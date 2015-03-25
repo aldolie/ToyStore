@@ -7,9 +7,11 @@
 	<title>Laravel</title>
 
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('/css/simple-sidebar.css') }}" rel="stylesheet" >
+    <link href="{{ asset('/css/view.css') }}" rel="stylesheet" >
 
 	<!-- Fonts -->
-	<link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+	<link href='{{ asset('/css/font.css') }}' rel='stylesheet' type='text/css'>
 
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -18,9 +20,9 @@
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 </head>
-<body>
-	<nav class="navbar navbar-default">
-		<div class="container-fluid">
+<body ng-app="app">
+<nav class="navbar navbar-inverse navbar-fixed-top" style="margin:0px;">
+		  <div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
 					<span class="sr-only">Toggle Navigation</span>
@@ -28,7 +30,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Laravel</a>
+				<a class="navbar-brand" href="#">Toy Store</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -50,13 +52,67 @@
 					@endif
 				</ul>
 			</div>
-		</div>
+		  </div>
 	</nav>
+    <div id="wrapper">
 
-	@yield('content')
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        Divine
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url('/Pembelian') }}"><span class="glyphicon glyphicon-folder-close" style="margin-right:10px;" aria-hidden="true"></span>Pembelian</a>
+                </li>
+                
+               
+                <li>
+                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-user" style="margin-right:10px;" aria-hidden="true"></span>Pembayaran Piutang</a>
+                </li>
+                <li>
+                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-unchecked" style="margin-right:10px;" aria-hidden="true"></span>Penjualan</a>
+                </li>
+               <li>
+                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-check" style="margin-right:10px;" aria-hidden="true"></span>Surat Jalan</a>
+                </li>
+                
+                 <li>
+                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Tagihan Pembayaran</a>
+                </li>
+                <li>
+                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Stock Barang</a>
+                </li>
+				 <li>
+                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pembelian</a>
+                </li>
+                   <li>
+                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Penjualan</a>
+                </li>
+                
+				<li>
+                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pengiriman</a>
+                </li>
+               
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper"  >
+		  @yield('content')
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+
 
 	<!-- Scripts -->
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<script src="{{ asset('/js/jquery.js') }}"></script>
+	<script src="{{ asset('/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('/js/angular.min.js') }}"></script>
+    <script src="{{ asset('/js/app.js') }}"></script>
 </body>
 </html>
