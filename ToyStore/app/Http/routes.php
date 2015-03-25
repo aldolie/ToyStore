@@ -24,10 +24,10 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     
     Route::get('/order/{id}', function ($id) {
         $orders = App\Models\Order::find($id);
-        return Response::json(['status' => 200, 'poll' => $orders->toArray()]);
+        return Response::json(['status' => 200, 'result' => $orders->toArray()]);
     });
     
-     Route::get('/product/{id}', function () {
+     Route::get('/product/', function () {
         $products = App\Models\Product::getProductsName();
         return Response::json(['status' => 200, 'result' => $products]);
     });

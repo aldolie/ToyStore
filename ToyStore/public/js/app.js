@@ -1,4 +1,5 @@
 var app=angular.module('app',[]);
+var SERVICE_URL="http://localhost:8000/apiv1/"
 app.config(function($interpolateProvider){
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
 });
@@ -41,12 +42,35 @@ app.directive('doDecimal', function() {
   }; 
 });
 
-app.controller('OrderSupplyController',['$scope','filterFilter',function($scope,filterFilter){
-    $scope.orderId=1;
+app.factory('ProductService',['$http','$rootScope','$q',function($http,$rootScope,$q){
+	
+	function ProductService(){
+		this.products=[];
+	}
+	
+	ProductService.prototype={
+		constructor:ProductService,
+		loadProductsforAutoComplete:function(){
+			var deferred=$q.defer();
+			var url=SERVICE_URL+'product/';
+			$http.get(url).success(function(data){
+				deferred.resolve(data.result);
+				$rootScope.$phase;
+			});
+			return deferred.promise;
+		}
+	}
+	var instance=new ProductService();
+	return instance;
+}]);
+
+
+app.controller('OrderSupplyController',['$scope','filterFilter','ProductService',function($scope,filterFilter,productService){
+    
+	$scope.orderId=1;
     $scope.date=new Date().toLocaleDateString();
 	$scope.orders=[{kode_barang:null,nama_barang:'',harga:null,quantity:null}];
     $scope.products=[{kode_barang:1,nama_barang:'Playstasion'},{kode_barang:2,nama_barang:'Playstation 2'}];
-    
     $scope.addOrder=function(){
         $scope.orders.push({kode_barang:'',nama_barang:'',harga:'',quantity:''}) ;
     };
@@ -66,6 +90,13 @@ app.controller('OrderSupplyController',['$scope','filterFilter',function($scope,
         }
         // if valid data
     };
+	
+	(function(){
+		productService.loadProductsforAutoComplete().then(function(data){
+			$scope.products=data;
+		},function(){});
+	})();
+	
     
 }]);
 
