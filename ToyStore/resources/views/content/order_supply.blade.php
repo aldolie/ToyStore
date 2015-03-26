@@ -85,10 +85,122 @@
                 </div>
     
             </div>
-            <button class="btn btn-primary" ng-click="addOrder()"><span class="glyphicon glyphicon-plus" style="margin-right:10px;" aria-hidden="true" ></span>Tambah Pembelian</button>
+            <button class="btn btn-info" ng-click="addOrder()"><span class="glyphicon glyphicon-plus" style="margin-right:10px;" aria-hidden="true" ></span>Tambah Pembelian</button>
             <button class="btn btn-warning" ng-click="saveOrder()"><span class="glyphicon glyphicon-floppy-save" style="margin-right:10px;" aria-hidden="true" ></span>Simpan Data Pembelian</button>
+   
+<!-- Error Dialog -->
 
+<div id="modal-save-error" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Error Message</h4>
+      </div>    
+        <div class="modal-body">
+            [[error]]
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error Dialog -->
+
+<!-- Confirmation Dialog -->
+<div id="modal-save" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+              <div class="modal-dialog modal-lg" >
+                <div id="modal-save-content" class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Konfirmasi</h4>
+                      </div>
+                     <div id="order-form-confirmation">
+                        <div class="row" id="order-header-form">
+                            <div class="col-md-6 ">
+                                <div>
+                                    <span class="label-form">No Invoice Pembelian</span>
+                                    <span class="label-form-delimiter">:</span>
+                                    <span>[[orderId]]</span>
+                                </div>
+
+                                <div>
+                                    <span class="label-form">Supplier</span>
+                                    <span class="label-form-delimiter">:</span>
+                                    <span><input class="form-none" ng-disabled="true" type="numeric" ng-model="supplier" /></span>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6 ">
+                                <div>
+                                    <span class="label-form">Tanggal</span>
+                                    <span class="label-form-delimiter">:</span>
+                                    <span>[[date]]</span>
+                                </div>
+
+                                <div>
+                                    <span class="label-form">Mata Uang</span>
+                                    <span class="label-form-delimiter">:</span>
+                                    <span><input ng-disabled="true" class="form-none" type="numeric" ng-model="currency" /></span>
+                                </div>
+                                <div>
+                                    <span class="label-form">Dikirim oleh</span>
+                                    <span class="label-form-delimiter">:</span>
+                                    <span><input ng-disabled="true" class="form-none" type="numeric" ng-model="shipper" /></span>
+                                </div>
+                            </div>
+                    </div>
+                    <table class="table">
+                       <thead>
+                           <tr>
+                            <th>Quantity</th>
+                            <th>Nama Barang</th>
+                            <th>Harga</th>
+                            <th>Jumlah</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-controller="OrderSuppyDetailController" ng-repeat="order in orders track by $index">
+
+                                <td>
+                                    <input do-numeric  ng-disabled="true"  class="form-none small-input" type="text" ng-model="order.quantity" /></td>
+                                <td>
+                                    <input class="form-none medium-input" type="text" ng-model="order.nama_barang" ng-disabled="true" />
+                                    <code ng-show="isNewItem()">Baru</code>
+                                </td>
+                                <td><span>[[currency+' ']]</span></span><input do-decimal  ng-disabled="true" class="form-none medium-input" type="text" ng-model="order.harga" /></td>
+                                <td><span>[[currency+' ']]</span>[[ (order.quantity*order.harga) | number:2]]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+    
+                    <div class="col-md-4 col-sm-offset-8">
+                            <div>
+                                <span class="label-form">Grand Total</span>
+                                <span class="label-form-delimiter">:</span>
+                                <span>[[currency+' ']] [[ getGrandTotal() | number:2]]</span>
+                            </div>
+
+
+                    </div>  
+                    
+                    <div>[[error]]</div>
+                </div>
+                <div>
+                     <button class="btn btn-primary" ng-click="submitOrder()">
+                             <span class="glyphicon glyphicon-floppy-save" style="margin-right:10px;" aria-hidden="true" ></span>Simpan Pembelian
+                    </button>
+                    <button class="btn btn-danger" ng-click="cancelOrder()">
+                            <span class="glyphicon glyphicon-remove" style="margin-right:10px;" aria-hidden="true" ></span>Cancel Pembelian
+                    </button>
+                </div>
+
+              </div>
+            </div>
 		</div>
+
+<!-- Confirmation Dialog -->
+
 	</div>
 </div>
 @endsection

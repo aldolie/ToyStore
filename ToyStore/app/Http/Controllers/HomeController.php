@@ -38,5 +38,11 @@ class HomeController extends Controller {
 	{
 		return view('content/order_supply');
 	}
+    
+    
+     public function product_recapitulation()
+	{
+		return view('content/product_recapitulation');
+	}
 
 }

@@ -13,25 +13,22 @@
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
+	'password' => 'Auth\PasswordController'
+    
 ]);
 
 
 Route::get('/','HomeController@index');
 Route::get('/Pembelian','HomeController@order_supply');
+Route::get('/Product/','HomeController@product_recapitulation');
 
 Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     
-    Route::get('/order/{id}', function ($id) {
-        $orders = App\Models\Order::find($id);
-        return Response::json(['status' => 200, 'result' => $orders->toArray()]);
-    });
     
-     Route::get('/product/', function () {
-        $products = App\Models\Product::getProductsName();
-        return Response::json(['status' => 200, 'result' => $products]);
-    });
-
+    Route::get('/product/auto/',  [ 'uses' => 'Service\AdminController@getProductsSimpleList']);
+    Route::get('/product/recap/',  [ 'uses' => 'Service\AdminController@getProductsRecapList']);
+    Route::post('/order/supplier/save',  [ 'uses' => 'Service\AdminController@saveOrderSupplier']);
+    Route::get('/order/supplier/id',  [ 'uses' => 'Service\AdminController@getNewOrderId']);
  
    
 });

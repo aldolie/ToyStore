@@ -83,7 +83,7 @@
                     <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Tagihan Pembayaran</a>
                 </li>
                 <li>
-                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Stock Barang</a>
+                    <a href="{{ url('/Product/') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Stock Barang</a>
                 </li>
 				 <li>
                     <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pembelian</a>
@@ -113,6 +113,12 @@
 	<script src="{{ asset('/js/jquery.js') }}"></script>
 	<script src="{{ asset('/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('/js/angular.min.js') }}"></script>
+    <script>
+        var app=angular.module('app',[]);
+        app.constant("CSRF_TOKEN", "{!! csrf_token() !!}");
+        app.constant("ROP",10);
+        app.constant("SERVICE_URI","http://localhost:8000/apiv1/");
+    </script>
     <script src="{{ asset('/js/app.js') }}"></script>
 </body>
 </html>
