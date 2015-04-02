@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Laravel</title>
-
-	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('/css/jquery-ui.css') }}" rel="stylesheet">
+    <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('/css/simple-sidebar.css') }}" rel="stylesheet" >
     <link href="{{ asset('/css/view.css') }}" rel="stylesheet" >
 
@@ -70,7 +70,7 @@
                 
                
                 <li>
-                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-user" style="margin-right:10px;" aria-hidden="true"></span>Pembayaran Piutang</a>
+                    <a href="{{ url('/Pembayaran') }}"><span class="glyphicon glyphicon-user" style="margin-right:10px;" aria-hidden="true"></span>Pembayaran Piutang</a>
                 </li>
                 <li>
                     <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-unchecked" style="margin-right:10px;" aria-hidden="true"></span>Penjualan</a>
@@ -86,7 +86,7 @@
                     <a href="{{ url('/Product/') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Stock Barang</a>
                 </li>
 				 <li>
-                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pembelian</a>
+                    <a href="{{ url('/Pembelian/Report') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pembelian</a>
                 </li>
                    <li>
                     <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Penjualan</a>
@@ -111,6 +111,12 @@
 
 	<!-- Scripts -->
 	<script src="{{ asset('/js/jquery.js') }}"></script>
+    <script src="{{ asset('/js/jquery-ui.js') }}"></script>
+    <script>
+        (function(){
+            $( "#datepicker" ).datepicker();
+        })();
+    </script>
 	<script src="{{ asset('/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('/js/angular.min.js') }}"></script>
     <script>

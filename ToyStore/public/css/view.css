@@ -26,7 +26,7 @@ input:disabled{
     border-bottom:1px solid grey;
 }
 
-#order-form,#product-report{
+#order-form,#product-report,#order-report,#payment-form{
    padding-top: 20px;
    margin-top:30px;
 }

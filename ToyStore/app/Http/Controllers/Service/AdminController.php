@@ -3,6 +3,7 @@
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\OrderHeader;
+use App\Models\Payment;
 use Illuminate\Http\Request as Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -45,7 +46,18 @@ class AdminController extends Controller {
         return (['status' => 200, 'result' => $products]);
     }
     
+    public function getPayment(){
+        $payments=Payment::getPaymentHeader();
+        return (['status' => 200, 'result' =>$payments]);
+    }
     
+
+    public function getPaymentDetail(Request $request){
+        $id=$request->input('i');
+        $payments=Payment::getPaymentDetail($id);
+        return (['status' => 200, 'result' =>$payments]);
+    }
+
     public function getNewOrderId(){
         $id =OrderHeader::getLastOrderId();
         if($id==null)
@@ -53,6 +65,11 @@ class AdminController extends Controller {
         else
             $id+=1;
         return (['status' => 200, 'result' => $id]);
+    }
+
+    public function getOrders(){
+        $orders=OrderHeader::getOrders();
+        return (['status'=>200,'result'=>$orders]);
     }
     
     public function saveOrderSupplier(Request $request){
@@ -83,6 +100,7 @@ class AdminController extends Controller {
             else{
              return (['status'=>200,'isSuccess'=>false,'reason'=>['0'=>'Gagal Menyimpan Data']]);
             }
+            
        }
         
     }

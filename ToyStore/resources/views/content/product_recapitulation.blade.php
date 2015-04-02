@@ -28,7 +28,7 @@
                         <tr ng-controller="ProductRecapitulationDetailController" ng-repeat="product in filteredProducts track by $index">
                             
                             <td>[[product.nama_barang]]</td>
-                            <td>[[product.quantity]] <code ng-show="isReOrderPoint()">Order</code></code></td>
+                            <td>[[product.quantity]] <code ng-show="isReOrderPoint()">Order</code></td>
                             <td>
                                 <span ng-show="isAvailable()">[[product.harga | currency:'Rp.']]</span>
                                 <code ng-hide="isAvailable()">Belum Ada Transaksi</code>

@@ -11,8 +11,20 @@ class OrderHeader extends Model {
         return DB::table('order_supply_header')->max('id');
     }
     
+
+    public static function getOrders()
+    {
+        $orders = DB::table('order_supply_header')
+            ->join('order_supply','order_supply_header.id','=','order_supply.orderid')
+            ->join('product','product.id','=','order_supply.productid')
+            ->select('order_supply_header.id as id','productname as nama_barang','supplier','currency','order_supply.price','order_supply.quantity','transactiondate as tanggal_transaksi')
+            ->get();
+        return $orders;
+    }
+
     public static function insertOrder($userid,$supplier,$currency,$transactiondate,$shipper,$data)
 	{
+
         DB::beginTransaction();
         try {
             

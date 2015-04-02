@@ -39,10 +39,19 @@ class HomeController extends Controller {
 		return view('content/order_supply');
 	}
     
+	public function order_supply_report(){
+		return view('content/order_recapitulation');
+	}
+
+
+	public function payment_supply(){
+		return view('content/payment_supply');
+	}
     
      public function product_recapitulation()
 	{
 		return view('content/product_recapitulation');
 	}
+
 
 }

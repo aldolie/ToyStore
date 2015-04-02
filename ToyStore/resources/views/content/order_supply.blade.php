@@ -26,7 +26,9 @@
                         <div>
                             <span class="label-form">Tanggal</span>
                             <span class="label-form-delimiter">:</span>
-                            <span>[[date]]</span>
+                            <span>
+                                <input class="form-none" type="text" id="datepicker" ng-model="date"/>
+                            </span>
                         </div>
 
                         <div>

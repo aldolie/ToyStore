@@ -10,8 +10,7 @@ app.directive('doNumeric', function() {
     link: function (scope, element, attr, ngModelCtrl) {
       function fromUser(text) {
         var transformedInput = text.replace(/[^0-9]/g, '');
-        //console.log(transformedInput);
-        if(transformedInput !== text) {
+       if(transformedInput !== text) {
             ngModelCtrl.$setViewValue(transformedInput);
             ngModelCtrl.$render();
         }
@@ -76,7 +75,7 @@ app.factory('OrderService',['$http','$rootScope','$q','SERVICE_URI',function($ht
     }
     OrderService.prototype={
      constructor:OrderService, 
-     saveOrderSupplier:function(form){
+        saveOrderSupplier:function(form){
 			var deferred=$q.defer();
 			 var url=service+'order/supplier/save/';
            $http.post(url,{
@@ -93,9 +92,18 @@ app.factory('OrderService',['$http','$rootScope','$q','SERVICE_URI',function($ht
 		},
         loadOrderId:function(){
             var deferred=$q.defer();
-            var url=service+'order/supplier/id';
+            var url=service+'order/supplier/id/';
             $http.get(url).success(function(data){
                 deferred.resolve(data.result);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+        },
+        loadOrderSupplier:function(form){
+            var deferred=$q.defer();
+            var url=service+'order/supplier/get/';
+            $http.get(url).success(function(data){
+                deferred.resolve(data);
                 $rootScope.$phase;
             });
             return deferred.promise;
@@ -105,6 +113,45 @@ app.factory('OrderService',['$http','$rootScope','$q','SERVICE_URI',function($ht
     var instance=new OrderService();
 	return instance;
 }]);
+
+
+
+app.factory('PaymentService',['$http','$rootScope','$q','SERVICE_URI',function($http,$rootScope,$q,service){
+    
+    function PaymentService(){
+        
+    }
+    
+    PaymentService.prototype={
+        constructor:PaymentService,
+        loadPayments:function(){
+            var deferred=$q.defer();
+            var url=service+'payment/supplier/get/';
+            $http.get(url).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+        },
+        loadPaymentDetail:function(i){
+            var deferred=$q.defer();
+            var url=service+'payment/supplier/detail/get/';
+            $http.post(url,{
+                'i':i
+            }).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;   
+            });
+            return deferred.promise;
+
+        }
+    }
+    var instance=new PaymentService();
+    return instance;
+}]);
+
+
+/*----------------------------------------ORDER SUPPLY CONTROLLER-----------------------------------*/
 
 
 app.controller('OrderSupplyController',['$scope','filterFilter','ProductService','OrderService',function($scope,filterFilter,productService,orderService){
@@ -163,8 +210,13 @@ app.controller('OrderSupplyController',['$scope','filterFilter','ProductService'
                 }
             }
             $scope.error='';
+            var convertDate = function(usDate) {
+              var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+              return dateParts[3] + "-" + dateParts[1] + "-" + dateParts[2];
+            }
+
             $scope.form.supplier=$scope.supplier;
-            $scope.form.date=$scope.date;
+            $scope.form.date=convertDate($scope.date);
             $scope.form.currency=$scope.currency;
             $scope.form.shipper=$scope.shipper;
             $scope.form.data=data;
@@ -293,7 +345,7 @@ app.controller('ProductRecapitulationController',['$scope','filterFilter','Produ
 app.controller('ProductRecapitulationDetailController',['$scope','ROP',function($scope,rop){
     
 	$scope.isReOrderPoint=function(){
-        if($scope.product.quantity<10)
+        if($scope.product.quantity<rop)
             return true;
         else
             return false;
@@ -308,4 +360,85 @@ app.controller('ProductRecapitulationDetailController',['$scope','ROP',function(
     }
 	
     
+}]);
+
+
+app.controller('OrderRecapitulationController',['$scope','OrderService','filterFilter','orderByFilter',function($scope,orderService,filterFilter,orderByFilter){
+
+    $scope.orders=[];
+    $scope.filteredOrders=[];
+    $scope.filterOrder=function(){
+        $scope.filteredOrders=filterFilter($scope.orders,{'nama_barang':$scope.search});
+        $scope.filteredOrders=orderByFilter($scope.filteredOrders,'tanggal_transaksi',$scope.isReverse);
+    };
+    $scope.orderAsc=function(){
+        $scope.isReverse=true;
+        $scope.filteredOrders=orderByFilter($scope.filteredOrders,'tanggal_transaksi',$scope.isReverse);
+    };
+    $scope.orderDesc=function(){
+        $scope.isReverse=false;
+        $scope.filteredOrders=orderByFilter($scope.filteredOrders,'tanggal_transaksi',$scope.isReverse);
+    };
+
+    (function(){
+        orderService.loadOrderSupplier().then(function(data){
+            $scope.orders=data.result;
+            $scope.filteredOrders=filterFilter($scope.orders,{'nama_barang':$scope.search});
+            $scope.filteredOrders=orderByFilter($scope.filteredOrders,'tanggal_transaksi',$scope.isReverse);
+        },function(){});
+    })();
+
+}]);
+
+app.controller('OrderRecapitulationDetailController',['$scope',function($scope){
+
+}]);
+
+
+app.controller('PaymentController',['$scope','filterFilter','orderByFilter','PaymentService',function($scope,filterFilter,orderByFilter,paymentService){
+
+    $scope.payments=[];
+    $scope.filteredPayments=[];
+    $scope.filterPayments=function(){
+        $scope.filteredPayments=filterFilter($scope.payments,{'supplier':$scope.search});
+        $scope.filteredPayments=orderByFilter($scope.filteredPayments,['tanggal_pembelian','supplier'],true);
+        cons
+    };
+
+    (function(){
+        paymentService.loadPayments().then(function(data){
+            $scope.payments=data.result;
+            $scope.filteredPayments=filterFilter($scope.payments,{'supplier':$scope.search});
+            $scope.filteredPayments=orderByFilter($scope.filteredPayments,['tanggal_pembelian','supplier'],true);
+        },function(){
+
+        });
+    })();
+}]);
+
+
+
+app.controller('PaymentDetailController',['$scope','PaymentService',function($scope,paymentService){
+    $scope.paymentDetails=[];
+    $scope.showDetail=function(){
+        paymentService.loadPaymentDetail($scope.payment.kode_invoice).then(function(data){
+            $scope.paymentDetails=data.result;
+            $scope.isShowDetail=true;
+        },function(){
+
+        });
+
+    };
+
+    $scope.hideDetail=function(){
+       $scope.isShowDetail=false; 
+    };
+
+    $scope.isAvalable=function(){
+        if($scope.paymentDetails.length>0)
+            return true;
+        else return false;
+    }
+
+    $scope.show
 }]);
