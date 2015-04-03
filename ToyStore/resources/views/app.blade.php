@@ -19,6 +19,9 @@
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
+
+    <script src="{{ asset('/js/jquery.js') }}"></script>
+    <script src="{{ asset('/js/jquery-ui.js') }}"></script>
 </head>
 <body ng-app="app">
 <nav class="navbar navbar-inverse navbar-fixed-top" style="margin:0px;">
@@ -65,26 +68,26 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url('/Pembelian') }}"><span class="glyphicon glyphicon-folder-close" style="margin-right:10px;" aria-hidden="true"></span>Pembelian</a>
+                    <a href="{{ url('/Pembelian') }}"><span class="glyphicon glyphicon-import" style="margin-right:10px;" aria-hidden="true"></span>Pembelian</a>
                 </li>
                 
                
                 <li>
-                    <a href="{{ url('/Pembayaran') }}"><span class="glyphicon glyphicon-user" style="margin-right:10px;" aria-hidden="true"></span>Pembayaran Piutang</a>
+                    <a href="{{ url('/Pembayaran') }}"><span class="glyphicon glyphicon-saved" style="margin-right:10px;" aria-hidden="true"></span>Pembayaran Piutang</a>
                 </li>
                 <li>
-                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-unchecked" style="margin-right:10px;" aria-hidden="true"></span>Penjualan</a>
+                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-export" style="margin-right:10px;" aria-hidden="true"></span>Penjualan</a>
                 </li>
                <li>
-                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-check" style="margin-right:10px;" aria-hidden="true"></span>Surat Jalan</a>
+                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-envelope" style="margin-right:10px;" aria-hidden="true"></span>Surat Jalan</a>
                 </li>
-                
+                   <li>
+                    <a href="{{ url('/Product/') }}"><span class="glyphicon glyphicon-folder-close" style="margin-right:10px;" aria-hidden="true"></span>Stock Barang</a>
+                </li>
                  <li>
-                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Tagihan Pembayaran</a>
+                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-check" style="margin-right:10px;" aria-hidden="true"></span>Tagihan Pembayaran</a>
                 </li>
-                <li>
-                    <a href="{{ url('/Product/') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Stock Barang</a>
-                </li>
+             
 				 <li>
                     <a href="{{ url('/Pembelian/Report') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pembelian</a>
                 </li>
@@ -110,13 +113,7 @@
 
 
 	<!-- Scripts -->
-	<script src="{{ asset('/js/jquery.js') }}"></script>
-    <script src="{{ asset('/js/jquery-ui.js') }}"></script>
-    <script>
-        (function(){
-            $( "#datepicker" ).datepicker();
-        })();
-    </script>
+   
 	<script src="{{ asset('/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('/js/angular.min.js') }}"></script>
     <script>

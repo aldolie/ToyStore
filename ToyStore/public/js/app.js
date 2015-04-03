@@ -144,6 +144,20 @@ app.factory('PaymentService',['$http','$rootScope','$q','SERVICE_URI',function($
             });
             return deferred.promise;
 
+        },
+        doPayment:function(i,form){
+            var deferred=$q.defer();
+            var url=service+'payment/supplier/do/';
+            $http.post(url,{
+                'i':i,
+                'p':form.paid,
+                'd':form.date
+            }).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+
         }
     }
     var instance=new PaymentService();
@@ -156,8 +170,13 @@ app.factory('PaymentService',['$http','$rootScope','$q','SERVICE_URI',function($
 
 app.controller('OrderSupplyController',['$scope','filterFilter','ProductService','OrderService',function($scope,filterFilter,productService,orderService){
     
+    var convertDate = function(usDate) {
+      var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
+    };
+
 	$scope.orderId=1;
-    $scope.date=new Date().toLocaleDateString();
+    $scope.date=convertDate(new Date().toLocaleDateString());
 	$scope.orders=[{kode_barang:null,nama_barang:'',harga:null,quantity:null}];
     $scope.products=[{kode_barang:1,nama_barang:'Playstasion'},{kode_barang:2,nama_barang:'Playstation 2'}];
     $scope.addOrder=function(){
@@ -210,19 +229,17 @@ app.controller('OrderSupplyController',['$scope','filterFilter','ProductService'
                 }
             }
             $scope.error='';
-            var convertDate = function(usDate) {
-              var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-              return dateParts[3] + "-" + dateParts[1] + "-" + dateParts[2];
-            }
+            
 
             $scope.form.supplier=$scope.supplier;
-            $scope.form.date=convertDate($scope.date);
+            $scope.form.date=$scope.date;
             $scope.form.currency=$scope.currency;
             $scope.form.shipper=$scope.shipper;
             $scope.form.data=data;
             $('#modal-save').modal('show');
         }
     };
+
     
     $scope.submitOrder=function(){
      
@@ -235,7 +252,7 @@ app.controller('OrderSupplyController',['$scope','filterFilter','ProductService'
             else{
               $scope.error='<ul>';
               for(var i=0;i<data.reason.length;i++){
-                 $scope.error+='<li>'+data[i]+'</li>';
+                 $scope.error+='<li>'+data.reason[i]+'</li>';
                  
               }
               $scope.error+='</ul>';
@@ -402,7 +419,7 @@ app.controller('PaymentController',['$scope','filterFilter','orderByFilter','Pay
     $scope.filterPayments=function(){
         $scope.filteredPayments=filterFilter($scope.payments,{'supplier':$scope.search});
         $scope.filteredPayments=orderByFilter($scope.filteredPayments,['tanggal_pembelian','supplier'],true);
-        cons
+      //  cons
     };
 
     (function(){
@@ -419,16 +436,52 @@ app.controller('PaymentController',['$scope','filterFilter','orderByFilter','Pay
 
 
 app.controller('PaymentDetailController',['$scope','PaymentService',function($scope,paymentService){
-    $scope.paymentDetails=[];
-    $scope.showDetail=function(){
+    
+    var showDatePicker=function(){
+     
+        $('.datepicker').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                defaultDate: new Date(),
+                yearRange: '1970:2030',
+                dateFormat: 'yy-mm-dd'
+        });
+            
+    };
+
+    var convertDate = function(usDate) {
+      var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
+    };
+
+    var doLoadPaymentsDetail=function(){
         paymentService.loadPaymentDetail($scope.payment.kode_invoice).then(function(data){
             $scope.paymentDetails=data.result;
             $scope.isShowDetail=true;
+            showDatePicker();
+
         },function(){
 
         });
+    };
+    
+
+    $scope.paymentDetails=[];
+    $scope.form={
+        date:convertDate(new Date().toLocaleDateString()),
+        paid:''
+    }
+
+
+
+    $scope.showDetail=function(){
+        doLoadPaymentsDetail();
 
     };
+
+
+
+
 
     $scope.hideDetail=function(){
        $scope.isShowDetail=false; 
@@ -440,5 +493,42 @@ app.controller('PaymentDetailController',['$scope','PaymentService',function($sc
         else return false;
     }
 
-    $scope.show
+    $scope.isNotValidPayment=function(){
+        
+        if(!$scope.form)
+            return true;
+
+        if(!$scope.form.paid)
+            return true;
+
+        if($scope.form.paid=='')
+            return true;
+        if(parseFloat($scope.form.paid)>(parseFloat($scope.payment.jumlah_utang-$scope.payment.paid).toFixed(2)))
+            return true;
+        return false;
+    };
+
+    $scope.doPayment=function(){
+        paymentService.doPayment($scope.payment.kode_invoice,$scope.form).then(function(data){
+            if(data.isSuccess){
+                $scope.payment.paid=data.result;
+                 doLoadPaymentsDetail();
+            }
+            else
+            {
+                // Error Message
+            }
+        },function(){
+
+        });
+    };
+
+    $scope.isBase=function(){
+        if((parseFloat($scope.payment.jumlah_utang-$scope.payment.paid).toFixed(2))>0)
+            return false;
+        return true;
+    };
+
+   
+
 }]);

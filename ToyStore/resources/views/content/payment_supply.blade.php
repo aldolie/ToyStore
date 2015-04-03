@@ -16,7 +16,7 @@
 
                     </div>
                 </div>
-                <table class="table" >
+                <table class="table table-condensed" >
                     <thead >
                        <tr>
                         <th>#</th>
@@ -36,9 +36,12 @@
                           </td>
                           <td>[[payment.kode_invoice]]</td>
                           <td>[[payment.supplier]]</td>
-                          <td>[[payment.currency]]&nbsp; [[payment.jumlah_utang]]</td>
-                          <td>[[payment.currency]]&nbsp; [[payment.paid]]</td>
-                          <td>[[payment.currency]]&nbsp; [[payment.jumlah_utang-payment.paid]]</td>
+                          <td>[[payment.currency]]&nbsp; [[payment.jumlah_utang | number:2]]</td>
+                          <td>[[payment.currency]]&nbsp; [[payment.paid | number:2]]</td>
+                          <td>
+                            <span ng-hide="isBase()">[[payment.currency]]&nbsp; [[payment.jumlah_utang-payment.paid | number:2]]</span>
+                            <code ng-show="isBase()">LUNAS</code>
+                          </td>
                           <td>[[payment.tanggal_pembelian]]</td>
                         </tr>
                         <tr ng-show="isShowDetail">
@@ -46,7 +49,7 @@
                           <td></td>
                           <td></td>
                           <td colspan="4">
-                            <div class="alert alert-info" role="alert">Belum Ada Pembayaran</div>
+                            <div class="alert alert-info"  ng-hide="isAvalable()" role="alert">Belum Ada Pembayaran</div>
                             <table class="table" ng-show="isAvalable()">
                               <thead>
                                 <tr>
@@ -57,23 +60,26 @@
                               <tbody>
                                 <tr ng-repeat="detail in paymentDetails">
                                   <td>[[detail.tanggal_pembayaran]]</td>
-                                  <td>[[detail.jumlah_pembayaran]]</td>
+                                  <td>[[payment.currency]]&nbsp; [[detail.jumlah_pembayaran]]</td>
                                 </tr>
                               </tbody>
                             </table>
-                            <form>
+                            <div class="alert alert-info"  ng-show="isBase()" role="alert">Sudah Lunas</div>
+                            <form ng-hide="isBase()" ng-submit="doPayment()">
                                 <div class="form-group">
                                     <div>
                                     <label for="date">Tanggal Pembayaran</label>
-                                      <input type="text" class="form-control" name="date_paid" ng-model="form.date" >
+                                      <input type="text" class="form-control datepicker"   name="date_paid" ng-model="form.date" />
                                     </div>
+
                                     <div class="form-group">
                                       <label for="paid">Jumlah Bayar</label>
-                                      <input type="text" do-decimal class="form-control" name="paid"  ng-model="form.paid">
+                                      <input type="text" do-decimal class="form-control" name="paid"  ng-model="form.paid" />
                                     </div>
                                    
-                                    <button type="submit" class="btn btn-primary">Lakukan pembayaran</button>
+                                    <button type="submit" ng-disabled="isNotValidPayment()"  class="btn btn-primary">Lakukan pembayaran</button>
                             </form>
+
                           </td>
 
                         </tr>
@@ -87,4 +93,5 @@
          </div>
     </div>
 </div>
+
 @endsection

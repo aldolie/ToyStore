@@ -28,6 +28,19 @@
                             <span class="label-form-delimiter">:</span>
                             <span>
                                 <input class="form-none" type="text" id="datepicker" ng-model="date"/>
+                                <script>
+                                (function(){
+                                    var d = new Date();
+                                    $('#datepicker').datepicker({
+                                            changeMonth: true,
+                                            changeYear: true,
+                                            defaultDate: d,
+                                            yearRange: '1970:2030',
+                                            dateFormat: 'yy-mm-dd'
+                                    });
+
+                                })();
+                                </script>
                             </span>
                         </div>
 
@@ -43,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <table class="table">
+                <table class="table table-condensed">
                    <thead>
                        <tr>
                         <th>#</th>
@@ -165,12 +178,16 @@
                             <tr ng-controller="OrderSuppyDetailController" ng-repeat="order in orders track by $index">
 
                                 <td>
-                                    <input do-numeric  ng-disabled="true"  class="form-none small-input" type="text" ng-model="order.quantity" /></td>
-                                <td>
-                                    <input class="form-none medium-input" type="text" ng-model="order.nama_barang" ng-disabled="true" />
-                                    <code ng-show="isNewItem()">Baru</code>
+                                    <div class="form-none small-input">[[order.quantity]]</div>
                                 </td>
-                                <td><span>[[currency+' ']]</span></span><input do-decimal  ng-disabled="true" class="form-none medium-input" type="text" ng-model="order.harga" /></td>
+                                <td>
+                                    <div class="form-none">[[order.nama_barang]] <code ng-show="isNewItem()">Baru</code></div>
+                                    
+                                </td>
+                                <td>
+                                    
+                                    <div class="form-none small-input"><span>[[currency+' ']]</span>[[order.harga]]</div>
+                                </td>
                                 <td><span>[[currency+' ']]</span>[[ (order.quantity*order.harga) | number:2]]</td>
                             </tr>
                         </tbody>
@@ -186,7 +203,7 @@
 
                     </div>  
                     
-                    <div>[[error]]</div>
+                    <code>[[error]]</code>
                 </div>
                 <div>
                      <button class="btn btn-primary" ng-click="submitOrder()">

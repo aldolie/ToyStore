@@ -34,5 +34,6 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     Route::get('/order/supplier/id/',  [ 'uses' => 'Service\AdminController@getNewOrderId']);
  	Route::get('/order/supplier/get/',['uses'=>'Service\AdminController@getOrders']);
 	Route::get('/payment/supplier/get/',['uses'=>'Service\AdminController@getPayment']);
-	Route::post('/payment/supplier/detail/get/',['uses'=>'Service\AdminController@getPaymentDetail']);	   
+	Route::post('/payment/supplier/detail/get/',['uses'=>'Service\AdminController@getPaymentDetail']);	 
+	Route::post('/payment/supplier/do/',['uses'=>'Service\AdminController@doPayment']);  
 });
