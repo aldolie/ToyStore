@@ -78,7 +78,7 @@
                                     
                                     <input class="form-none large-input" ng-init="order.isDisabled=false" ng-disabled="order.isDisabled" type="text" ng-model="order.nama_barang" ng-change="searchProduct()" />
                                     <span ng-click="reset()" ng-show="order.isDisabled" class="glyphicon glyphicon-trash  "  aria-hidden="true" ></span>
-                                    <ul class="content-auto-complete">
+                                    <ul class="content-auto-complete new-content-auto-complete">
                                         <li ng-repeat="product in filteredProducts track by $index" ng-click="onClickAutoComplete(product)">[[product.kode_barang+'-'+product.nama_barang]]</li>
                                     </ul>
                                 </div>

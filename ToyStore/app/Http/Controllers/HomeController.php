@@ -1,5 +1,8 @@
 <?php namespace App\Http\Controllers;
 
+
+use Illuminate\Http\Request as Request;
+
 class HomeController extends Controller {
 
 	/*
@@ -33,6 +36,9 @@ class HomeController extends Controller {
 		return view('home');
 	}
    
+   	public function signin(){
+   		return view('login');
+   	}
     
     public function order_supply()
 	{
@@ -53,5 +59,13 @@ class HomeController extends Controller {
 		return view('content/product_recapitulation');
 	}
 
+
+	public function order_purchase(){
+		return view('content/order_purchase');
+	}
+
+	public function doSignin(Request $request){
+		
+	}
 
 }

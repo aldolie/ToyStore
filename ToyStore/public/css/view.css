@@ -62,6 +62,7 @@ input:disabled{
     background: white;
     border-radius: 0px 0px 0px 2px;
     box-shadow: 1px 1px 1px #666,-1px -1px 2px #666,-1px 1px 1px #666,1px -1px 1px #666;
+    z-index: 100;
 }
 
 .content-auto-complete> li{
@@ -71,7 +72,7 @@ input:disabled{
     
 }
 
-.content-auto-complete> li:last-child{
+.new-content-auto-complete> li:last-child{
     border: none;
      color: #ffffff;
     background-color: #F30a07;

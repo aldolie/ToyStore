@@ -42,17 +42,14 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
-					@if (Auth::guest())
 						<li><a href="{{ url('/auth/login') }}">Login</a></li>
 						<li><a href="{{ url('/auth/register') }}">Register</a></li>
-					@else
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								<li><a href="{{ url('/auth/logout') }}">Logout</a></li>
 							</ul>
 						</li>
-					@endif
 				</ul>
 			</div>
 		  </div>
@@ -64,39 +61,38 @@
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
                     <a href="#">
-                        Divine
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url('/Pembelian') }}"><span class="glyphicon glyphicon-import" style="margin-right:10px;" aria-hidden="true"></span>Pembelian</a>
+                    <a href="{{ url('/Pembelian/') }}"><span class="glyphicon glyphicon-import" style="margin-right:10px;" aria-hidden="true"></span>Pembelian</a>
                 </li>
                 
                
                 <li>
-                    <a href="{{ url('/Pembayaran') }}"><span class="glyphicon glyphicon-saved" style="margin-right:10px;" aria-hidden="true"></span>Pembayaran Piutang</a>
+                    <a href="{{ url('/Pembayaran/') }}"><span class="glyphicon glyphicon-saved" style="margin-right:10px;" aria-hidden="true"></span>Pembayaran Piutang</a>
                 </li>
                 <li>
-                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-export" style="margin-right:10px;" aria-hidden="true"></span>Penjualan</a>
+                    <a href="{{ url('/Penjualan/') }}"><span class="glyphicon glyphicon-export" style="margin-right:10px;" aria-hidden="true"></span>Penjualan</a>
                 </li>
                <li>
-                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-envelope" style="margin-right:10px;" aria-hidden="true"></span>Surat Jalan</a>
+                    <a href="{{ url('/') }}"><span class="glyphicon glyphicon-envelope" style="margin-right:10px;" aria-hidden="true"></span>Surat Jalan</a>
                 </li>
                    <li>
                     <a href="{{ url('/Product/') }}"><span class="glyphicon glyphicon-folder-close" style="margin-right:10px;" aria-hidden="true"></span>Stock Barang</a>
                 </li>
                  <li>
-                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-check" style="margin-right:10px;" aria-hidden="true"></span>Tagihan Pembayaran</a>
+                    <a href="{{ url('/') }}"><span class="glyphicon glyphicon-check" style="margin-right:10px;" aria-hidden="true"></span>Tagihan Pembayaran</a>
                 </li>
              
 				 <li>
                     <a href="{{ url('/Pembelian/Report') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pembelian</a>
                 </li>
                    <li>
-                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Penjualan</a>
+                    <a href="{{ url('/') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Penjualan</a>
                 </li>
                 
 				<li>
-                    <a href="{{ url('/auth/login') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pengiriman</a>
+                    <a href="{{ url('/') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pengiriman</a>
                 </li>
                
             </ul>

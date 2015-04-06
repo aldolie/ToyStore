@@ -4,8 +4,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\OrderHeader;
 use App\Models\Payment;
+use App\Models\User;
+use App\Models\PurchaseHeader;
 use Illuminate\Http\Request as Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash as Hash;
 
 class AdminController extends Controller {
 
@@ -35,6 +38,43 @@ class AdminController extends Controller {
 	 *
 	 * @return Response
 	 */
+
+
+    public function getCurrentUser(Request $request){
+       
+        return (['status' => 200, 'result' =>['userid'=>1,'name'=>'Admin']]);
+    }
+
+    public function authenticateUser(Request $request){
+
+        $v = Validator::make($request->all(), [
+        'u' => 'required',
+        'p' => 'required'
+        ],[
+            'u.required'=>'Username harus diisi ',
+            'p.required'=>'Password harus diisi',
+        ]);
+
+        if ($v->fails())
+        {
+           return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>$v->messages()->all()]);
+        }
+        else{
+             $username=$request->input('u');
+             $password=$request->input('p');
+             $user=User::requestAuthentication($username,$password);
+                if($user){
+                  //  return dd($request);
+                    $token=Hash::make($username.'|'.$password.'|'.$request->ip().'|'.str_random(60).'|'.date_format(date_create(), 'U'));
+                    return (['status'=>200,'isSuccess'=>true,'result'=>$token,'reason'=>[]]);
+                }
+                else
+                {
+                    return (['status'=>200,'isSuccess'=>false,'result'=>$user,'reason'=>['0'=>'Username dan Password tidak cocok']]);
+                }
+        }
+    }
+
 	public function getProductsSimpleList()
 	{
 		$products = Product::getProductsName();
@@ -110,6 +150,15 @@ class AdminController extends Controller {
         return (['status' => 200, 'result' => $id]);
     }
 
+    public function getNewPurchaseOrderId(){
+        $id =PurchaseHeader::getLastOrderId();
+        if($id==null)
+            $id=1;
+        else
+            $id+=1;
+        return (['status' => 200, 'result' => $id]);
+    }
+
     public function getOrders(){
         $orders=OrderHeader::getOrders();
         return (['status'=>200,'result'=>$orders]);
@@ -157,6 +206,60 @@ class AdminController extends Controller {
         
     }
     
+
+     public function saveOrderPurchase(Request $request){
+        
+       $v = Validator::make($request->all(), [
+            'customer' => 'required|max:255',
+            'date' => 'required|date',
+            'is_sales_order'=>'required',
+        ],[
+            'customer.required'=>'Nama Customer  harus diisi',
+            'date.required'=>'Tanggal Pembelian harus diisi',
+            'is_sales_order.required'=>'Sales Order harus di isi'
+        ]);
+       
+       if ($v->fails())
+       {
+           return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>$v->messages()->all()]);
+       }
+       else{
+
+
+            $customer=$request->input('customer');
+            $date=$request->input('date');
+            $isSalesOrder=$request->input('is_sales_order');
+            $discount=$request->input('discount');
+            $dp=$request->input('dp');
+            $isDiscount=$request->input('isDiscount');
+            $isDp=$request->input('isDp');
+            if(!$isDiscount)
+                $discount=0;
+            if(!$isDp)
+                $dp=0;
+            $discount=(($discount=='')?0:$discount);
+            $dp=(($dp=='')?0:$dp);
+
+            $data=$request->input('data');
+            $result = PurchaseHeader::insertOrder(1,$customer,$date,$isSalesOrder,$discount,$dp,$data);
+
+            if($result['status']==false){
+                if($result['error_code']==-2){
+                    return (['status'=>200,'isSuccess'=>false,'reason'=>['0'=>'Gagal Menyimpan Data']]);
+                }
+                else if($result['error_code']==-1)
+                {
+                    return (['status'=>200,'isSuccess'=>false,'reason'=>['0'=>'Barang Tidak Mencukupi'],'products'=>$result['products']]);
+                }
+            }
+            
+            else{
+                return (['status'=>200,'isSuccess'=>true,'reason'=>[]]);
+            }
+            
+       }
+        
+    }
     
 
 }

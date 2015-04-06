@@ -116,6 +116,78 @@ app.factory('OrderService',['$http','$rootScope','$q','SERVICE_URI',function($ht
 
 
 
+
+
+app.factory('PurchaseService',['$http','$rootScope','$q','SERVICE_URI',function($http,$rootScope,$q,service){
+    function PurchaseService(){
+    }
+    PurchaseService.prototype={
+     constructor:PurchaseService, 
+        saveOrderPurchase:function(form){
+            var deferred=$q.defer();
+             var url=service+'order/purchase/save/';
+           $http.post(url,{
+               'customer':form.customer,
+               'date':form.date,
+               'is_sales_order':form.salesOrder,
+               'isDp':form.isDp,
+               'isDiscount':form.isDiscount,
+               'discount':form.discount,
+               'dp':form.dp,
+               'data':form.data
+           }).success(function(data){
+             deferred.resolve(data);
+             $rootScope.$phase;  
+           });
+            return deferred.promise;
+        },
+        loadOrderId:function(){
+            var deferred=$q.defer();
+            var url=service+'order/purchase/id/';
+            $http.get(url).success(function(data){
+                deferred.resolve(data.result);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+        },
+        loadOrderSupplier:function(form){
+            var deferred=$q.defer();
+            var url=service+'order/supplier/get/';
+            $http.get(url).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+        }
+    
+    }
+    var instance=new PurchaseService();
+    return instance;
+}]);
+
+
+
+app.factory('UserService',['$http','$rootScope','$q','SERVICE_URI',function($http,$rootScope,$q,service){
+    function UserService(){
+    }
+    UserService.prototype={
+     constructor:UserService, 
+        loadCurrenctUser:function(){
+            var deferred=$q.defer();
+            var url=service+'user/current/id/';
+            $http.get(url).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+        }
+    
+    }
+    var instance=new UserService();
+    return instance;
+}]);
+
+
 app.factory('PaymentService',['$http','$rootScope','$q','SERVICE_URI',function($http,$rootScope,$q,service){
     
     function PaymentService(){
@@ -178,7 +250,7 @@ app.controller('OrderSupplyController',['$scope','filterFilter','ProductService'
 	$scope.orderId=1;
     $scope.date=convertDate(new Date().toLocaleDateString());
 	$scope.orders=[{kode_barang:null,nama_barang:'',harga:null,quantity:null}];
-    $scope.products=[{kode_barang:1,nama_barang:'Playstasion'},{kode_barang:2,nama_barang:'Playstation 2'}];
+    $scope.products=[];
     $scope.addOrder=function(){
         $scope.orders.push({kode_barang:'',nama_barang:'',harga:'',quantity:''}) ;
     };
@@ -333,6 +405,210 @@ app.controller('OrderSuppyDetailController',['$scope','filterFilter',function($s
 }]);
 
 
+
+
+
+app.controller('OrderPurchaseController',['$scope','filterFilter','ProductService','PurchaseService','UserService',function($scope,filterFilter,productService,purchaseService,userService){
+    
+    var convertDate = function(usDate) {
+      var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
+    };
+
+   
+    $scope.form={orderId:1,customer:'',sales:'',salesId:0,date:'',dp:0,discount:0,salesOrder:false,data:[]};
+    $scope.form.date=convertDate(new Date().toLocaleDateString());
+    $scope.orders=[{kode_barang:null,nama_barang:'',harga:null,quantity:null}];
+    $scope.products=[];
+    $scope.addOrder=function(){
+        $scope.orders.push({kode_barang:'',nama_barang:'',harga:'',quantity:''}) ;
+    };
+    
+    $scope.getGrandTotal=function(){
+        var total=0;
+        for(var i=0;i<$scope.orders.length;i++)
+         total+=$scope.orders[i].quantity*$scope.orders[i].harga;
+        return total;
+    };
+    
+    $scope.saveOrder=function(){
+        if($scope.form.customer==null||$scope.form.customer=='')
+        {
+            $scope.error='Nama Customer Harus di isi';
+            $('#modal-save-error').modal('show');
+            return;
+        }
+        else if($scope.form.date==null||$scope.form.date==''){
+            $scope.error='Tanggal Harus di isi';
+            $('#modal-save-error').modal('show');
+            return;
+        }
+        else if($scope.form.dp!=0){
+            $scope.error='Down Payment Harus di isi';
+            $('#modal-save-error').modal('show');
+            return;
+        }
+        else if($scope.form.discount!=0){
+            $scope.error='Discount Harus di isi';
+            $('#modal-save-error').modal('show');
+            return;
+        }
+        else if($scope.form.discount>$scope.getGrandTotal()){
+            $scope.error='Discount Tidak bisa lebih besar dari total';
+            $('#modal-save-error').modal('show');
+            return;
+        }
+        
+        else{
+        
+            
+            var data=$scope.orders;
+            for(var i=0;i<data.length;i++){
+                if(data[i].kode_barang==null||data[i].nama_barang==''||data[i].harga==''||data[i].quantity==''){
+                    $scope.error='Data Order Harus Lengkap';
+                    $('#modal-save-error').modal('show');
+                    return;
+                
+                }
+            }
+            $scope.error='';
+            $scope.form.data=data;
+
+            $('#modal-save').modal('show');
+        }
+    };
+
+    
+    $scope.submitOrder=function(){
+     
+        purchaseService.saveOrderPurchase($scope.form).then(function(data){
+            
+            if(data.isSuccess){
+               $('#modal-save').modal('hide');
+                window.location.href='/Penjualan/';
+            }
+            else{
+               for(var i=0;i<data.reason.length;i++){
+                 $scope.error=data.reason[i];
+                }
+                if(data.products){
+                    data.products.forEach(function(current,index){
+                        $scope.orders[index].error='Barang tidak mencukupi';
+                    });
+                }
+            }
+        },function(){
+            
+            
+        });
+    };
+    
+    $scope.enableProduct=function(kdbarang){
+        for(var i=0;i<$scope.products.length;i++){
+                if($scope.products[i].kode_barang==kdbarang){
+                    $scope.products[i].isSelected=false;
+                    break;
+                }
+            }
+    };
+
+    $scope.disableProduct=function(kdbarang){
+        for(var i=0;i<$scope.products.length;i++){
+                if($scope.products[i].kode_barang==kdbarang){
+                    $scope.products[i].isSelected=true;
+                    break;
+                }
+            }
+    }
+
+    $scope.cancelOrder=function(){
+        
+        for(var i=0;i<$scope.orders.length;i++){
+             $scope.orders[i].error='';
+        }
+        $('#modal-save').modal('hide');
+    };
+    
+    (function(){
+        
+                
+        purchaseService.loadOrderId().then(function(data){
+            $scope.form.orderId=data;
+        },function(){});
+        
+        productService.loadProductsforAutoComplete().then(function(data){
+            $scope.products=data;
+            for(var i=0;i<$scope.products.length;i++){
+                $scope.products[i].isSelected=false;
+            }
+             
+        },function(){});
+
+        userService.loadCurrenctUser().then(function(data){
+            if(data.result){
+                $scope.form.sales=data.result.name;
+                $scope.form.salesId=data.result.userid;
+                   
+            }
+        });
+        
+    })();
+    
+    
+}]);
+
+
+app.controller('OrderPurchaseDetailController',['$scope','filterFilter',function($scope,filterFilter){
+    
+
+
+    $scope.searchProduct=function(){
+        if($scope.order.nama_barang=='')
+        {
+           $scope.filteredProducts=[];
+           return;
+        }
+        
+        $scope.filteredProducts=filterFilter($scope.$parent.products,{'nama_barang':$scope.order.nama_barang,'isSelected':false});
+       
+       
+    }
+    
+    $scope.reset=function(){
+        $scope.$parent.enableProduct($scope.order.kode_barang);
+        $scope.order.nama_barang='';
+        $scope.order.kode_barang=null;
+        $scope.order.isDisabled=false;
+
+    };
+    
+     $scope.onClickAutoComplete=function(product){
+        
+        $scope.$parent.disableProduct(product.kode_barang);
+        $scope.order.kode_barang=product.kode_barang;
+         if($scope.order.kode_barang!=0)
+        $scope.order.nama_barang=product.nama_barang;
+        $scope.order.harga=product.harga;
+        $scope.filteredProducts=[];
+        $scope.order.isDisabled=true;
+    };
+    
+    $scope.remove=function(){
+        $scope.$parent.enableProduct($scope.order.kode_barang);
+        $scope.$parent.orders.splice($scope.$index,1) ;
+        $scope.order.isDisabled=false;
+        if($scope.$parent.orders.length==0)
+            $scope.$parent.orders.push({kode_barang:'',nama_barang:'',harga:'',quantity:''}) ;
+    };
+    
+    $scope.isErrorQuantity=function(){
+        if($scope.order.error==null||$scope.order.error=='')
+            return false;
+        else
+            return true;
+    };
+    
+}]);
 
 
 app.controller('ProductRecapitulationController',['$scope','filterFilter','ProductService',function($scope,filterFilter,productService){
