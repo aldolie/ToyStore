@@ -8,7 +8,7 @@ class Product extends Model {
     
     public static function getProductsName()
 	{
-		$products = DB::table('product')->select('id as kode_barang','productname as nama_barang','price as harga')->get();
+		$products = DB::table('product')->select('id as kode_barang','productname as nama_barang','price as harga','quantity')->get();
         return $products;
 	}
     

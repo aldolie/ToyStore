@@ -159,9 +159,20 @@ class AdminController extends Controller {
         return (['status' => 200, 'result' => $id]);
     }
 
+    public function getPurchaseById(Request $request){
+        $id=$request->input('id');
+        $purchase=PurchaseHeader::getPurchaseById($id);
+        return (['status'=>200,'result'=>$purchase]);
+    }
+
     public function getOrders(){
         $orders=OrderHeader::getOrders();
         return (['status'=>200,'result'=>$orders]);
+    }
+
+    public function getPurchases(){
+        $purchases=PurchaseHeader::getPurchase();
+        return (['status'=>200,'result'=>$purchases]);
     }
     
     public function saveOrderSupplier(Request $request){

@@ -150,10 +150,21 @@ app.factory('PurchaseService',['$http','$rootScope','$q','SERVICE_URI',function(
             });
             return deferred.promise;
         },
-        loadOrderSupplier:function(form){
+        loadOrderPurchase:function(){
             var deferred=$q.defer();
-            var url=service+'order/supplier/get/';
+            var url=service+'order/purchase/get/';
             $http.get(url).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+        },
+        loadOrderPurchaseById:function(id){
+            var deferred=$q.defer();
+            var url=service+'order/purchase/getId/';
+            $http.post(url,{
+                'id':id
+            }).success(function(data){
                 deferred.resolve(data);
                 $rootScope.$phase;
             });
@@ -418,10 +429,10 @@ app.controller('OrderPurchaseController',['$scope','filterFilter','ProductServic
    
     $scope.form={orderId:1,customer:'',sales:'',salesId:0,date:'',dp:0,discount:0,salesOrder:false,data:[]};
     $scope.form.date=convertDate(new Date().toLocaleDateString());
-    $scope.orders=[{kode_barang:null,nama_barang:'',harga:null,quantity:null}];
+    $scope.orders=[{kode_barang:null,nama_barang:'',harga:null,quantity:null,limit:-1}];
     $scope.products=[];
     $scope.addOrder=function(){
-        $scope.orders.push({kode_barang:'',nama_barang:'',harga:'',quantity:''}) ;
+        $scope.orders.push({kode_barang:'',nama_barang:'',harga:'',quantity:'',limit:-1}) ;
     };
     
     $scope.getGrandTotal=function(){
@@ -443,12 +454,12 @@ app.controller('OrderPurchaseController',['$scope','filterFilter','ProductServic
             $('#modal-save-error').modal('show');
             return;
         }
-        else if($scope.form.dp!=0){
+        else if($scope.form.dp!=0&&!$scope.form.isDp){
             $scope.error='Down Payment Harus di isi';
             $('#modal-save-error').modal('show');
             return;
         }
-        else if($scope.form.discount!=0){
+        else if($scope.form.discount!=0&&!$scope.form.isDiscount){
             $scope.error='Discount Harus di isi';
             $('#modal-save-error').modal('show');
             return;
@@ -468,7 +479,16 @@ app.controller('OrderPurchaseController',['$scope','filterFilter','ProductServic
                     $scope.error='Data Order Harus Lengkap';
                     $('#modal-save-error').modal('show');
                     return;
-                
+                }
+                else if(data[i].limit<data[i].quantity){
+                    $scope.error='Stock tidak mencukupi';
+                    $('#modal-save-error').modal('show');
+                    return;
+                }
+                else if(data[i].quantity<1){
+                    $scope.error='Quantity minimal 1';
+                    $('#modal-save-error').modal('show');
+                    return;
                 }
             }
             $scope.error='';
@@ -560,7 +580,7 @@ app.controller('OrderPurchaseController',['$scope','filterFilter','ProductServic
 
 app.controller('OrderPurchaseDetailController',['$scope','filterFilter',function($scope,filterFilter){
     
-
+    $scope.styleQuantity='red';
 
     $scope.searchProduct=function(){
         if($scope.order.nama_barang=='')
@@ -579,9 +599,38 @@ app.controller('OrderPurchaseDetailController',['$scope','filterFilter',function
         $scope.order.nama_barang='';
         $scope.order.kode_barang=null;
         $scope.order.isDisabled=false;
+        $scope.order.quantity='';
+        $scope.order.limit=-1;
 
     };
+
+    $scope.isAvalableStock=function(){
+        if($scope.order.limit==-1)
+            return false;
+        return true;
+    };
+
+    $scope.validateQuantity=function(before){
+     
+        if($scope.order.quantity==''||$scope.order.limit==-1){
+            return;
+        }
+        else if($scope.order.quantity<1)
+            $scope.order.quantity= before;
+        else if($scope.order.limit<$scope.order.quantity)
+           $scope.order.quantity= before;
+        if(typeof $scope.order.quantity==='undefined')
+            $scope.order.quantity='';
+        
+    };
     
+    $scope.isAlreadyChoosed=function(){
+        if($scope.order.kode_barang==null)
+            return true;
+        else 
+            return false;
+    }
+
      $scope.onClickAutoComplete=function(product){
         
         $scope.$parent.disableProduct(product.kode_barang);
@@ -589,6 +638,7 @@ app.controller('OrderPurchaseDetailController',['$scope','filterFilter',function
          if($scope.order.kode_barang!=0)
         $scope.order.nama_barang=product.nama_barang;
         $scope.order.harga=product.harga;
+        $scope.order.limit=product.quantity;
         $scope.filteredProducts=[];
         $scope.order.isDisabled=true;
     };
@@ -684,6 +734,39 @@ app.controller('OrderRecapitulationController',['$scope','OrderService','filterF
 }]);
 
 app.controller('OrderRecapitulationDetailController',['$scope',function($scope){
+
+}]);
+
+
+
+app.controller('OrderPurchaseRecapitulationController',['$scope','PurchaseService','filterFilter','orderByFilter',function($scope,purchaseService,filterFilter,orderByFilter){
+
+    $scope.orders=[];
+    $scope.filteredOrders=[];
+    $scope.filterOrder=function(){
+        $scope.filteredOrders=filterFilter($scope.orders,{'customer':$scope.search});
+        $scope.filteredOrders=orderByFilter($scope.filteredOrders,'tanggal_transaksi',$scope.isReverse);
+    };
+    $scope.orderAsc=function(){
+        $scope.isReverse=true;
+        $scope.filteredOrders=orderByFilter($scope.filteredOrders,'tanggal_transaksi',$scope.isReverse);
+    };
+    $scope.orderDesc=function(){
+        $scope.isReverse=false;
+        $scope.filteredOrders=orderByFilter($scope.filteredOrders,'tanggal_transaksi',$scope.isReverse);
+    };
+
+    (function(){
+        purchaseService.loadOrderPurchase().then(function(data){
+            $scope.orders=data.result;
+            $scope.filteredOrders=filterFilter($scope.orders,{'customer':$scope.search});
+            $scope.filteredOrders=orderByFilter($scope.filteredOrders,'tanggal_transaksi',$scope.isReverse);
+        },function(){});
+    })();
+
+}]);
+
+app.controller('OrderPurchaseRecapitulationDetailController',['$scope',function($scope){
 
 }]);
 
@@ -807,4 +890,43 @@ app.controller('PaymentDetailController',['$scope','PaymentService',function($sc
 
    
 
+}]);
+
+app.controller('SendDocumentController',['$scope','PurchaseService',function($scope,purchaseService){
+    $scope.search='';
+    $scope.form={
+        id:0
+    };
+    $scope.orders=[];
+    
+
+    $scope.searchTransaction=function(){
+        purchaseService.loadOrderPurchaseById($scope.search).then(function(data){
+            $scope.orders=data.result;
+        },function(){});
+    };
+
+    $scope.saveSuratJalan=function(){
+       // $scope.form.data=data;
+            $('#modal-save').modal('show');
+    };
+
+    $scope.cancelSuratJalan=function(){
+        $('#modal-save').modal('hide');
+    };
+
+}]);
+
+
+app.controller('SendDocumentDetailController',['$scope','PurchaseService',function($scope,purchaseService){
+    $scope.validateQuantity=function(before){
+        if($scope.order.quantity=='')
+            return;
+        if($scope.order.quantity>$scope.order.remaining)
+            $scope.order.quantity=before;
+    }
+
+    $scope.remove=function(){
+        $scope.$parent.orders.splice($scope.$index,1) ;
+    }
 }]);

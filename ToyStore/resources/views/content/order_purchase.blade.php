@@ -87,7 +87,9 @@
                                <span class="glyphicon glyphicon-remove" ng-click="remove()" style="cursor:pointer;"  aria-hidden="true" ></span>
                              </td>
                             <td>
-                                <input do-numeric  class="form-none small-input" type="text" ng-model="order.quantity" /></td>
+                                <input do-numeric  class="form-none small-input" type="text" ng-model="order.quantity"  ng-change="validateQuantity([[order.quantity]])" ng-disabled="isAlreadyChoosed()" />
+                                <span ng-show="isAvalableStock()"><code>Stock: [[order.limit]] </code></span>
+                            </td>
                             <td>
                                 <div class="container-auto-complete">
                                     

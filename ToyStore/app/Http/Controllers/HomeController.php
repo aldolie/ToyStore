@@ -64,6 +64,15 @@ class HomeController extends Controller {
 		return view('content/order_purchase');
 	}
 
+	public function order_purchase_report(){
+		return view('content/order_purchase_recapitulation');
+	}
+
+	public function send_document(){
+		return view('content/send_document');
+	}
+
+	
 	public function doSignin(Request $request){
 		
 	}

@@ -75,7 +75,7 @@
                     <a href="{{ url('/Penjualan/') }}"><span class="glyphicon glyphicon-export" style="margin-right:10px;" aria-hidden="true"></span>Penjualan</a>
                 </li>
                <li>
-                    <a href="{{ url('/') }}"><span class="glyphicon glyphicon-envelope" style="margin-right:10px;" aria-hidden="true"></span>Surat Jalan</a>
+                    <a href="{{ url('/Surat/Jalan/') }}"><span class="glyphicon glyphicon-envelope" style="margin-right:10px;" aria-hidden="true"></span>Surat Jalan</a>
                 </li>
                    <li>
                     <a href="{{ url('/Product/') }}"><span class="glyphicon glyphicon-folder-close" style="margin-right:10px;" aria-hidden="true"></span>Stock Barang</a>
@@ -85,10 +85,10 @@
                 </li>
              
 				 <li>
-                    <a href="{{ url('/Pembelian/Report') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pembelian</a>
+                    <a href="{{ url('/Pembelian/Report/') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pembelian</a>
                 </li>
                    <li>
-                    <a href="{{ url('/') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Penjualan</a>
+                    <a href="{{ url('/Penjualan/Report/') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Penjualan</a>
                 </li>
                 
 				<li>
