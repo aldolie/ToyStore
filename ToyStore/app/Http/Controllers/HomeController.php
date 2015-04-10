@@ -72,6 +72,10 @@ class HomeController extends Controller {
 		return view('content/send_document');
 	}
 
+	public function send_document_report(){
+		return view('content/sending_recapitulation');
+	}
+
 	
 	public function doSignin(Request $request){
 		

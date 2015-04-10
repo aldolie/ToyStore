@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 09, 2015 at 11:12 AM
+-- Generation Time: Apr 10, 2015 at 10:36 AM
 -- Server version: 5.6.11
 -- PHP Version: 5.5.1
 
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `order_purchase` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `order_purchase`
@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS `order_purchase` (
 
 INSERT INTO `order_purchase` (`id`, `purchaseid`, `productid`, `quantity`, `price`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
 (1, 1, 3, 2, 2990000, 1, NULL, '2015-04-09 04:12:08', NULL),
-(2, 1, 1, 4, 2000000, 1, NULL, '2015-04-09 04:12:08', NULL);
+(2, 1, 1, 4, 2000000, 1, NULL, '2015-04-09 04:12:08', NULL),
+(3, 2, 1, 3, 2000000, 1, NULL, '2015-04-10 06:40:43', NULL);
 
 -- --------------------------------------------------------
 
@@ -67,14 +68,15 @@ CREATE TABLE IF NOT EXISTS `order_purchase_header` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `order_purchase_header`
 --
 
 INSERT INTO `order_purchase_header` (`id`, `transactiondate`, `customer`, `is_sales_order`, `dp`, `discount`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, '2015-04-09', 'Kenrick', 1, 1000000, 50000, 1, NULL, '2015-04-09 04:12:08', NULL);
+(1, '2015-04-09', 'Kenrick', 1, 1000000, 50000, 1, NULL, '2015-04-09 04:12:08', NULL),
+(2, '2015-04-10', 'Febrian', 0, 0, 0, 1, NULL, '2015-04-10 06:40:43', NULL);
 
 -- --------------------------------------------------------
 
@@ -181,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `product` (
 --
 
 INSERT INTO `product` (`id`, `productname`, `quantity`, `price`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
-(1, 'Playstation', 6, 2000000, '2015-04-09 04:09:27', NULL, 1, NULL),
+(1, 'Playstation', 3, 2000000, '2015-04-09 04:09:27', NULL, 1, NULL),
 (2, 'Kinect For XBox 360', 20, 0, '2015-04-09 04:09:27', NULL, 1, NULL),
 (3, 'PS Vita', 29, 2990000, '2015-04-09 04:09:27', NULL, 1, NULL);
 
@@ -201,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `sending` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `sending`
@@ -210,7 +212,10 @@ CREATE TABLE IF NOT EXISTS `sending` (
 INSERT INTO `sending` (`id`, `sendingid`, `productid`, `quantity`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 2, 1, NULL, '2015-04-09 06:59:45', NULL),
 (2, 2, 1, 1, 1, NULL, '2015-04-09 07:23:08', NULL),
-(3, 2, 3, 1, 1, NULL, '2015-04-09 07:23:08', NULL);
+(3, 2, 3, 1, 1, NULL, '2015-04-09 07:23:08', NULL),
+(4, 3, 1, 1, 1, NULL, '2015-04-10 06:38:19', NULL),
+(5, 3, 3, 1, 1, NULL, '2015-04-10 06:38:19', NULL),
+(6, 4, 1, 2, 1, NULL, '2015-04-10 06:41:43', NULL);
 
 -- --------------------------------------------------------
 
@@ -224,20 +229,24 @@ CREATE TABLE IF NOT EXISTS `sending_header` (
   `destination` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
   `transactiondate` date NOT NULL,
+  `tracking_number` varchar(255) DEFAULT NULL,
+  `ongkos_kirim` double DEFAULT NULL,
   `created_by` int(11) NOT NULL,
   `updated_by` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `sending_header`
 --
 
-INSERT INTO `sending_header` (`id`, `purchaseid`, `destination`, `address`, `transactiondate`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Kenrick', 'Jalan Kemanggisan Raya No 96', '2015-04-10', 1, NULL, '2015-04-09 06:58:08', NULL),
-(2, 1, 'Kenrick', 'Jalan Kemanggisan Raya No 96', '2015-04-10', 1, NULL, '2015-04-09 07:22:39', NULL);
+INSERT INTO `sending_header` (`id`, `purchaseid`, `destination`, `address`, `transactiondate`, `tracking_number`, `ongkos_kirim`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Kenrick', 'Jalan Kemanggisan Raya No 96', '2015-04-10', NULL, NULL, 1, NULL, '2015-04-09 06:58:08', NULL),
+(2, 1, 'Kenrick', 'Jalan Kemanggisan Raya No 96', '2015-04-10', NULL, NULL, 1, NULL, '2015-04-09 07:22:39', NULL),
+(3, 1, 'Kenrick', 'Jl Gedong Panjang No 96', '2015-04-10', NULL, NULL, 1, NULL, '2015-04-10 06:38:19', NULL),
+(4, 2, 'Febrian', 'Jl Kemanggisan', '2015-04-10', NULL, NULL, 1, NULL, '2015-04-10 06:41:43', NULL);
 
 -- --------------------------------------------------------
 

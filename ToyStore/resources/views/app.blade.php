@@ -92,7 +92,7 @@
                 </li>
                 
 				<li>
-                    <a href="{{ url('/') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pengiriman</a>
+                    <a href="{{ url('/Surat/Jalan/Report/') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pengiriman</a>
                 </li>
                
             </ul>

@@ -24,14 +24,35 @@
 
                     <div class="col-md-5 col-sm-offset-2">
                         <div>
-                            <span class="label-form">Kepada</span>
+                            <span class="label-form">Tanggal</span>
                             <span class="label-form-delimiter">:</span>
-                            <span><input class="form-none" type="text" ng-model="to" /></span>
+                            <span>
+                                <input class="form-none" type="text" id="datepicker" ng-model="date"/>
+                                <script>
+                                (function(){
+                                    var d = new Date();
+                                    $('#datepicker').datepicker({
+                                            changeMonth: true,
+                                            changeYear: true,
+                                            defaultDate: d,
+                                            yearRange: '1970:2030',
+                                            dateFormat: 'yy-mm-dd'
+                                    });
+
+                                })();
+                                </script>
+                            </span>
+                        </div>
+
+                        <div>
+                            <span class="label-form">Mata Uang</span>
+                            <span class="label-form-delimiter">:</span>
+                            <span><input class="form-none" type="numeric" ng-model="currency" /></span>
                         </div>
                         <div>
-                            <span class="label-form">Alamat</span>
+                            <span class="label-form">Dikirim oleh</span>
                             <span class="label-form-delimiter">:</span>
-                            <span><input class="form-none" type="text" ng-model="address" /></span>
+                            <span><input class="form-none" type="numeric" ng-model="shipper" /></span>
                         </div>
                     </div>
                 </div>

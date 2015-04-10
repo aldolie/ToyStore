@@ -169,6 +169,29 @@ app.factory('PurchaseService',['$http','$rootScope','$q','SERVICE_URI',function(
                 $rootScope.$phase;
             });
             return deferred.promise;
+        },
+        loadSuratJalan:function(){
+            var deferred=$q.defer();
+            var url=service+'surat/jalan/get/';
+            $http.get(url).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+        },
+        saveSuratJalan:function(form){
+            var deferred=$q.defer();
+            var url=service+'surat/jalan/save/';
+            $http.post(url,{
+                'id':form.purchaseId,
+                'to':form.to,
+                'address':form.address,
+                'data':form.data
+            }).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
         }
     
     }
@@ -333,12 +356,12 @@ app.controller('OrderSupplyController',['$scope','filterFilter','ProductService'
                 window.location.href='/Pembelian/';
             }
             else{
-              $scope.error='<ul>';
+              $scope.error='';
               for(var i=0;i<data.reason.length;i++){
-                 $scope.error+='<li>'+data.reason[i]+'</li>';
+                 $scope.error+=''+data.reason[i]+'';
                  
               }
-              $scope.error+='</ul>';
+              $scope.error+='';
             }
 		},function(){
             
@@ -739,6 +762,38 @@ app.controller('OrderRecapitulationDetailController',['$scope',function($scope){
 
 
 
+app.controller('DocumentRecapitulationController',['$scope','PurchaseService','filterFilter','orderByFilter',function($scope,purchaseService,filterFilter,orderByFilter){
+
+    $scope.documents=[];
+    $scope.filteredDocuments=[];
+    $scope.filterOrder=function(){
+        $scope.filteredDocuments=filterFilter($scope.documents,{'id':$scope.search});
+        $scope.filteredDocuments=orderByFilter($scope.filteredDocuments,'transactiondate',$scope.isReverse);
+    };
+    $scope.orderAsc=function(){
+        $scope.isReverse=true;
+        $scope.filteredDocuments=orderByFilter($scope.filteredDocuments,'transactiondate',$scope.isReverse);
+    };
+    $scope.orderDesc=function(){
+        $scope.isReverse=false;
+        $scope.filteredDocuments=orderByFilter($scope.filteredDocuments,'transactiondate',$scope.isReverse);
+    };
+
+    (function(){
+        purchaseService.loadSuratJalan().then(function(data){
+            $scope.documents=data.result;
+            $scope.filteredDocuments=filterFilter($scope.documents,{'id':$scope.search});
+            $scope.filteredDocuments=orderByFilter($scope.filteredDocuments,'transactiondate',$scope.isReverse);
+        },function(){});
+    })();
+
+}]);
+
+app.controller('DocumentRecapitulationDetailController',['$scope',function($scope){
+
+}]);
+
+
 app.controller('OrderPurchaseRecapitulationController',['$scope','PurchaseService','filterFilter','orderByFilter',function($scope,purchaseService,filterFilter,orderByFilter){
 
     $scope.orders=[];
@@ -895,25 +950,94 @@ app.controller('PaymentDetailController',['$scope','PaymentService',function($sc
 app.controller('SendDocumentController',['$scope','PurchaseService',function($scope,purchaseService){
     $scope.search='';
     $scope.form={
-        id:0
+        id:0,
+        purchaseId:-1,
+        to:'',
+        address:''
     };
     $scope.orders=[];
-    
+    $scope.lock=false;
 
     $scope.searchTransaction=function(){
         purchaseService.loadOrderPurchaseById($scope.search).then(function(data){
-            $scope.orders=data.result;
+            if(!data.result)
+            {
+                $scope.lock=false;
+            }
+            else if(data.result.length==0){
+                $scope.lock=false;
+            }
+            else{
+                $scope.orders=data.result;
+                $scope.lock=true;
+                $scope.form.purchaseId=$scope.search;
+            }
         },function(){});
     };
 
     $scope.saveSuratJalan=function(){
-       // $scope.form.data=data;
-            $('#modal-save').modal('show');
+            if($scope.form.to==''){
+                $scope.error='Tujuan harus diisi';
+                $("#modal-save-error").modal("show");
+                return;
+            }
+            else if($scope.form.address=='')
+            {
+                $scope.error='Alamat tujuan harus diisi';
+                $("#modal-save-error").modal("show");
+                return;
+            }
+            else{
+
+                for(var i=0;i<$scope.orders.length;i++){
+                    if(typeof $scope.orders[i].quantity ==='undefined')
+                    {
+                        $scope.error='Quantity harus diisi';
+                        $("#modal-save-error").modal("show");
+                        return;
+                    }
+                    else if($scope.orders[i].quantity>$scope.orders[i].remaining)
+                    {
+
+                        $scope.error='Quantity melebihi batasan pesanan';
+                        $("#modal-save-error").modal("show");
+                        return;
+                    }
+                }
+
+                $scope.error='';
+                $scope.form.data=$scope.orders;
+                $('#modal-save').modal('show');
+            }
     };
 
     $scope.cancelSuratJalan=function(){
         $('#modal-save').modal('hide');
     };
+
+    $scope.isLock=function(){
+        return $scope.lock;
+    };
+
+    $scope.submitSuratJalan=function(){
+        purchaseService.saveSuratJalan($scope.form).then(function(data){
+            console.log(data);
+            if(data.isSuccess){
+               $('#modal-save').modal('hide');
+                window.location.href='/Surat/Jalan/';
+            }
+            else{
+              $scope.error='';
+              for(var i=0;i<data.reason.length;i++){
+                 $scope.error+=''+data.reason[i]+'';
+                 
+              }
+              $scope.error+='';
+            }
+        },function(){
+
+        });
+    }
 
 }]);
 

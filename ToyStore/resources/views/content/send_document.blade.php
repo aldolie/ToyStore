@@ -12,19 +12,19 @@
                             <span class="label-form">No Invoice Penjualan</span>
                             <span class="label-form-delimiter">:</span>
                             <span>
-                                <input do-numeric type="text" class="form-none small" ng-model="search" />
-                                <span class="glyphicon glyphicon-search" style="margin-right:10px;cursor:pointer;" ng-click="searchTransaction()" aria-hidden="true"></span>
+                                <input do-numeric type="text" class="form-none small" ng-model="search" ng-disabled="isLock()" />
+                                <span class="glyphicon glyphicon-search" ng-hide="isLock()" style="margin-right:10px;cursor:pointer;" ng-click="searchTransaction()" aria-hidden="true"></span>
                             </span>
                         </div>
 
-                        <div>
+                        <div ng-show="isLock()">
                             <span class="label-form">No Surat Jalan</span>
                             <span class="label-form-delimiter">:</span>
                             <span>[[form.id]]</span>
                         </div>
                     </div>
 
-                    <div class="col-md-5 col-sm-offset-2">
+                    <div class="col-md-5 col-sm-offset-2" ng-show="isLock()">
                         <div>
                             <span class="label-form">Kepada</span>
                             <span class="label-form-delimiter">:</span>
@@ -38,7 +38,7 @@
                         
                     </div>
                 </div>
-                <table class="table table-condensed">
+                <table class="table table-condensed" ng-show="isLock()">
                    <thead>
                        <tr>
                         <th>#</th>
@@ -65,7 +65,7 @@
                 
     
             </div>
-            <div style="margin-top:20px;padding:10px;clear:both;">
+            <div style="margin-top:20px;padding:10px;clear:both;" ng-show="isLock()">
                 <button class="btn btn-warning" ng-click="saveSuratJalan()"><span class="glyphicon glyphicon-floppy-save" style="margin-right:10px;" aria-hidden="true" ></span>Simpan Surat Jalan</button>
             </div>
 <!-- Error Dialog -->
@@ -162,10 +162,10 @@
                 </div>
                 <div style="margin-top:30px;clear:both;padding-top:20px;">
                      <button class="btn btn-primary" ng-click="submitSuratJalan()">
-                             <span class="glyphicon glyphicon-floppy-save" style="margin-right:10px;" aria-hidden="true" ></span>Simpan Penjualan
+                             <span class="glyphicon glyphicon-floppy-save" style="margin-right:10px;" aria-hidden="true" ></span>Simpan Surat Jalan
                     </button>
                     <button class="btn btn-danger" ng-click="cancelSuratJalan()">
-                            <span class="glyphicon glyphicon-remove" style="margin-right:10px;" aria-hidden="true" ></span>Cancel Penjualan
+                            <span class="glyphicon glyphicon-remove" style="margin-right:10px;" aria-hidden="true" ></span>Cancel Surat Jalan
                     </button>
                 </div>
 

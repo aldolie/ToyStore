@@ -5,6 +5,7 @@ use App\Models\Product;
 use App\Models\OrderHeader;
 use App\Models\Payment;
 use App\Models\User;
+use App\Models\SendDocument;
 use App\Models\PurchaseHeader;
 use Illuminate\Http\Request as Request;
 use Illuminate\Support\Facades\Validator;
@@ -98,6 +99,11 @@ class AdminController extends Controller {
         return (['status' => 200, 'result' =>$payments]);
     }
 
+    public function getSuratJalan(){
+        $documents=SendDocument::getHeaders();
+        return (['status'=>200,'result'=>$documents]);
+    }
+
 
     public function doPayment(Request $request){
           $v = Validator::make($request->all(), [
@@ -175,6 +181,47 @@ class AdminController extends Controller {
         return (['status'=>200,'result'=>$purchases]);
     }
     
+    public function saveSuratJalan(Request $request){
+        $v = Validator::make($request->all(), [
+            'id' => 'required',
+            'to' => 'required|max:50',
+            'address'=>'required|max:255'
+        ],[
+            'id.required'=>'Id harus ditentukan',
+            'to.required'=>'Tujuan harus diisi',
+            'address.required'=>'Alamat tujuan harus disi'
+        ]);
+       
+       if ($v->fails())
+       {
+           return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>$v->messages()->all()]);
+       }
+       else{
+
+
+            $id=$request->input('id');
+            $to=$request->input('to');
+            $address=$request->input('address');
+            $data=$request->input('data');
+            $date=date("Y-m-d");
+            $result = SendDocument::insertSendingDocument(1,$to,$address,$date,$data,$id);
+            if($result['status']==false){
+                if($result['error_code']==-2){
+                    return (['status'=>200,'isSuccess'=>false,'reason'=>['0'=>$result['reason']]]);
+                }
+                else if($result['error_code']==-1)
+                {
+                    return (['status'=>200,'isSuccess'=>false,'reason'=>['0'=>'Barang Tidak Mencukupi'],'products'=>$result['products']]);
+                }
+            }
+            
+            else{
+                return (['status'=>200,'isSuccess'=>true,'reason'=>[]]);
+            }
+            
+       }
+    }
+
     public function saveOrderSupplier(Request $request){
         
        $v = Validator::make($request->all(), [

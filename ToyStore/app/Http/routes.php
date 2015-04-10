@@ -27,6 +27,7 @@ Route::get('/Product/','HomeController@product_recapitulation');
 Route::get('/signin/','HomeController@signin');
 Route::get('/Penjualan/Report/','HomeController@order_purchase_report');
 Route::get('/Surat/Jalan/','HomeController@send_document');
+Route::get('/Surat/Jalan/Report','HomeController@send_document_report');
 Route::post('/signin/action','HomeController@doSignin');
 
 
@@ -49,7 +50,9 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     Route::get('/order/purchase/get/',['uses'=>'Service\AdminController@getPurchases']);
     Route::get('/user/current/id/',['uses'=>'Service\AdminController@getCurrentUser']);
     Route::post('/order/purchase/getId/',['uses'=>'Service\AdminController@getPurchaseById']);
-    
+    Route::post('/surat/jalan/save/',['uses'=>'Service\AdminController@saveSuratJalan']);
+    Route::get('/surat/jalan/get/',['uses'=>'Service\AdminController@getSuratJalan']);
+   
 });
 
 Route::group(['prefix'=>'api','after'=>'allowOrigin'],function(){
