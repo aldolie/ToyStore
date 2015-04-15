@@ -29,41 +29,35 @@
 		<div class="col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
 				<div class="panel-heading">Login</div>
-				<div class="panel-body">
+				<div class="panel-body" ng-controller="AuthenticateController">
 				
 
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/auth/login') }}">
-						<input type="hidden" name="_token" value="{{ csrf_token() }}">
+					<form class="form-horizontal"  ng-submit="authenticateUser()">
+						
 
 						<div class="form-group">
-							<label class="col-md-4 control-label">E-Mail Address</label>
+							<label class="col-md-4 control-label">Username</label>
 							<div class="col-md-6">
-								<input type="email" class="form-control" name="email" value="{{ old('email') }}">
+								<input type="text" class="form-control" name="username" ng-model="form.username">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">Password</label>
 							<div class="col-md-6">
-								<input type="password" class="form-control" name="password">
+								<input type="password" class="form-control" name="password" ng-model="form.password">
 							</div>
 						</div>
 
 						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" name="remember"> Remember Me
-									</label>
-								</div>
+							<div class="col-md-6 col-md-offset-4 alert-danger" ng-show="isError()" style="padding:10px;">
+								<div ng-repeat="error in errors">[[error]]</div>
 							</div>
 						</div>
 
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">Login</button>
-
-								<a class="btn btn-link" href="{{ url('/password/email') }}">Forgot Your Password?</a>
 							</div>
 						</div>
 					</form>
@@ -73,6 +67,9 @@
 	</div>
 </div>
 	<script src="{{ asset('/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('/js/angular.min.js') }}"></script>
+    <script src="{{ asset('/js/angular-cookies.min.js') }}"></script>
+    <script src="{{ asset('/js/authenticate.js') }}"></script>
     
 </body>
 </html>

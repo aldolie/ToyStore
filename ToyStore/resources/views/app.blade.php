@@ -112,9 +112,9 @@
    
 	<script src="{{ asset('/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('/js/angular.min.js') }}"></script>
+    <script src="{{ asset('/js/angular-cookies.min.js') }}"></script>
     <script>
-        var app=angular.module('app',[]);
-        app.constant("CSRF_TOKEN", "{!! csrf_token() !!}");
+        var app=angular.module('app',['ngCookies']);
         app.constant("ROP",10);
         app.constant("SERVICE_URI","http://localhost:8000/apiv1/");
     </script>

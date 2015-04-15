@@ -6,6 +6,7 @@ use App\Models\OrderHeader;
 use App\Models\Payment;
 use App\Models\User;
 use App\Models\SendDocument;
+use App\Models\Session;
 use App\Models\PurchaseHeader;
 use Illuminate\Http\Request as Request;
 use Illuminate\Support\Facades\Validator;
@@ -65,14 +66,35 @@ class AdminController extends Controller {
              $password=$request->input('p');
              $user=User::requestAuthentication($username,$password);
                 if($user){
-                  //  return dd($request);
                     $token=Hash::make($username.'|'.$password.'|'.$request->ip().'|'.str_random(60).'|'.date_format(date_create(), 'U'));
+                    Session::setSession($user->id,$token);
                     return (['status'=>200,'isSuccess'=>true,'result'=>$token,'reason'=>[]]);
                 }
                 else
                 {
                     return (['status'=>200,'isSuccess'=>false,'result'=>$user,'reason'=>['0'=>'Username dan Password tidak cocok']]);
                 }
+        }
+    }
+
+    public function authenticateUserCheck(Request $request){
+        $v = Validator::make($request->all(), [
+        'payload' => 'required'
+        ],[
+            'payload.required'=>'Payload Required'
+        ]);
+
+        if ($v->fails())
+        {
+           return (['status'=>200,'isSuccess'=>false]);
+        }
+        else{
+             $payload=$request->input('payload');
+             $session=Session::getSession($payload);
+             if($session)
+                return (['status'=>200,'isSuccess'=>true]);
+            else
+                return (['status'=>200,'isSuccess'=>false]);
         }
     }
 

@@ -39,10 +39,10 @@ app.directive('doDecimal', function() {
   }; 
 });
 
-app.factory('ProductService',['$http','$rootScope','$q','SERVICE_URI',function($http,$rootScope,$q,service){
+app.factory('ProductService',['$http','$rootScope','$q','$cookies','$cookieStore','SERVICE_URI',function($http,$rootScope,$q,$cookies,$cookieStore,service){
 	
 	function ProductService(){
-		
+        $http.defaults.headers.get = { 'X-APP-TOKEN' : $cookieStore.get('authenticateApp')['token'] };
 	}
 	
 	ProductService.prototype={
@@ -50,6 +50,7 @@ app.factory('ProductService',['$http','$rootScope','$q','SERVICE_URI',function($
 		loadProductsforAutoComplete:function(){
 			var deferred=$q.defer();
 			var url=service+'product/auto/';
+            console.log($cookieStore.get('authenticateApp')['token']);
 			$http.get(url).success(function(data){
 				deferred.resolve(data.result);
 				$rootScope.$phase;
@@ -963,9 +964,13 @@ app.controller('SendDocumentController',['$scope','PurchaseService',function($sc
             if(!data.result)
             {
                 $scope.lock=false;
+                 $scope.error='Penjualan yang aktif tidak ditemukan';
+                $("#modal-save-error").modal("show");
             }
             else if(data.result.length==0){
                 $scope.lock=false;
+                 $scope.error='Penjualan yang aktif tidak ditemukan';
+                $("#modal-save-error").modal("show");
             }
             else{
                 $scope.orders=data.result;
@@ -989,11 +994,17 @@ app.controller('SendDocumentController',['$scope','PurchaseService',function($sc
             }
             else{
 
+                if($scope.orders.length==0)
+                {
+
+                    $scope.error='Tidak Ada Barang yang di pilih';
+                    $("#modal-save-error").modal("show");
+                    return;
+                }
+
                 for(var i=0;i<$scope.orders.length;i++){
                     if(typeof $scope.orders[i].quantity ==='undefined')
                     {
-                        $scope.error='Quantity harus diisi';
-                        $("#modal-save-error").modal("show");
                         return;
                     }
                     else if($scope.orders[i].quantity>$scope.orders[i].remaining)
@@ -1021,7 +1032,6 @@ app.controller('SendDocumentController',['$scope','PurchaseService',function($sc
 
     $scope.submitSuratJalan=function(){
         purchaseService.saveSuratJalan($scope.form).then(function(data){
-            console.log(data);
             if(data.isSuccess){
                $('#modal-save').modal('hide');
                 window.location.href='/Surat/Jalan/';
