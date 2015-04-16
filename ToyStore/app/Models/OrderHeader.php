@@ -17,18 +17,18 @@ class OrderHeader extends Model {
         $orders = DB::table('order_supply_header')
             ->join('order_supply','order_supply_header.id','=','order_supply.orderid')
             ->join('product','product.id','=','order_supply.productid')
-            ->select('order_supply_header.id as id','productname as nama_barang','supplier','currency','order_supply.price','order_supply.quantity','transactiondate as tanggal_transaksi')
+            ->select('order_supply_header.invoice','order_supply_header.id as id','productname as nama_barang','supplier','currency','order_supply.price','order_supply.quantity','transactiondate as tanggal_transaksi')
             ->get();
         return $orders;
     }
 
-    public static function insertOrder($userid,$supplier,$currency,$transactiondate,$shipper,$data)
+    public static function insertOrder($orderid,$userid,$supplier,$currency,$transactiondate,$shipper,$data)
 	{
 
         DB::beginTransaction();
         try {
             
-            $id = DB::table('order_supply_header')->insertGetId(['supplier' => $supplier, 'currency' => $currency,'transactiondate'=>$transactiondate,'shipped_by'=>$shipper,'created_by'=>$userid]);
+            $id = DB::table('order_supply_header')->insertGetId(['invoice'=>$orderid,'supplier' => $supplier, 'currency' => $currency,'transactiondate'=>$transactiondate,'shipped_by'=>$shipper,'created_by'=>$userid]);
            
             for($i=0;$i<count($data);$i++){
                 if($data[$i]['kode_barang']==0){

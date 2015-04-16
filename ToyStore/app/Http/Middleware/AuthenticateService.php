@@ -32,8 +32,7 @@ class AuthenticateService {
 	 */
 	public function handle($request, Closure $next)
 	{
-
-		if (Session::getSession($request->header('X-APP-Token')))
+		if (Session::getSession($request->header(' X-APP-TOKEN')))
 		{
 			return $next($request);
 		}

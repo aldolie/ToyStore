@@ -98,6 +98,7 @@ app.controller('AuthenticateController',['$scope','$cookies','$cookieStore','Aut
     $scope.authenticateUser=function(){
         AuthenticateService.authenticate($scope.form).then(function(data){
             if(data.isSuccess){
+                 $cookies.authenticateApp=data.result;
                  $cookieStore.put('authenticateApp', {'token':data.result});
                  window.location.href='/';
             }
@@ -113,8 +114,9 @@ app.controller('AuthenticateController',['$scope','$cookies','$cookieStore','Aut
         });
     };
     (function(){
-        var c=$cookieStore.get('authenticateApp');
-        AuthenticateService.authenticateCheck(c).then(function(data){
+        var c=$cookies.authenticateApp;
+
+        AuthenticateService.authenticateCheck(c['token']).then(function(data){
             if(data.isSuccess){
                window.location.href='/'; 
             }

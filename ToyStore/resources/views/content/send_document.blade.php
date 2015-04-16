@@ -12,7 +12,7 @@
                             <span class="label-form">No Invoice Penjualan</span>
                             <span class="label-form-delimiter">:</span>
                             <span>
-                                <input do-numeric type="text" class="form-none small" ng-model="search" ng-disabled="isLock()" />
+                                <input  type="text" class="form-none small" ng-model="search" ng-disabled="isLock()" />
                                 <span class="glyphicon glyphicon-search" ng-hide="isLock()" style="margin-right:10px;cursor:pointer;" ng-click="searchTransaction()" aria-hidden="true"></span>
                             </span>
                         </div>

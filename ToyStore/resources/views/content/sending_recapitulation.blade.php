@@ -19,10 +19,10 @@
                 <table class="table">
                    <thead ng-init="isReverse=false">
                        <tr>
-                        <th style="max-width:50px;">Kode Invoice</th>
-                        <th style="max-width:50px;">Nomor Surat Jalan</th>
+                        <th style="max-width:150px;">Kode Invoice</th>
+                        <th style="max-width:150px;">Nomor Surat Jalan</th>
                         <th style="max-width:150px;min-width:80px;">Nama</th>
-                        <th style="max-width:200px;min-width:80px;">Alamat</th>
+                        <th style="max-width:300px;min-width:80px;">Alamat</th>
                         <th>Tracking Number</th>
                         <th>Ongkos Kirim</th>
                         
@@ -36,14 +36,14 @@
                     </thead>
                     <tbody>
                         <tr ng-controller="DocumentRecapitulationDetailController" ng-repeat="document in filteredDocuments track by $index">
-                            <td style="max-width:50px;">[[document.invoice]]</td>
-                            <td style="max-width:50px;">[[document.id]]</td>
+                            <td style="max-width:150px;">[[document.invoice]]</td>
+                            <td style="max-width:150px;">[[document.suratJalan]]</td>
                             <td style="max-width:150px;min-width:80px;">[[document.destination]]</td>
-                            <td style="max-width:200px;min-width:80px;">[[document.address]]</td>
+                            <td style="max-width:300px;min-width:80px;">[[document.address]]</td>
                             <td><input type="text" class="form-none small" ng-model="document.tracking_number" /> </td>
                             <td><input type="text" do-numeric class="form-none small" ng-model="document.ongkos_kirim" /> </td>
                             <td>[[document.transactiondate]]</td>
-                            <td><button class="btn btn-primary">Update</button></td>
+                            <td><button class="btn btn-primary" ng-click="update()">Update</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -51,5 +51,25 @@
     
             </div>
     </div>
+
+    <div id="modal-save-error" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Error Message</h4>
+      </div>    
+        <div class="modal-body">
+            [[error]]
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Error Dialog -->
+
+
+</div>
+
+
 @endsection

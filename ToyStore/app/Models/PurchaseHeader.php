@@ -17,7 +17,7 @@ class PurchaseHeader extends Model {
         $purchase = DB::table('order_purchase_header')
             ->join('order_purchase','order_purchase_header.id','=','order_purchase.purchaseid')
             ->join('product','product.id','=','order_purchase.productid')
-            ->select('order_purchase_header.id as id','productname as nama_barang','customer','order_purchase.price','order_purchase.quantity','transactiondate as tanggal_transaksi')
+            ->select('order_purchase_header.invoice','order_purchase_header.id as id','productname as nama_barang','customer','order_purchase.price','order_purchase.quantity','transactiondate as tanggal_transaksi')
             ->get();
         return $purchase;
     }
@@ -30,14 +30,14 @@ class PurchaseHeader extends Model {
                 $join->on('p.purchaseid','=','order_purchase_header.id');
                 $join->on('p.productid','=','order_purchase.productid');
             })
-            ->where('order_purchase_header.id','=',$id)
+            ->where('order_purchase_header.invoice','=',$id)
             ->where(DB::Raw('order_purchase.quantity- ( case when p.total is null then 0 else p.total end)'),'>',0)
-            ->select('order_purchase_header.id as id','product.id as kode_barang','productname as nama_barang','customer','order_purchase.price',DB::Raw('order_purchase.quantity- ( case when p.total is null then 0 else p.total end)   as remaining'),'transactiondate as tanggal_transaksi')
+            ->select('order_purchase_header.invoice','order_purchase_header.id as id','product.id as kode_barang','productname as nama_barang','customer','order_purchase.price',DB::Raw('order_purchase.quantity- ( case when p.total is null then 0 else p.total end)   as remaining'),'transactiondate as tanggal_transaksi')
             ->get();
         return $purchase;
     }
     
-    public static function insertOrder($userid,$customer,$transactiondate,$isSalesOrder,$discount,$dp,$data)
+    public static function insertOrder($purchaseid,$userid,$customer,$transactiondate,$isSalesOrder,$discount,$dp,$data)
 	{
         $isSalesOrder=($isSalesOrder?1:0);
         $error=[];
@@ -54,7 +54,7 @@ class PurchaseHeader extends Model {
             if(count($error)>0)
             return ['status'=>false,'error_code'=>-1,'products'=>$error];
 
-            $id = DB::table('order_purchase_header')->insertGetId(['customer' => $customer, 'is_sales_order' => $isSalesOrder,'transactiondate'=>$transactiondate,'dp'=>$dp,'discount'=>$discount,'created_by'=>$userid]);
+            $id = DB::table('order_purchase_header')->insertGetId(['invoice'=>$purchaseid,'customer' => $customer, 'is_sales_order' => $isSalesOrder,'transactiondate'=>$transactiondate,'dp'=>$dp,'discount'=>$discount,'created_by'=>$userid]);
             //Insert DP HERE
             for($i=0;$i<count($data);$i++){
                 DB::table('order_purchase')->insert(['purchaseid' => $id, 'productid' => $data[$i]['kode_barang'],'price'=>$data[$i]['harga'],'quantity'=>$data[$i]['quantity'],'created_by'=>$userid]);

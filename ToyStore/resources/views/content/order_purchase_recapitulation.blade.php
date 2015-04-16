@@ -34,12 +34,12 @@
                     </thead>
                     <tbody>
                         <tr ng-controller="OrderPurchaseRecapitulationDetailController" ng-repeat="order in filteredOrders track by $index">
-                            <td>[[order.id]]</td>
+                            <td>[[order.invoice]]</td>
                             <td>[[order.nama_barang]]</td>
                             <td>[[order.customer]]</td>
-                            <td>[[order.price]] </td>
+                            <td>[[order.price | currency:'Rp.']] </td>
                             <td>[[order.quantity]] </td>
-                            <td>[[order.price*order.quantity]]</td>
+                            <td>[[order.price*order.quantity | currency:'Rp.']]</td>
                             <td>[[order.tanggal_transaksi]]</td>
                         </tr>
                     </tbody>

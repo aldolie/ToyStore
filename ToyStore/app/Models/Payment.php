@@ -11,12 +11,12 @@ class Payment extends Model {
 		$payment = DB::table('order_supply_header')
 					->join('order_supply','order_supply.orderid','=','order_supply_header.id')
 					->leftJoin(DB::raw('(select  orderid ,sum(paid) as paid from payment group by orderid) as p '),'p.orderid','=','order_supply.orderid')
-					->select('order_supply_header.id as kode_invoice','order_supply_header.supplier'
+					->select('order_supply_header.id as id','order_supply_header.invoice as kode_invoice','order_supply_header.supplier'
 						,DB::raw('SUM(order_supply.price*order_supply.quantity) as jumlah_utang')
 						,'order_supply_header.transactiondate as tanggal_pembelian'
 						,'currency'
 						,DB::raw('case when p.paid is null then 0 else p.paid end as paid'))
-					->groupBy('order_supply_header.transactiondate','order_supply_header.supplier','order_supply_header.id','currency')
+					->groupBy('order_supply_header.transactiondate','order_supply_header.supplier','order_supply_header.id','currency','order_supply_header.invoice')
 					->get();
         return $payment;
 	}

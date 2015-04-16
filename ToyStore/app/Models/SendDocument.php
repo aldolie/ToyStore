@@ -6,19 +6,35 @@ use DB;
 class SendDocument extends Model {
 	protected $table = 'sending_header';
 	
-    public static function getLastOrderId(){
+    public static function getLastSendingId(){
      
-        return DB::table('order_purchase_header')->max('id');
+        return DB::table('sending_header')->max('id');
     }
 
     public static function getHeaders(){
         $documents=DB::table('sending_header')
-                    ->select('purchaseid as invoice','id','destination','address','tracking_number','ongkos_kirim','transactiondate')
+                    ->join('order_purchase_header','order_purchase_header.id','=','sending_header.purchaseid')
+                    ->select('sending_header.id','order_purchase_header.invoice as invoice','sending_header.invoice as suratJalan','destination','address','tracking_number','ongkos_kirim','sending_header.transactiondate')
                     ->get();
         return $documents;
     }
+
+    public static function updateTrack($id,$tn,$ok){
+        DB::beginTransaction();
+        try {
+            DB::table('sending_header')
+            ->where('id','=',$id)
+            ->update(['tracking_number'=>$tn, 'ongkos_kirim'=>$ok] );
+              DB::commit();
+              return ['status'=>true];
+        } catch (\Exception $e) {
+              DB::rollback();
+              return ['status'=>false];
+        }
+       
+    }
     
-    public static function insertSendingDocument($userid,$to,$address,$date,$data,$purchaseid)
+    public static function insertSendingDocument($sd,$userid,$to,$address,$date,$data,$purchaseid)
 	{
         $error=[];
         DB::beginTransaction();
@@ -43,7 +59,7 @@ class SendDocument extends Model {
             if(count($error)>0)
             return ['status'=>false,'error_code'=>-1,'products'=>$error];
 
-            $id = DB::table('sending_header')->insertGetId(['purchaseid'=>$purchaseid,'destination' => $to, 'address' => $address,'transactiondate'=>$date,'created_by'=>$userid]);
+            $id = DB::table('sending_header')->insertGetId(['invoice'=>$sd,'purchaseid'=>$purchaseid,'destination' => $to, 'address' => $address,'transactiondate'=>$date,'created_by'=>$userid]);
             //Insert DP HERE
             for($i=0;$i<count($data);$i++){
                 DB::table('sending')->insert(['sendingid' => $id, 'productid' => $data[$i]['kode_barang'],'quantity'=>$data[$i]['quantity'],'created_by'=>$userid]);

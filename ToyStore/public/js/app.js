@@ -1,4 +1,14 @@
 
+function auth($http,$cookies){
+        var token=$cookies.authenticateApp;
+        console.log(token);
+   //     if(typeof token!=='undefined'){
+            $http.defaults.headers.get = {'X-APP-TOKEN' : token['token']};
+            $http.defaults.headers.common['Accept'] =token['html'];
+            
+     //   }
+}
+
 app.config(function($interpolateProvider){
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
 });
@@ -42,7 +52,7 @@ app.directive('doDecimal', function() {
 app.factory('ProductService',['$http','$rootScope','$q','$cookies','$cookieStore','SERVICE_URI',function($http,$rootScope,$q,$cookies,$cookieStore,service){
 	
 	function ProductService(){
-        $http.defaults.headers.get = { 'X-APP-TOKEN' : $cookieStore.get('authenticateApp')['token'] };
+           auth($http,$cookies);
 	}
 	
 	ProductService.prototype={
@@ -50,7 +60,6 @@ app.factory('ProductService',['$http','$rootScope','$q','$cookies','$cookieStore
 		loadProductsforAutoComplete:function(){
 			var deferred=$q.defer();
 			var url=service+'product/auto/';
-            console.log($cookieStore.get('authenticateApp')['token']);
 			$http.get(url).success(function(data){
 				deferred.resolve(data.result);
 				$rootScope.$phase;
@@ -71,8 +80,9 @@ app.factory('ProductService',['$http','$rootScope','$q','$cookies','$cookieStore
 	return instance;
 }]);
 
-app.factory('OrderService',['$http','$rootScope','$q','SERVICE_URI',function($http,$rootScope,$q,service){
-    function OrderService(){
+app.factory('OrderService',['$http','$rootScope','$q','$cookies','$cookieStore','SERVICE_URI',function($http,$rootScope,$q,$cookies,$cookieStore,service){
+    function OrderService(){ 
+         auth($http,$cookies);
     }
     OrderService.prototype={
      constructor:OrderService, 
@@ -80,6 +90,7 @@ app.factory('OrderService',['$http','$rootScope','$q','SERVICE_URI',function($ht
 			var deferred=$q.defer();
 			 var url=service+'order/supplier/save/';
            $http.post(url,{
+               'orderid':form.orderId,
                'supplier':form.supplier,
                'date':form.date,
                'currency':form.currency,
@@ -119,8 +130,9 @@ app.factory('OrderService',['$http','$rootScope','$q','SERVICE_URI',function($ht
 
 
 
-app.factory('PurchaseService',['$http','$rootScope','$q','SERVICE_URI',function($http,$rootScope,$q,service){
-    function PurchaseService(){
+app.factory('PurchaseService',['$http','$rootScope','$q','$cookies','$cookieStore','SERVICE_URI',function($http,$rootScope,$q,$cookies,$cookieStore,service){
+    function PurchaseService(){ 
+         auth($http,$cookies);
     }
     PurchaseService.prototype={
      constructor:PurchaseService, 
@@ -128,6 +140,7 @@ app.factory('PurchaseService',['$http','$rootScope','$q','SERVICE_URI',function(
             var deferred=$q.defer();
              var url=service+'order/purchase/save/';
            $http.post(url,{
+               'purchaseid':form.orderId,
                'customer':form.customer,
                'date':form.date,
                'is_sales_order':form.salesOrder,
@@ -171,6 +184,15 @@ app.factory('PurchaseService',['$http','$rootScope','$q','SERVICE_URI',function(
             });
             return deferred.promise;
         },
+        loadSuratJalanId:function(){
+              var deferred=$q.defer();
+            var url=service+'surat/jalan/id/';
+            $http.get(url).success(function(data){
+                deferred.resolve(data.result);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+        },
         loadSuratJalan:function(){
             var deferred=$q.defer();
             var url=service+'surat/jalan/get/';
@@ -184,10 +206,24 @@ app.factory('PurchaseService',['$http','$rootScope','$q','SERVICE_URI',function(
             var deferred=$q.defer();
             var url=service+'surat/jalan/save/';
             $http.post(url,{
+                'sd':form.id,
                 'id':form.purchaseId,
                 'to':form.to,
                 'address':form.address,
                 'data':form.data
+            }).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+        },
+        updateSuratJalan:function(form){
+              var deferred=$q.defer();
+            var url=service+'surat/jalan/updatetrack/';
+            $http.post(url,{
+                'id':form.id,
+                'tn':form.tracking_number,
+                'ok':form.ongkos_kirim
             }).success(function(data){
                 deferred.resolve(data);
                 $rootScope.$phase;
@@ -202,8 +238,9 @@ app.factory('PurchaseService',['$http','$rootScope','$q','SERVICE_URI',function(
 
 
 
-app.factory('UserService',['$http','$rootScope','$q','SERVICE_URI',function($http,$rootScope,$q,service){
+app.factory('UserService',['$http','$rootScope','$q','$cookies','$cookieStore','SERVICE_URI',function($http,$rootScope,$q,$cookies,$cookieStore,service){
     function UserService(){
+        auth($http,$cookies);
     }
     UserService.prototype={
      constructor:UserService, 
@@ -223,10 +260,10 @@ app.factory('UserService',['$http','$rootScope','$q','SERVICE_URI',function($htt
 }]);
 
 
-app.factory('PaymentService',['$http','$rootScope','$q','SERVICE_URI',function($http,$rootScope,$q,service){
+app.factory('PaymentService',['$http','$rootScope','$q','$cookies','$cookieStore','SERVICE_URI',function($http,$rootScope,$q,$cookies,$cookieStore,service){
     
     function PaymentService(){
-        
+      auth($http,$cookies); auth($http,$cookies);
     }
     
     PaymentService.prototype={
@@ -282,14 +319,14 @@ app.controller('OrderSupplyController',['$scope','filterFilter','ProductService'
       return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
     };
 
-	$scope.orderId=1;
+	$scope.orderId='';
     $scope.date=convertDate(new Date().toLocaleDateString());
 	$scope.orders=[{kode_barang:null,nama_barang:'',harga:null,quantity:null}];
     $scope.products=[];
     $scope.addOrder=function(){
         $scope.orders.push({kode_barang:'',nama_barang:'',harga:'',quantity:''}) ;
     };
-    $scope.form={supplier:'',currency:'',shipper:'',date:$scope.date,data:[]};
+    $scope.form={orderId:'',supplier:'',currency:'',shipper:'',date:$scope.date,data:[]};
     
     $scope.getGrandTotal=function(){
         var total=0;
@@ -380,6 +417,7 @@ app.controller('OrderSupplyController',['$scope','filterFilter','ProductService'
                 
         orderService.loadOrderId().then(function(data){
             $scope.orderId=data;
+            $scope.form.orderId=$scope.orderId;
         },function(){});
         
 		productService.loadProductsforAutoComplete().then(function(data){
@@ -788,10 +826,29 @@ app.controller('DocumentRecapitulationController',['$scope','PurchaseService','f
         },function(){});
     })();
 
+    $scope.fillError=function(error){
+        $scope.error=error;
+    };
+
 }]);
 
-app.controller('DocumentRecapitulationDetailController',['$scope',function($scope){
+app.controller('DocumentRecapitulationDetailController',['$scope','PurchaseService',function($scope,purchaseService){
+    $scope.update=function(){
+        purchaseService.updateSuratJalan($scope.document).then(function(data){
+            if(data.isSuccess){
+                $scope.fillError('Success');
+                $('#modal-save-error').modal('show');
 
+            }
+            else{
+                $scope.fillError(data.reason);
+                $('#modal-save-error').modal('show');
+                
+            }
+        },function(){
+
+        });
+    };
 }]);
 
 
@@ -870,7 +927,7 @@ app.controller('PaymentDetailController',['$scope','PaymentService',function($sc
     };
 
     var doLoadPaymentsDetail=function(){
-        paymentService.loadPaymentDetail($scope.payment.kode_invoice).then(function(data){
+        paymentService.loadPaymentDetail($scope.payment.id).then(function(data){
             $scope.paymentDetails=data.result;
             $scope.isShowDetail=true;
             showDatePicker();
@@ -924,7 +981,7 @@ app.controller('PaymentDetailController',['$scope','PaymentService',function($sc
     };
 
     $scope.doPayment=function(){
-        paymentService.doPayment($scope.payment.kode_invoice,$scope.form).then(function(data){
+        paymentService.doPayment($scope.payment.id,$scope.form).then(function(data){
             if(data.isSuccess){
                 $scope.payment.paid=data.result;
                  doLoadPaymentsDetail();
@@ -951,7 +1008,7 @@ app.controller('PaymentDetailController',['$scope','PaymentService',function($sc
 app.controller('SendDocumentController',['$scope','PurchaseService',function($scope,purchaseService){
     $scope.search='';
     $scope.form={
-        id:0,
+        id:'',
         purchaseId:-1,
         to:'',
         address:''
@@ -969,13 +1026,17 @@ app.controller('SendDocumentController',['$scope','PurchaseService',function($sc
             }
             else if(data.result.length==0){
                 $scope.lock=false;
-                 $scope.error='Penjualan yang aktif tidak ditemukan';
+                $scope.error='Penjualan yang aktif tidak ditemukan';
                 $("#modal-save-error").modal("show");
             }
             else{
                 $scope.orders=data.result;
-                $scope.lock=true;
-                $scope.form.purchaseId=$scope.search;
+                $scope.form.purchaseId=data.result[0].id;
+                purchaseService.loadSuratJalanId().then(function(data){
+                     $scope.form.id=data;
+                     $scope.lock=true;
+                     
+                },function(){});
             }
         },function(){});
     };

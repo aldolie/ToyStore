@@ -175,7 +175,8 @@ class AdminController extends Controller {
             $id=1;
         else
             $id+=1;
-        return (['status' => 200, 'result' => $id]);
+        $date=date("Y/m/d/");
+        return (['status' => 200, 'result' => 'PS'.(string)$date.(string)$id]);
     }
 
     public function getNewPurchaseOrderId(){
@@ -184,7 +185,18 @@ class AdminController extends Controller {
             $id=1;
         else
             $id+=1;
-        return (['status' => 200, 'result' => $id]);
+        $date=date("Y/m/d/");
+        return (['status' => 200, 'result' => 'PC'.(string)$date.(string)$id]);
+    }
+
+     public function getNewSendId(){
+        $id =SendDocument::getLastSendingId();
+        if($id==null)
+            $id=1;
+        else
+            $id+=1;
+        $date=date("Y/m/d/");
+        return (['status' => 200, 'result' => 'SD'.(string)$date.(string)$id]);
     }
 
     public function getPurchaseById(Request $request){
@@ -205,10 +217,12 @@ class AdminController extends Controller {
     
     public function saveSuratJalan(Request $request){
         $v = Validator::make($request->all(), [
+            'sd' =>'required',
             'id' => 'required',
             'to' => 'required|max:50',
             'address'=>'required|max:255'
         ],[
+            'sd.required'=>'ID harus ditentukan',
             'id.required'=>'Id harus ditentukan',
             'to.required'=>'Tujuan harus diisi',
             'address.required'=>'Alamat tujuan harus disi'
@@ -226,7 +240,8 @@ class AdminController extends Controller {
             $address=$request->input('address');
             $data=$request->input('data');
             $date=date("Y-m-d");
-            $result = SendDocument::insertSendingDocument(1,$to,$address,$date,$data,$id);
+            $sd=$request->input('sd');
+            $result = SendDocument::insertSendingDocument($sd,1,$to,$address,$date,$data,$id);
             if($result['status']==false){
                 if($result['error_code']==-2){
                     return (['status'=>200,'isSuccess'=>false,'reason'=>['0'=>$result['reason']]]);
@@ -244,18 +259,54 @@ class AdminController extends Controller {
        }
     }
 
+    public function updatetrack(Request $request){
+      $v = Validator::make($request->all(), [
+            'id' =>'required',
+            'tn' => 'required',
+            'ok' => 'required|numeric'
+        ],[
+            'id.required'=>'Id harus ditentukan',
+            'tn.required'=>'Tracking Number harus diisi',
+            'ok.required'=>'Ongkir harus disi'
+        ]);
+       
+       if ($v->fails())
+       {
+           return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>$v->messages()->all()]);
+       }
+       else{
+
+
+            $id=$request->input('id');
+            $tn=$request->input('tn');
+            $ok=$request->input('ok');
+            $result = SendDocument::updateTrack($id,$tn,$ok);
+            if($result['status']==false){
+                 return (['status'=>200,'isSuccess'=>false,'reason'=>['0'=>'Gagal Menyimpan Data']]);
+            }
+            
+            else{
+                return (['status'=>200,'isSuccess'=>true,'reason'=>[]]);
+            }
+            
+       }
+    
+    }
+
     public function saveOrderSupplier(Request $request){
         
        $v = Validator::make($request->all(), [
             'supplier' => 'required|max:255',
             'date' => 'required|date',
             'currency'=>'required|max:50',
-            'shipper' =>'required|max:255'
+            'shipper' =>'required|max:255',
+            'orderid'=>'required'
         ],[
             'supplier.required'=>'Nama Supplier harus diisi',
             'date.required'=>'Tanggal Pembelian harus diisi',
             'currency.required'=>'Currency harus di isi',
             'shipper.required'=>'Jasa Pengiriman harus di isi',
+            'orderid.required'=>'Order Id Harus di isi',
             'supplier.max'=>'Nama Supplier terlalu panjang',
             'date.date'=>'Tanggal Pembelian tidak sesuai format tanggal',
             'currency.max'=>'currency terlalu panjang',
@@ -274,7 +325,8 @@ class AdminController extends Controller {
             $currency=$request->input('currency');
             $shipper=$request->input('shipper');
             $data=$request->input('data');
-            $status = OrderHeader::insertOrder(1,$supplier,$currency,$date,$shipper,$data);
+            $orderid=$request->input('orderid');
+            $status = OrderHeader::insertOrder($orderid,1,$supplier,$currency,$date,$shipper,$data);
             if($status){
              return (['status'=>200,'isSuccess'=>true,'reason'=>[]]);
             }
@@ -293,7 +345,9 @@ class AdminController extends Controller {
             'customer' => 'required|max:255',
             'date' => 'required|date',
             'is_sales_order'=>'required',
+            'purchaseid'=>'required'
         ],[
+            'purchaseid.required'=>'Purchaseid harus diisi',
             'customer.required'=>'Nama Customer  harus diisi',
             'date.required'=>'Tanggal Pembelian harus diisi',
             'is_sales_order.required'=>'Sales Order harus di isi'
@@ -313,6 +367,7 @@ class AdminController extends Controller {
             $dp=$request->input('dp');
             $isDiscount=$request->input('isDiscount');
             $isDp=$request->input('isDp');
+            $purchaseid=$request->input('purchaseid');
             if(!$isDiscount)
                 $discount=0;
             if(!$isDp)
@@ -321,7 +376,7 @@ class AdminController extends Controller {
             $dp=(($dp=='')?0:$dp);
 
             $data=$request->input('data');
-            $result = PurchaseHeader::insertOrder(1,$customer,$date,$isSalesOrder,$discount,$dp,$data);
+            $result = PurchaseHeader::insertOrder($purchaseid,1,$customer,$date,$isSalesOrder,$discount,$dp,$data);
 
             if($result['status']==false){
                 if($result['error_code']==-2){

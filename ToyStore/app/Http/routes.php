@@ -31,11 +31,11 @@ Route::get('/Surat/Jalan/Report','HomeController@send_document_report');
 Route::post('/signin/action','HomeController@doSignin');
 
 
-Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin','middleware'=>'authservice'], function() {
+Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With, X-APP-TOKEN');
+    header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
     header('Access-Control-Allow-Credentials: true');
     Route::get('/product/auto/',  [ 'uses' => 'Service\AdminController@getProductsSimpleList']);
     Route::get('/product/recap/',  [ 'uses' => 'Service\AdminController@getProductsRecapList']);
@@ -52,6 +52,8 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin','middleware'=>'auths
     Route::post('/order/purchase/getId/',['uses'=>'Service\AdminController@getPurchaseById']);
     Route::post('/surat/jalan/save/',['uses'=>'Service\AdminController@saveSuratJalan']);
     Route::get('/surat/jalan/get/',['uses'=>'Service\AdminController@getSuratJalan']);
+    Route::get('/surat/jalan/id/',['uses'=>'Service\AdminController@getNewSendId']);
+    Route::post('surat/jalan/updatetrack/',['uses'=>'Service\AdminController@updatetrack']);
 
    
 });

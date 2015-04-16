@@ -35,7 +35,7 @@
                     </thead>
                     <tbody>
                         <tr ng-controller="OrderRecapitulationDetailController" ng-repeat="order in filteredOrders track by $index">
-                            <td>[[order.id]]</td>
+                            <td>[[order.invoice]]</td>
                             <td>[[order.nama_barang]]</td>
                             <td>[[order.supplier]]</td>
                             <td>[[order.currency]]</td>
