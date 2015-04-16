@@ -23,6 +23,7 @@ Route::get('/Pembelian/','HomeController@order_supply');
 Route::get('/Pembelian/Report/','HomeController@order_supply_report');
 Route::get('/Penjualan/','HomeController@order_purchase');
 Route::get('/Pembayaran/','HomeController@payment_supply');
+Route::get('/Tagihan/','HomeController@payment_purchase');
 Route::get('/Product/','HomeController@product_recapitulation');
 Route::get('/signin/','HomeController@signin');
 Route::get('/Penjualan/Report/','HomeController@order_purchase_report');
@@ -37,13 +38,16 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
     header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
     header('Access-Control-Allow-Credentials: true');
+
+    Route::get('/product/rop/{i}',  [ 'uses' => 'Service\AdminController@getROP']);
     Route::get('/product/auto/',  [ 'uses' => 'Service\AdminController@getProductsSimpleList']);
     Route::get('/product/recap/',  [ 'uses' => 'Service\AdminController@getProductsRecapList']);
     Route::post('/order/supplier/save/',  [ 'uses' => 'Service\AdminController@saveOrderSupplier']);
     Route::get('/order/supplier/id/',  [ 'uses' => 'Service\AdminController@getNewOrderId']);
  	Route::get('/order/supplier/get/',['uses'=>'Service\AdminController@getOrders']);
 	Route::get('/payment/supplier/get/',['uses'=>'Service\AdminController@getPayment']);
-	Route::post('/payment/supplier/detail/get/',['uses'=>'Service\AdminController@getPaymentDetail']);	 
+    Route::get('/payment/purchase/get/',['uses'=>'Service\AdminController@getPaymentPurchase']);
+    Route::post('/payment/supplier/detail/get/',['uses'=>'Service\AdminController@getPaymentDetail']);	 
 	Route::post('/payment/supplier/do/',['uses'=>'Service\AdminController@doPayment']);  
     Route::get('/order/purchase/id/',  [ 'uses' => 'Service\AdminController@getNewPurchaseOrderId']);
     Route::post('/order/purchase/save/',  [ 'uses' => 'Service\AdminController@saveOrderPurchase']);

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\SendDocument;
 use App\Models\Session;
 use App\Models\PurchaseHeader;
+use App\Models\PaymentPurchase;
 use Illuminate\Http\Request as Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash as Hash;
@@ -103,6 +104,12 @@ class AdminController extends Controller {
 		$products = Product::getProductsName();
         return (['status' => 200, 'result' => $products]);
 	}
+
+    public function getROP($i)
+    {
+        $counts=Product::getROP($i);
+        return (['status'=>200,'result'=>$counts]);
+    }
     
     public function getProductsRecapList(){
         $products = Product::getProductsRecap();
@@ -113,6 +120,12 @@ class AdminController extends Controller {
         $payments=Payment::getPaymentHeader();
         return (['status' => 200, 'result' =>$payments]);
     }
+
+    public function getPaymentPurchase(){
+        $payments=PaymentPurchase::getPaymentHeader();
+        return (['status' => 200, 'result' =>$payments]);
+    }
+    
     
 
     public function getPaymentDetail(Request $request){
@@ -175,7 +188,7 @@ class AdminController extends Controller {
             $id=1;
         else
             $id+=1;
-        $date=date("Y/m/d/");
+        $date=date("Y/m/d/s");
         return (['status' => 200, 'result' => 'PS'.(string)$date.(string)$id]);
     }
 
@@ -185,7 +198,7 @@ class AdminController extends Controller {
             $id=1;
         else
             $id+=1;
-        $date=date("Y/m/d/");
+        $date=date("Y/m/d/s");
         return (['status' => 200, 'result' => 'PC'.(string)$date.(string)$id]);
     }
 
@@ -195,7 +208,7 @@ class AdminController extends Controller {
             $id=1;
         else
             $id+=1;
-        $date=date("Y/m/d/");
+        $date=date("Y/m/d/s");
         return (['status' => 200, 'result' => 'SD'.(string)$date.(string)$id]);
     }
 

@@ -76,7 +76,10 @@ class HomeController extends Controller {
 		return view('content/sending_recapitulation');
 	}
 
-	
+	public function payment_purchase(){
+		return view('content/payment_purchase');
+	}
+
 	public function doSignin(Request $request){
 		
 	}

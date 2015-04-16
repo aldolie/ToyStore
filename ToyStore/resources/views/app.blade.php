@@ -57,7 +57,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <div id="sidebar-wrapper">
+        <div id="sidebar-wrapper" ng-controller="SideBarController">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
                     <a href="#">
@@ -78,10 +78,12 @@
                     <a href="{{ url('/Surat/Jalan/') }}"><span class="glyphicon glyphicon-envelope" style="margin-right:10px;" aria-hidden="true"></span>Surat Jalan</a>
                 </li>
                    <li>
-                    <a href="{{ url('/Product/') }}"><span class="glyphicon glyphicon-folder-close" style="margin-right:10px;" aria-hidden="true"></span>Stock Barang</a>
+                    <a href="{{ url('/Product/') }}"><span class="glyphicon glyphicon-folder-close" style="margin-right:10px;" aria-hidden="true"></span>Stock Barang
+                        <code ng-show="isROP()">[[rop]]</code>
+                    </a>
                 </li>
                  <li>
-                    <a href="{{ url('/') }}"><span class="glyphicon glyphicon-check" style="margin-right:10px;" aria-hidden="true"></span>Tagihan Pembayaran</a>
+                    <a href="{{ url('/Tagihan/') }}"><span class="glyphicon glyphicon-check" style="margin-right:10px;" aria-hidden="true"></span>Tagihan Pembayaran</a>
                 </li>
              
 				 <li>

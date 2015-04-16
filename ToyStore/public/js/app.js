@@ -1,12 +1,12 @@
 
 function auth($http,$cookies){
-        var token=$cookies.authenticateApp;
+    /*    var token=$cookies.authenticateApp;
         console.log(token);
-   //     if(typeof token!=='undefined'){
+        if(typeof token!=='undefined'){
             $http.defaults.headers.get = {'X-APP-TOKEN' : token['token']};
             $http.defaults.headers.common['Accept'] =token['html'];
             
-     //   }
+        }*/
 }
 
 app.config(function($interpolateProvider){
@@ -74,6 +74,15 @@ app.factory('ProductService',['$http','$rootScope','$q','$cookies','$cookieStore
 				$rootScope.$phase;
 			});
 			return deferred.promise;
+        },
+        loadROP:function(rop){
+            var deferred=$q.defer();
+            var url=service+'product/rop/'+rop;
+            $http.get(url).success(function(data){
+                deferred.resolve(data.result);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
         }
 	}
 	var instance=new ProductService();
@@ -258,6 +267,29 @@ app.factory('UserService',['$http','$rootScope','$q','$cookies','$cookieStore','
     var instance=new UserService();
     return instance;
 }]);
+
+
+app.factory('PaymentPurchaseService',['$http','$rootScope','$q','$cookies','$cookieStore','SERVICE_URI',function($http,$rootScope,$q,$cookies,$cookieStore,service){
+    function PaymentPurchaseService(){
+        auth($http,$cookies);
+    }
+    PaymentPurchaseService.prototype={
+     constructor:PaymentPurchaseService, 
+        loadPayments:function(){
+            var deferred=$q.defer();
+            var url=service+'payment/purchase/get/';
+            $http.get(url).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+        }
+    
+    }
+    var instance=new PaymentPurchaseService();
+    return instance;
+}]);
+
 
 
 app.factory('PaymentService',['$http','$rootScope','$q','$cookies','$cookieStore','SERVICE_URI',function($http,$rootScope,$q,$cookies,$cookieStore,service){
@@ -1124,4 +1156,42 @@ app.controller('SendDocumentDetailController',['$scope','PurchaseService',functi
     $scope.remove=function(){
         $scope.$parent.orders.splice($scope.$index,1) ;
     }
+}]);
+
+
+app.controller('PaymentPurchaseController',['$scope','PaymentPurchaseService','filterFilter','orderByFilter',function($scope,PaymentPurchaseService,filterFilter,orderByFilter){
+    
+    $scope.payments=[];
+    $scope.filteredPayments=[];
+    (function(){
+        PaymentPurchaseService.loadPayments().then(function(data){
+            $scope.payments=data.result;
+            $scope.filteredPayments=filterFilter($scope.payments,{'customer':$scope.search});
+        },function(){
+
+        });
+    })();
+}]);
+
+app.controller('PaymentPurchaseDetailController',['$scope',function($scope){
+
+
+}]);
+
+
+app.controller('SideBarController',['$scope','ProductService','ROP',function($scope,productService,rop){
+    $scope.rop=0;
+    $scope.isROP=function(){
+        if($scope.rop<1)
+            return false;
+        return true;
+    };
+
+    (function(){
+        productService.loadROP(rop).then(function(data){
+            $scope.rop=data;
+        },function(){
+
+        });
+    })();
 }]);

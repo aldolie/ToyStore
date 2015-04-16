@@ -17,4 +17,10 @@ class Product extends Model {
         $products = DB::table('product')->select('id as kode_barang','productname as nama_barang','quantity','price as harga')->get();
         return $products;
     }
+
+    public static function getROP($rop){
+        $count=DB::table('product')->where('quantity','<=',$rop)->count();
+        return $count;
+    }
+
 }

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.4.1
+-- version 4.0.9
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 16, 2015 at 12:05 PM
--- Server version: 5.6.11
--- PHP Version: 5.5.1
+-- Generation Time: Apr 17, 2015 at 12:49 AM
+-- Server version: 5.6.14
+-- PHP Version: 5.5.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `ts`
 --
-CREATE DATABASE IF NOT EXISTS `ts` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `ts`;
 
 -- --------------------------------------------------------
 
@@ -154,6 +152,25 @@ CREATE TABLE IF NOT EXISTS `payment` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `payment_purchase`
+--
+
+CREATE TABLE IF NOT EXISTS `payment_purchase` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `purchaseid` int(11) NOT NULL,
+  `paymentdate` date NOT NULL,
+  `paymenttype` varchar(255) NOT NULL,
+  `paid` double NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `product`
 --
 
@@ -174,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `product` (
 --
 
 INSERT INTO `product` (`id`, `productname`, `quantity`, `price`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
-(1, 'Playstation', 13, 2000000, '2015-04-09 04:09:27', NULL, 1, NULL),
+(1, 'Playstation', 15, 2000000, '2015-04-09 04:09:27', NULL, 1, NULL),
 (2, 'Kinect For XBox 360', 27, 1000000, '2015-04-09 04:09:27', NULL, 1, NULL),
 (3, 'PS Vita', 29, 2990000, '2015-04-09 04:09:27', NULL, 1, NULL);
 
