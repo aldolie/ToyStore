@@ -11,6 +11,6 @@ class Session extends Model {
 	}
 
 	public static function getSession($payload){
-		return DB::table('session_storage')->where('payload','=',$payload)->first();
+		return DB::table('session_storage')->join('user','user.id','=','session_storage.userid')->where('payload','=',$payload)->first();
 	}
 }

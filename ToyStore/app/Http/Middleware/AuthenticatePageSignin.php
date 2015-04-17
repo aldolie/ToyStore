@@ -2,9 +2,10 @@
 
 use Closure;
 use App\Models\Session as SessionTable;
+use Illuminate\Support\Facades\Session as Session;
 use Illuminate\Http\Request;
 
-class AuthenticateService {
+class AuthenticatePageSignin {
 
 	/**
 	 * The Guard implementation.
@@ -32,12 +33,12 @@ class AuthenticateService {
 	 */
 	public function handle($request, Closure $next)
 	{
-		if (Session::get('user'))
+		if (!Session::get('user'))
 		{
 			return $next($request);
 		}
 		else{
-			return response('Unauthorized.', 401);
+			return redirect('/');
 		}
 
 	}

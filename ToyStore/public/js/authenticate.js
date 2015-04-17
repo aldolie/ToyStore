@@ -1,5 +1,5 @@
 var app=angular.module('app',['ngCookies']);
-app.constant("SERVICE_URI","http://localhost:8000/api/");
+app.constant("SERVICE_URI","http://localhost:8000/apiv1/");
 
 app.config(function($interpolateProvider){
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
@@ -50,7 +50,7 @@ app.factory('AuthenticateService',['$http','$rootScope','$q','SERVICE_URI',funct
      constructor:AuthenticateService, 
         authenticate:function(form){
             var deferred=$q.defer();
-            var url=service+'authenticate/user/';
+            var url=service+'authenticate/user';
             $http.post(url,{
                 'u':form.username,
                 'p':form.password
@@ -62,7 +62,7 @@ app.factory('AuthenticateService',['$http','$rootScope','$q','SERVICE_URI',funct
         },
         authenticateCheck:function(payload){
             var deferred=$q.defer();
-           var url=service+'authenticate/user/check/';
+           var url=service+'authenticate/user/check';
             $http.post(url,{
                 'payload':payload
             }).success(function(data){
@@ -98,8 +98,8 @@ app.controller('AuthenticateController',['$scope','$cookies','$cookieStore','Aut
     $scope.authenticateUser=function(){
         AuthenticateService.authenticate($scope.form).then(function(data){
             if(data.isSuccess){
-                 $cookies.authenticateApp=data.result;
-                 $cookieStore.put('authenticateApp', {'token':data.result});
+                //$cookies.authenticateApp=data.result;
+                //$cookieStore.put('authenticateApp', {'token':data.result});
                  window.location.href='/';
             }
             else
@@ -114,7 +114,7 @@ app.controller('AuthenticateController',['$scope','$cookies','$cookieStore','Aut
         });
     };
     (function(){
-        var c=$cookies.authenticateApp;
+      /*  var c=$cookies.authenticateApp;
 
         AuthenticateService.authenticateCheck(c['token']).then(function(data){
             if(data.isSuccess){
@@ -122,7 +122,7 @@ app.controller('AuthenticateController',['$scope','$cookies','$cookieStore','Aut
             }
         },function(){
 
-        });
+        });*/
     })();
 
 }]);

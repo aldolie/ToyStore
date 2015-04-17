@@ -19,7 +19,7 @@ class Product extends Model {
     }
 
     public static function getROP($rop){
-        $count=DB::table('product')->where('quantity','<=',$rop)->count();
+        $count=DB::table('product')->where('quantity','<',$rop)->count();
         return $count;
     }
 

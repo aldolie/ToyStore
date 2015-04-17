@@ -59,7 +59,7 @@ app.factory('ProductService',['$http','$rootScope','$q','$cookies','$cookieStore
 		constructor:ProductService,
 		loadProductsforAutoComplete:function(){
 			var deferred=$q.defer();
-			var url=service+'product/auto/';
+			var url=service+'product/auto';
 			$http.get(url).success(function(data){
 				deferred.resolve(data.result);
 				$rootScope.$phase;
@@ -68,7 +68,7 @@ app.factory('ProductService',['$http','$rootScope','$q','$cookies','$cookieStore
 		},
         loadProductsforRecapitulation:function(){
             var deferred=$q.defer();
-			var url=service+'product/recap/';
+			var url=service+'product/recap';
 			$http.get(url).success(function(data){
 				deferred.resolve(data.result);
 				$rootScope.$phase;
@@ -97,7 +97,7 @@ app.factory('OrderService',['$http','$rootScope','$q','$cookies','$cookieStore',
      constructor:OrderService, 
         saveOrderSupplier:function(form){
 			var deferred=$q.defer();
-			 var url=service+'order/supplier/save/';
+			 var url=service+'order/supplier/save';
            $http.post(url,{
                'orderid':form.orderId,
                'supplier':form.supplier,
@@ -113,7 +113,7 @@ app.factory('OrderService',['$http','$rootScope','$q','$cookies','$cookieStore',
 		},
         loadOrderId:function(){
             var deferred=$q.defer();
-            var url=service+'order/supplier/id/';
+            var url=service+'order/supplier/id';
             $http.get(url).success(function(data){
                 deferred.resolve(data.result);
                 $rootScope.$phase;
@@ -122,7 +122,7 @@ app.factory('OrderService',['$http','$rootScope','$q','$cookies','$cookieStore',
         },
         loadOrderSupplier:function(form){
             var deferred=$q.defer();
-            var url=service+'order/supplier/get/';
+            var url=service+'order/supplier/get';
             $http.get(url).success(function(data){
                 deferred.resolve(data);
                 $rootScope.$phase;
@@ -147,7 +147,7 @@ app.factory('PurchaseService',['$http','$rootScope','$q','$cookies','$cookieStor
      constructor:PurchaseService, 
         saveOrderPurchase:function(form){
             var deferred=$q.defer();
-             var url=service+'order/purchase/save/';
+             var url=service+'order/purchase/save';
            $http.post(url,{
                'purchaseid':form.orderId,
                'customer':form.customer,
@@ -166,7 +166,7 @@ app.factory('PurchaseService',['$http','$rootScope','$q','$cookies','$cookieStor
         },
         loadOrderId:function(){
             var deferred=$q.defer();
-            var url=service+'order/purchase/id/';
+            var url=service+'order/purchase/id';
             $http.get(url).success(function(data){
                 deferred.resolve(data.result);
                 $rootScope.$phase;
@@ -175,7 +175,7 @@ app.factory('PurchaseService',['$http','$rootScope','$q','$cookies','$cookieStor
         },
         loadOrderPurchase:function(){
             var deferred=$q.defer();
-            var url=service+'order/purchase/get/';
+            var url=service+'order/purchase/get';
             $http.get(url).success(function(data){
                 deferred.resolve(data);
                 $rootScope.$phase;
@@ -184,7 +184,7 @@ app.factory('PurchaseService',['$http','$rootScope','$q','$cookies','$cookieStor
         },
         loadOrderPurchaseById:function(id){
             var deferred=$q.defer();
-            var url=service+'order/purchase/getId/';
+            var url=service+'order/purchase/getId';
             $http.post(url,{
                 'id':id
             }).success(function(data){
@@ -195,7 +195,7 @@ app.factory('PurchaseService',['$http','$rootScope','$q','$cookies','$cookieStor
         },
         loadSuratJalanId:function(){
               var deferred=$q.defer();
-            var url=service+'surat/jalan/id/';
+            var url=service+'surat/jalan/id';
             $http.get(url).success(function(data){
                 deferred.resolve(data.result);
                 $rootScope.$phase;
@@ -204,7 +204,7 @@ app.factory('PurchaseService',['$http','$rootScope','$q','$cookies','$cookieStor
         },
         loadSuratJalan:function(){
             var deferred=$q.defer();
-            var url=service+'surat/jalan/get/';
+            var url=service+'surat/jalan/get';
             $http.get(url).success(function(data){
                 deferred.resolve(data);
                 $rootScope.$phase;
@@ -213,7 +213,7 @@ app.factory('PurchaseService',['$http','$rootScope','$q','$cookies','$cookieStor
         },
         saveSuratJalan:function(form){
             var deferred=$q.defer();
-            var url=service+'surat/jalan/save/';
+            var url=service+'surat/jalan/save';
             $http.post(url,{
                 'sd':form.id,
                 'id':form.purchaseId,
@@ -228,7 +228,7 @@ app.factory('PurchaseService',['$http','$rootScope','$q','$cookies','$cookieStor
         },
         updateSuratJalan:function(form){
               var deferred=$q.defer();
-            var url=service+'surat/jalan/updatetrack/';
+            var url=service+'surat/jalan/updatetrack';
             $http.post(url,{
                 'id':form.id,
                 'tn':form.tracking_number,
@@ -255,7 +255,7 @@ app.factory('UserService',['$http','$rootScope','$q','$cookies','$cookieStore','
      constructor:UserService, 
         loadCurrenctUser:function(){
             var deferred=$q.defer();
-            var url=service+'user/current/id/';
+            var url=service+'user/current/id';
             $http.get(url).success(function(data){
                 deferred.resolve(data);
                 $rootScope.$phase;
@@ -277,7 +277,7 @@ app.factory('PaymentPurchaseService',['$http','$rootScope','$q','$cookies','$coo
      constructor:PaymentPurchaseService, 
         loadPayments:function(){
             var deferred=$q.defer();
-            var url=service+'payment/purchase/get/';
+            var url=service+'payment/purchase/get';
             $http.get(url).success(function(data){
                 deferred.resolve(data);
                 $rootScope.$phase;
@@ -302,7 +302,7 @@ app.factory('PaymentService',['$http','$rootScope','$q','$cookies','$cookieStore
         constructor:PaymentService,
         loadPayments:function(){
             var deferred=$q.defer();
-            var url=service+'payment/supplier/get/';
+            var url=service+'payment/supplier/get';
             $http.get(url).success(function(data){
                 deferred.resolve(data);
                 $rootScope.$phase;
@@ -311,7 +311,7 @@ app.factory('PaymentService',['$http','$rootScope','$q','$cookies','$cookieStore
         },
         loadPaymentDetail:function(i){
             var deferred=$q.defer();
-            var url=service+'payment/supplier/detail/get/';
+            var url=service+'payment/supplier/detail/get';
             $http.post(url,{
                 'i':i
             }).success(function(data){
@@ -323,7 +323,7 @@ app.factory('PaymentService',['$http','$rootScope','$q','$cookies','$cookieStore
         },
         doPayment:function(i,form){
             var deferred=$q.defer();
-            var url=service+'payment/supplier/do/';
+            var url=service+'payment/supplier/do';
             $http.post(url,{
                 'i':i,
                 'p':form.paid,
@@ -706,7 +706,7 @@ app.controller('OrderPurchaseDetailController',['$scope','filterFilter',function
 
     $scope.validateQuantity=function(before){
      
-        if($scope.order.quantity==''||$scope.order.limit==-1){
+       /* if($scope.order.quantity==''||$scope.order.limit==-1){
             return;
         }
         else if($scope.order.quantity<1)
@@ -715,7 +715,7 @@ app.controller('OrderPurchaseDetailController',['$scope','filterFilter',function
            $scope.order.quantity= before;
         if(typeof $scope.order.quantity==='undefined')
             $scope.order.quantity='';
-        
+        */
     };
     
     $scope.isAlreadyChoosed=function(){
@@ -1147,10 +1147,16 @@ app.controller('SendDocumentController',['$scope','PurchaseService',function($sc
 
 app.controller('SendDocumentDetailController',['$scope','PurchaseService',function($scope,purchaseService){
     $scope.validateQuantity=function(before){
-        if($scope.order.quantity=='')
+        
+        if($scope.order.quantity==''){
             return;
-        if($scope.order.quantity>$scope.order.remaining)
-            $scope.order.quantity=before;
+        }
+        else if($scope.order.quantity<1)
+            $scope.order.quantity= before;
+        else if($scope.order.remaining<$scope.order.quantity)
+           $scope.order.quantity= before;
+        if(typeof $scope.order.quantity==='undefined')
+            $scope.order.quantity='';
     }
 
     $scope.remove=function(){

@@ -44,7 +44,7 @@ class PurchaseHeader extends Model {
         DB::beginTransaction();
         try {
             
-             for($i=0;$i<count($data);$i++){
+            for($i=0;$i<count($data);$i++){
                 $product=DB::table('product')->where('id', $data[$i]['kode_barang'])
                         ->select('id as kode_barang','quantity')->first();
                 if(($product->quantity)-$data[$i]['quantity'] <0||$data[$i]['quantity']<1){
@@ -53,7 +53,7 @@ class PurchaseHeader extends Model {
             }
             if(count($error)>0)
             return ['status'=>false,'error_code'=>-1,'products'=>$error];
-
+            
             $id = DB::table('order_purchase_header')->insertGetId(['invoice'=>$purchaseid,'customer' => $customer, 'is_sales_order' => $isSalesOrder,'transactiondate'=>$transactiondate,'dp'=>$dp,'discount'=>$discount,'created_by'=>$userid]);
             //Insert DP HERE
             for($i=0;$i<count($data);$i++){

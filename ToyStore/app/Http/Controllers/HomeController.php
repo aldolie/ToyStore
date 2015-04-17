@@ -2,6 +2,7 @@
 
 
 use Illuminate\Http\Request as Request;
+use Illuminate\Support\Facades\Session as Session;
 
 class HomeController extends Controller {
 
@@ -82,6 +83,11 @@ class HomeController extends Controller {
 
 	public function doSignin(Request $request){
 		
+	}
+
+	public function logout(){
+		Session::forget('user');
+		return redirect('signin');
 	}
 
 }
