@@ -129,6 +129,58 @@ class AdminController extends Controller {
         return (['status' => 200, 'result' =>$payments]);
     }
     
+    public function getPaymentPurchaseDetail(Request $request){
+        $id=$request->input('id');
+        $payments=PaymentPurchase::getPaymentDetail($id);
+        return (['status'=>200,'result'=>$payments]);
+    }
+
+    public function doPaymentPurchase(Request $request){
+         $v = Validator::make($request->all(), [
+            'i' => 'required|integer',
+            'd' => 'required|date',
+            'p'=>'required|regex:/^\d+(\.\d+)?$/',
+            't'=>'required'
+            ],[
+                'i.required'=>'Kode Invoice tidak ditemukan',
+                'i.integer' =>'Kode Invoice tidak sesuai',
+                'd.required'=>'Tanggal Pembayaran harus di isi',
+                'd.date'=>'Tanggal Pembayaran harus sesuai format tanggal',
+                'p.required'=>'Jumlah Pembayaran harus di isi',
+                'p.regex'=>'Jumlah Pembayaran harus sesuai format angka',
+                't.required'=>'Tipe Pembayaran harus di pilih',
+            ]);
+            if ($v->fails())
+           {
+               return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>$v->messages()->all()]);
+           }
+           else{
+
+
+                $id=$request->input('i');
+                $date=$request->input('d');
+                $paid=$request->input('p');
+                $type=$request->input('t');
+                $residual=PaymentPurchase::getResidual($id)->residual;
+                if($paid>$residual){
+                    return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>['Pembayaran tidak bisa lebih besar dari sisa hutang']]);
+                }
+                else{
+
+                    $token=Session::get('user');
+                    $user=SessionTable::getSession($token);
+                    $status = PaymentPurchase::doPayment($user->id,$id,$paid,$date,$type);
+                    if($status){
+                        $totalPaid=PaymentPurchase::getTotalPaid($id)->paid;
+                        return (['status'=>200,'isSuccess'=>true,'reason'=>[],'result'=>$totalPaid]);
+                    }
+                    else{
+                        return (['status'=>200,'isSuccess'=>false,'reason'=>['0'=>'Gagal Menyimpan Data']]);
+                    }
+                }
+                
+           }
+    }
     
 
     public function getPaymentDetail(Request $request){

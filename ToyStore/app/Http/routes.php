@@ -55,11 +55,16 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     Route::get('/product/recap',  [ 'uses' => 'Service\AdminController@getProductsRecapList']);
     Route::post('/order/supplier/save',  [ 'uses' => 'Service\AdminController@saveOrderSupplier']);
     Route::get('/order/supplier/id',  [ 'uses' => 'Service\AdminController@getNewOrderId']);
- 	Route::get('/order/supplier/get',['uses'=>'Service\AdminController@getOrders']);
-	Route::get('/payment/supplier/get',['uses'=>'Service\AdminController@getPayment']);
+ 	Route::get('/order/supplier/get',['uses'=>'Service\AdminController@getOrders']);   
+   
+    Route::get('/payment/supplier/get',['uses'=>'Service\AdminController@getPayment']);
+    Route::post('/payment/supplier/detail/get',['uses'=>'Service\AdminController@getPaymentDetail']);
+    Route::post('/payment/supplier/do',['uses'=>'Service\AdminController@doPayment']);  
+
     Route::get('/payment/purchase/get',['uses'=>'Service\AdminController@getPaymentPurchase']);
-    Route::post('/payment/supplier/detail/get',['uses'=>'Service\AdminController@getPaymentDetail']);	 
-	Route::post('/payment/supplier/do',['uses'=>'Service\AdminController@doPayment']);  
+    Route::post('/payment/purchase/detail/get',['uses'=>'Service\AdminController@getPaymentPurchaseDetail']);
+    Route::post('/payment/purchase/do',['uses'=>'Service\AdminController@doPaymentPurchase']);  
+    
     Route::get('/order/purchase/id',  [ 'uses' => 'Service\AdminController@getNewPurchaseOrderId']);
     Route::post('/order/purchase/save',  [ 'uses' => 'Service\AdminController@saveOrderPurchase']);
     Route::get('/order/purchase/get',['uses'=>'Service\AdminController@getPurchases']);

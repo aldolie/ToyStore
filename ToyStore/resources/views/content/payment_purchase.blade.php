@@ -38,7 +38,7 @@
                           <td>[[payment.kode_invoice]]</td>
                           <td>[[payment.jumlah_utang | currency:'Rp.']]</td>
                           <td>[[payment.ongkos_kirim | currency:'Rp.']]</td>
-                          <td>[[payment.jumlah_utang-payment.paid | currency:'Rp.']]</td>
+                          <td>[[payment.jumlah_utang-payment.ongkos_kirim-payment.paid | currency:'Rp.']]</td>
                           <td>[[payment.customer]]</td>
                         </tr>
                         <tr ng-show="isShowDetail">
@@ -52,12 +52,14 @@
                                 <tr>
                                   <th>Tanggal Bayar</th>
                                   <th>Jumlah Bayar</th>
+                                  <th>Tipe Pembayaran</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 <tr ng-repeat="detail in paymentDetails">
-                                  <td></td>
-                                  <td></td>
+                                  <td>[[detail.tanggal_pembayaran]]</td>
+                                  <td>[[detail.jumlah_pembayaran]]</td>
+                                  <td>[[detail.tipe_pembayaran]]</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -69,10 +71,19 @@
                                       <input type="text" class="form-control datepicker"   name="date_paid" ng-model="form.date" />
                                     </div>
 
+                                     <div class="form-group">
+                                      <label for="type">Tipe Pembayaran</label>
+                                      <select ng-model="form.type" class="form-control"  ng-init="form.type='Cash'">
+                                        <option value="Cash">Cash</option>
+                                        <option value="Voucher">Voucher</option>
+                                      </select>
+                                    </div>
+                                   
                                     <div class="form-group">
                                       <label for="paid">Jumlah Bayar</label>
                                       <input type="text" do-decimal class="form-control" name="paid"  ng-model="form.paid" />
                                     </div>
+
                                    
                                     <button type="submit" ng-disabled="isNotValidPayment()"  class="btn btn-primary">Lakukan pembayaran</button>
                             </form>
