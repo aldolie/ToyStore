@@ -11,6 +11,28 @@ class PurchaseHeader extends Model {
         return DB::table('order_purchase_header')->max('id');
     }
     
+    public static function getPurchaseHeaderById($id)
+    {
+        $purchase = DB::table('order_purchase_header')
+            ->join('user','user.id','=','order_purchase_header.created_by')
+            ->where('invoice','=',$id)
+            ->select('customer','dp','discount','order_purchase_header.id','is_sales_order',
+                'firstname','lastname',
+                'user.id as userid')
+            ->first();
+        return $purchase;
+    }
+
+    public static function getPurchaseDetailById($id){
+        //  $scope.orders=[{kode_barang:null,nama_barang:'',harga:null,quantity:null,limit:-1}];
+        $purchase = DB::table('order_purchase')
+            ->join('order_purchase_header','order_purchase_header.id','=','order_purchase.purchaseid')
+            ->join('product','product.id','=','order_purchase.productid')
+            ->where('invoice','=',$id)
+            ->select('order_purchase.productid as kode_barang','product.productname as nama_barang','order_purchase.price as harga','order_purchase.quantity',DB::raw('true as isDisabled'),'order_purchase.quantity as old','product.quantity as limit')
+            ->get();
+        return $purchase;
+    }
 
     public static function getPurchase()
     {

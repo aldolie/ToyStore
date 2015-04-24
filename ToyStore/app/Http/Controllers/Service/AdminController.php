@@ -128,7 +128,7 @@ class AdminController extends Controller {
         $payments=PaymentPurchase::getPaymentHeader();
         return (['status' => 200, 'result' =>$payments]);
     }
-    
+
     public function getPaymentPurchaseDetail(Request $request){
         $id=$request->input('id');
         $payments=PaymentPurchase::getPaymentDetail($id);
@@ -274,6 +274,19 @@ class AdminController extends Controller {
         $id=$request->input('id');
         $purchase=PurchaseHeader::getPurchaseById($id);
         return (['status'=>200,'result'=>$purchase]);
+    }
+
+    public function getPurchaseHeader(Request $request){
+        $id=$request->input('id');
+        $purchase=PurchaseHeader::getPurchaseHeaderById($id);
+        return ['status'=>200,'result'=>$purchase];
+    }
+
+
+    public function getPurchaseDetail(Request $request){
+        $id=$request->input('id');
+        $purchase=PurchaseHeader::getPurchaseDetailById($id);
+        return ['status'=>200,'result'=>$purchase];
     }
 
     public function getOrders(){

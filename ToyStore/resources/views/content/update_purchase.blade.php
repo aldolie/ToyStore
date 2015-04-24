@@ -1,9 +1,10 @@
 @extends('app')
 
 @section('content')
-<div class="container" ng-controller="OrderPurchaseController">
+<div class="container" ng-controller="UpdatePurchaseController">
 	<div class="row">
-		<div class="col-md-10">
+
+		<div class="col-md-10" ng-init="isFound={{$isFound}}">
             
             <div id="order-form">
                     <form method="POST" action="#">
@@ -15,19 +16,21 @@
                                 <span class="glyphicon glyphicon-search" style="margin-right:10px;cursor:pointer;" aria-hidden="true"></span>
                             </button>
                         </span>
-                    </form>  
 
-                <div class="row" id="order-header-form">
+                        <div class="alert alert-danger" ng-hide="isFound" style="margin-top:10px;">Dokumen tidak ditemukan</div>
+                    </form>  
+                
+                <div class="row" id="order-header-form" ng-show="isFound">
 
                     <div class="col-md-5 ">
                         
                         <div>
                             <span class="label-form">No Invoice Penjualan</span>
                             <span class="label-form-delimiter">:</span>
-                            <span>[[form.orderId]]</span>
+                            <span ng-init="form.orderId='{{$id}}'" >[[form.orderId]]</span>
                         </div>
 
-                        <div>
+                        <div ng-init="init()">
                             <span class="label-form">Customer</span>
                             <span class="label-form-delimiter">:</span>
                             <span><input class="form-none" type="numeric" ng-model="form.customer" /></span>
@@ -84,7 +87,7 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-condensed">
+                <table class="table table-condensed" ng-show="isFound">
                    <thead>
                        <tr>
                         <th>#</th>
@@ -95,13 +98,13 @@
                        </tr>
                     </thead>
                     <tbody>
-                        <tr ng-controller="OrderPurchaseDetailController" ng-repeat="order in orders track by $index">
+                        <tr ng-controller="UpdatePurchaseDetailController" ng-repeat="order in orders track by $index">
                              <td>
                                <span class="glyphicon glyphicon-remove" ng-click="remove()" style="cursor:pointer;"  aria-hidden="true" ></span>
                              </td>
                             <td>
                                 <input do-numeric  class="form-none small-input" type="text" ng-model="order.quantity"  ng-change="validateQuantity([[order.quantity]])" ng-disabled="isAlreadyChoosed()" />
-                                <span ng-show="isAvalableStock()"><code>Stock: [[order.limit]] </code></span>
+                                <span ng-show="isAvalableStock()"><code>Stock: [[order.limit+order.old-order.quantity]] </code></span>
                             </td>
                             <td>
                                 <div class="container-auto-complete">
@@ -119,7 +122,7 @@
                     </tbody>
                 </table>
     
-                <div class="col-md-5 col-sm-offset-7" ng-show="form.isDp">
+                <div class="col-md-5 col-sm-offset-7" ng-show="form.isDp" ng-show="isFound">
                         <div>
                             <span class="label-form">Down Payment</span>
                             <span class="label-form-delimiter">:</span>
@@ -128,7 +131,7 @@
 
                 </div>
 
-                <div class="col-md-5 col-sm-offset-7" ng-show="form.isDiscount">
+                <div class="col-md-5 col-sm-offset-7" ng-show="form.isDiscount" ng-show="isFound" >
                         <div>
                             <span class="label-form">Discount</span>
                             <span class="label-form-delimiter">:</span>
@@ -137,7 +140,7 @@
 
                 </div>
 
-                <div class="col-md-5 col-sm-offset-7">
+                <div class="col-md-5 col-sm-offset-7" ng-show="isFound" >
                         <div>
                             <span class="label-form">Grand Total</span>
                             <span class="label-form-delimiter">:</span>
@@ -148,9 +151,10 @@
                 </div>
     
             </div>
-            <button class="btn btn-info" ng-click="addOrder()"><span class="glyphicon glyphicon-plus" style="margin-right:10px;" aria-hidden="true" ></span>Tambah Penjualan</button>
-            <button class="btn btn-warning" ng-click="saveOrder()"><span class="glyphicon glyphicon-floppy-save" style="margin-right:10px;" aria-hidden="true" ></span>Simpan Data Penjualan</button>
-   
+            <div ng-show="isFound">
+                <button class="btn btn-info" ng-click="addOrder()"><span class="glyphicon glyphicon-plus" style="margin-right:10px;" aria-hidden="true" ></span>Tambah Penjualan</button>
+                <button class="btn btn-warning" ng-click="saveOrder()"><span class="glyphicon glyphicon-floppy-save" style="margin-right:10px;" aria-hidden="true" ></span>Simpan Data Penjualan</button>
+            </div>
 <!-- Error Dialog -->
 
 <div id="modal-save-error" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">

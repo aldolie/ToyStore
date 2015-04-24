@@ -63,9 +63,14 @@ class PaymentPurchase extends Model {
 
 	public static function getPaymentDetail($id)
 	{
-		$payment = DB::table('payment_purchase')->where('purchaseid','=',$id)
-					->select('paymentdate as tanggal_pembayaran','paid as jumlah_pembayaran','paymenttype as tipe_pembayaran')
-					->get();
-        return $payment;
+				
+        $payments=DB::table('order_purchase_header')->where('order_purchase_header.id','=',$id)
+        		->select('order_purchase_header.created_at as tanggal_pembayaran','order_purchase_header.dp as jumlah_pembayaran'
+        		,DB::raw("'Down Payment' as tipe_pembayaran"))->get();
+        		
+        $payment = DB::table('payment_purchase')->where('payment_purchase.purchaseid','=',$id)
+					->select('payment_purchase.paymentdate as tanggal_pembayaran','payment_purchase.paid as jumlah_pembayaran','payment_purchase.paymenttype as tipe_pembayaran')->get();
+        array_push($payments, $payment);
+        return $payments;
 	}
 }

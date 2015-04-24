@@ -38,7 +38,7 @@
                           <td>[[payment.kode_invoice]]</td>
                           <td>[[payment.jumlah_utang | currency:'Rp.']]</td>
                           <td>[[payment.ongkos_kirim | currency:'Rp.']]</td>
-                          <td>[[payment.jumlah_utang-payment.ongkos_kirim-payment.paid | currency:'Rp.']]</td>
+                          <td>[[payment.jumlah_utang+payment.ongkos_kirim-payment.paid | currency:'Rp.']]</td>
                           <td>[[payment.customer]]</td>
                         </tr>
                         <tr ng-show="isShowDetail">

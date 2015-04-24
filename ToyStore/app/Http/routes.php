@@ -32,6 +32,8 @@ Route::group(['prefix'=>'/','middleware'=>'authpage'],function(){
     Route::get('/Pembelian/','HomeController@order_supply');
     Route::get('/Pembelian/Report/','HomeController@order_supply_report');
     Route::get('/Penjualan/','HomeController@order_purchase');
+    Route::post('/Penjualan/','HomeController@update_purchase');
+
     Route::get('/Pembayaran/','HomeController@payment_supply');
     Route::get('/Tagihan/','HomeController@payment_purchase');
     Route::get('/Product/','HomeController@product_recapitulation');
@@ -67,7 +69,12 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     
     Route::get('/order/purchase/id',  [ 'uses' => 'Service\AdminController@getNewPurchaseOrderId']);
     Route::post('/order/purchase/save',  [ 'uses' => 'Service\AdminController@saveOrderPurchase']);
+    Route::post('/order/purchase/header/get',['uses'=>'Service\AdminController@getPurchaseHeader']);
+    Route::post('/order/purchase/detail/get',['uses'=>'Service\AdminController@getPurchaseDetail']);
+   
     Route::get('/order/purchase/get',['uses'=>'Service\AdminController@getPurchases']);
+        
+
     Route::get('/user/current/id',['uses'=>'Service\AdminController@getCurrentUser']);
     Route::post('/order/purchase/getId',['uses'=>'Service\AdminController@getPurchaseById']);
     Route::post('/surat/jalan/save',['uses'=>'Service\AdminController@saveSuratJalan']);
