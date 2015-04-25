@@ -23,6 +23,26 @@ angular.module('app').factory('PurchaseService',['$http','$rootScope','$q','$coo
            });
             return deferred.promise;
         },
+        updateOrderPurchase:function(form){
+            var deferred=$q.defer();
+             var url=service+'order/purchase/update';
+           $http.post(url,{
+               'purchaseid':form.id,
+               'customer':form.customer,
+               'date':form.date,
+               'is_sales_order':form.salesOrder,
+               'isDp':form.isDp,
+               'isDiscount':form.isDiscount,
+               'discount':form.discount,
+               'dp':form.dp,
+               'data':form.data,
+               'deleted':form.deleted
+           }).success(function(data){
+             deferred.resolve(data);
+             $rootScope.$phase;  
+           });
+            return deferred.promise;
+        },
         loadOrderId:function(){
             var deferred=$q.defer();
             var url=service+'order/purchase/id';

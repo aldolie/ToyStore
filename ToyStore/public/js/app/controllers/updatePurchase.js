@@ -2,7 +2,7 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
     
     var convertDate = function(usDate) {
       var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-      return dateParts[3] + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2])) + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1]));
+      return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
     };
 
    
@@ -10,6 +10,8 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
     $scope.form.date=convertDate(new Date().toLocaleDateString());
     $scope.orders=[{kode_barang:null,nama_barang:'',harga:null,quantity:null,limit:-1}];
     $scope.products=[];
+    $scope.deleted=[];
+
     $scope.addOrder=function(){
         $scope.orders.push({kode_barang:'',nama_barang:'',harga:'',quantity:'',limit:-1}) ;
     };
@@ -20,6 +22,25 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
          total+=$scope.orders[i].quantity*$scope.orders[i].harga;
         return total;
     };
+
+    $scope.getDp=function(){
+        if($scope.form.isDp)
+            return $scope.form.dp;
+        else
+            return 0;
+    }
+
+    $scope.getDiscount=function(){
+
+         if($scope.form.isDiscount)
+            return $scope.form.discount;
+          else
+            return 0;
+    }
+
+    $scope.getTotalAll=function(){
+        return ($scope.getGrandTotal()-$scope.getDiscount());
+    }
     
     $scope.saveOrder=function(){
         if($scope.form.customer==null||$scope.form.customer=='')
@@ -33,12 +54,13 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
             $('#modal-save-error').modal('show');
             return;
         }
-        else if($scope.form.dp!=0&&!$scope.form.isDp){
+        else if($scope.form.isDp&&$scope.form.dp==0){
             $scope.error='Down Payment Harus di isi';
             $('#modal-save-error').modal('show');
             return;
         }
-        else if($scope.form.discount!=0&&!$scope.form.isDiscount){
+
+        else if($scope.form.discount==0&&$scope.form.isDiscount){
             $scope.error='Discount Harus di isi';
             $('#modal-save-error').modal('show');
             return;
@@ -48,7 +70,11 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
             $('#modal-save-error').modal('show');
             return;
         }
-        
+        else if($scope.form.dp>$scope.getGrandTotal()-$scope.form.discount){
+             $scope.error='Down Payment Tidak bisa lebih besar dari total tambah discount';
+            $('#modal-save-error').modal('show');
+            return;
+        }
         else{
         
             
@@ -72,6 +98,7 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
             }
             $scope.error='';
             $scope.form.data=data;
+            $scope.form.deleted=$scope.deleted;
 
             $('#modal-save').modal('show');
         }
@@ -80,11 +107,11 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
     
     $scope.submitOrder=function(){
      
-        purchaseService.saveOrderPurchase($scope.form).then(function(data){
+        purchaseService.updateOrderPurchase($scope.form).then(function(data){
             
             if(data.isSuccess){
-               $('#modal-save').modal('hide');
-                window.location.href='/Penjualan/';
+              // $('#modal-save').modal('hide');
+              //  window.location.href='/Penjualan/';
             }
             else{
                for(var i=0;i<data.reason.length;i++){
@@ -128,6 +155,11 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
         $('#modal-save').modal('hide');
     };
 
+    $scope.deleteOrder=function(order){
+        if(order.old)
+            $scope.deleted.push(order);
+    };
+
     $scope.init=function(){
         purchaseService.loadHeaderPurchase($scope.form.orderId).then(function(data){
             $scope.form.customer=data.result.customer;
@@ -135,12 +167,15 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
             $scope.form.discount=data.result.discount;
             $scope.form.sales=data.result.lastname+' '+data.result.firstname;
             $scope.form.salesId=data.result.userid;
-            if(data.result.is_sales_order=0)
+            $scope.form.id=data.result.id;
+            if(data.result.is_sales_order==1)
                 $scope.form.salesOrder=true;
             if(data.result.dp>0)
                 $scope.form.isDp=true;
             if(data.result.discount>0)
                 $scope.form.isDiscount=true;
+            $scope.form.date=data.result.transactiondate;
+  
             purchaseService.loadDetailPurchase($scope.form.orderId).then(function(data_detail){
                 $scope.orders=data_detail.result;
                 productService.loadProductsforAutoComplete().then(function(data){
@@ -165,20 +200,6 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
         });
     };
     
-    (function(){
-
-      
-
-       /* userService.loadCurrenctUser().then(function(data){
-            if(data.result){
-                $scope.form.sales=data.result.name;
-                $scope.form.salesId=data.result.userid;
-                   
-            }
-        });*/
-        
-    })();
-    
     
 }]);
 
@@ -199,15 +220,7 @@ angular.module('app').controller('UpdatePurchaseDetailController',['$scope','fil
        
     }
     
-    $scope.reset=function(){
-        $scope.$parent.enableProduct($scope.order.kode_barang);
-        $scope.order.nama_barang='';
-        $scope.order.kode_barang=null;
-        $scope.order.isDisabled=false;
-        $scope.order.quantity='';
-        $scope.order.limit=-1;
-
-    };
+    
 
     $scope.isAvalableStock=function(){
         if($scope.order.limit==-1)
@@ -239,6 +252,24 @@ angular.module('app').controller('UpdatePurchaseDetailController',['$scope','fil
      $scope.onClickAutoComplete=function(product){
         
         $scope.$parent.disableProduct(product.kode_barang);
+        for(var i=0;i<$scope.$parent.deleted.length;i++)
+        {
+
+            if(product.kode_barang===$scope.$parent.deleted[i].kode_barang)
+            {
+                var o=$scope.$parent.deleted[i];
+                $scope.order.kode_barang=o.kode_barang;
+                $scope.order.nama_barang=o.nama_barang;
+                $scope.order.harga=o.harga;
+                $scope.order.limit=product.quantity;
+                $scope.order.quantity=o.quantity;
+                $scope.order.old=o.old;
+                $scope.$parent.deleted.splice(i,1);
+                $scope.filteredProducts=[];
+                $scope.order.isDisabled=true;
+                return;
+            }
+        }
         $scope.order.kode_barang=product.kode_barang;
          if($scope.order.kode_barang!=0)
         $scope.order.nama_barang=product.nama_barang;
@@ -249,6 +280,7 @@ angular.module('app').controller('UpdatePurchaseDetailController',['$scope','fil
     };
     
     $scope.remove=function(){
+        $scope.$parent.deleteOrder($scope.order);
         $scope.$parent.enableProduct($scope.order.kode_barang);
         $scope.$parent.orders.splice($scope.$index,1) ;
         $scope.order.isDisabled=false;

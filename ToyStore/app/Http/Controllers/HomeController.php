@@ -113,11 +113,28 @@ class HomeController extends Controller {
 				$data['isFound']='false';
 				$purchase=PurchaseHeader::getPurchaseHeaderById($request->input('search'));
 				if($purchase)
-					$data['isFound']='true';
+					return redirect('/Penjualan/Search/'.str_replace('/', '_', $data['id']));
 				else
-					$data['isFound']='false';
-				return view('content/update_purchase',$data);
+					return view('content/update_purchase',$data);
+				
 			}
+		}
+	}
+
+	public function update_purchaseView(Request $request){
+
+		$user=SessionTable::getSession(Session::get('user'));
+		if($user->role!='sales')
+			return view('404',$this->getData($user));
+		else{
+			$data=$this->getData($user);
+			$data['id']=str_replace('_', '/',$request->route('invoice'));
+			$data['isFound']='true';
+			$purchase=PurchaseHeader::getPurchaseHeaderById($data['id']);
+			if(!$purchase)
+				$data['isFound']='false';
+			return view('content/update_purchase',$data);	
+			
 		}
 	}
 

@@ -7,7 +7,7 @@
 		<div class="col-md-10" ng-init="isFound={{$isFound}}">
             
             <div id="order-form">
-                    <form method="POST" action="#">
+                    <form method="POST" action="{{url('/Penjualan')}}">
                         <span class="label-form">Search Form</span>
                         <span class="label-form-delimiter">:</span>
                         <span>
@@ -16,8 +16,6 @@
                                 <span class="glyphicon glyphicon-search" style="margin-right:10px;cursor:pointer;" aria-hidden="true"></span>
                             </button>
                         </span>
-
-                        <div class="alert alert-danger" ng-hide="isFound" style="margin-top:10px;">Dokumen tidak ditemukan</div>
                     </form>  
                 
                 <div class="row" id="order-header-form" ng-show="isFound">
@@ -108,9 +106,7 @@
                             </td>
                             <td>
                                 <div class="container-auto-complete">
-                                    
                                     <input class="form-none large-input" ng-init="order.isDisabled=false" ng-disabled="order.isDisabled" type="text" ng-model="order.nama_barang" ng-change="searchProduct()" />
-                                    <span ng-click="reset()" ng-show="order.isDisabled" class="glyphicon glyphicon-trash  "  aria-hidden="true" ></span>
                                     <ul class="content-auto-complete">
                                         <li ng-repeat="product in filteredProducts track by $index" ng-click="onClickAutoComplete(product)">[[product.kode_barang+'-'+product.nama_barang]]</li>
                                     </ul>
@@ -144,7 +140,7 @@
                         <div>
                             <span class="label-form">Grand Total</span>
                             <span class="label-form-delimiter">:</span>
-                            <span>Rp.  [[ getGrandTotal()-form.discount ]]</span>
+                            <span>Rp.  [[ getTotalAll() ]]</span>
                         </div>
 
                         
@@ -271,7 +267,7 @@
                         <div>
                             <span class="label-form">Grand Total</span>
                             <span class="label-form-delimiter">:</span>
-                            <span>Rp.  [[ getGrandTotal()-form.discount ]]</span>
+                            <span>Rp.  [[ getTotalAll() ]]</span>
                         </div>
 
                         

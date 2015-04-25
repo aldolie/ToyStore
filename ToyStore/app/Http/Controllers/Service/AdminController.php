@@ -490,4 +490,67 @@ class AdminController extends Controller {
     }
     
 
+    public function updateOrderPurchase(Request $request){
+        
+       $v = Validator::make($request->all(), [
+            'customer' => 'required|max:255',
+            'date' => 'required|date',
+            'is_sales_order'=>'required',
+            'purchaseid'=>'required'
+        ],[
+            'purchaseid.required'=>'Purchaseid harus diisi',
+            'customer.required'=>'Nama Customer  harus diisi',
+            'date.required'=>'Tanggal Pembelian harus diisi',
+            'is_sales_order.required'=>'Sales Order harus di isi'
+        ]);
+       
+       if ($v->fails())
+       {
+           return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>$v->messages()->all()]);
+       }
+       else{
+
+
+            $customer=$request->input('customer');
+            $date=$request->input('date');
+            $isSalesOrder=$request->input('is_sales_order');
+            $discount=$request->input('discount');
+            $dp=$request->input('dp');
+            $isDiscount=$request->input('isDiscount');
+            $isDp=$request->input('isDp');
+            $purchaseid=$request->input('purchaseid');
+            if(!$isDiscount)
+                $discount=0;
+            if(!$isDp)
+                $dp=0;
+            $discount=(($discount=='')?0:$discount);
+            $dp=(($dp=='')?0:$dp);
+
+            $data=$request->input('data');
+            $deleted=$request->input('deleted');
+
+            $token=Session::get('user');
+            $user=SessionTable::getSession($token);
+            $result = PurchaseHeader::updateOrder($purchaseid,$user->id,$customer,$date,$isSalesOrder,$discount,$dp,$data,$deleted);
+
+            if($result['status']==false){
+                if($result['error_code']==-2){
+                    return (['status'=>200,'isSuccess'=>false,'reason'=>['0'=>'Gagal Menyimpan Data']]);
+                }
+                else if($result['error_code']==-1)
+                {
+                    return (['status'=>200,'isSuccess'=>false,'reason'=>['0'=>'Barang Tidak Mencukupi'],'products'=>$result['products']]);
+                }
+            }
+            
+            else{
+                return (['status'=>200,'isSuccess'=>true,'reason'=>[]]);
+            }
+            
+       }
+        
+    }
+    
+
+
 }

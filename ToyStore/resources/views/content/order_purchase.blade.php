@@ -6,7 +6,7 @@
 		<div class="col-md-10">
             
             <div id="order-form">
-                    <form method="POST" action="#">
+                    <form method="POST" action="{{url('/Penjualan')}}">
                         <span class="label-form">Search Form</span>
                         <span class="label-form-delimiter">:</span>
                         <span>

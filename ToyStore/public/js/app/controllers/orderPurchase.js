@@ -1,11 +1,10 @@
 
 angular.module('app').controller('OrderPurchaseController',['$scope','filterFilter','ProductService','PurchaseService','UserService',function($scope,filterFilter,productService,purchaseService,userService){
     
-    var convertDate = function(usDate) {
+   var convertDate = function(usDate) {
       var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-      return dateParts[3] + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2])) + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1]));
+      return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
     };
-
    
     $scope.form={orderId:1,customer:'',sales:'',salesId:0,date:'',dp:0,discount:0,salesOrder:false,data:[]};
     $scope.form.date=convertDate(new Date().toLocaleDateString());
@@ -49,7 +48,12 @@ angular.module('app').controller('OrderPurchaseController',['$scope','filterFilt
             $('#modal-save-error').modal('show');
             return;
         }
-        
+        else if($scope.form.dp>$scope.getGrandTotal()-$scope.form.discount){
+             $scope.error='Down Payment Tidak bisa lebih besar dari total tambah discount';
+            $('#modal-save-error').modal('show');
+            return;
+        }
+
         else{
         
             
