@@ -28,10 +28,11 @@ angular.module('app').controller('PaymentDetailController',['$scope','PaymentSer
      
         $('.datepicker').datepicker({
                 changeMonth: true,
-                changeYear: true,
+                changeYear: false,
                 defaultDate: new Date(),
                 yearRange: '1970:2030',
-                dateFormat: 'yy-mm-dd'
+                dateFormat: 'yy-mm-dd',
+                stepMonths:false
         });
             
     };

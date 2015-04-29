@@ -33,10 +33,11 @@
                                     var d = new Date();
                                     $('#datepicker').datepicker({
                                             changeMonth: true,
-                                            changeYear: true,
+                                            changeYear: false,
                                             defaultDate: d,
                                             yearRange: '1970:2030',
-                                            dateFormat: 'yy-mm-dd'
+                                            dateFormat: 'yy-mm-dd',
+                                            stepMonths: 0
                                     });
 
                                 })();

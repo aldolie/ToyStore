@@ -5,21 +5,27 @@ angular.module('app').controller('ProductRecapitulationController',['$scope','fi
 	$scope.filteredProducts=[];
     $scope.products=[];
     $scope.filterProduct=function(){
-        $scope.filteredProducts=filterFilter($scope.products,{'nama_barang':$scope.search});
+        filter();
     };
 	
 	(function(){
         
 		productService.loadProductsforRecapitulation().then(function(data){
 			$scope.products=data;
-            
-            $scope.filteredProducts=filterFilter($scope.products,{'nama_barang':$scope.search});
+            filter();
              
 		},function(){});
 
         
 	})();
 	
+     var filter=function (){
+        if($scope.type=='nama_barang')
+            $scope.filteredProducts=filterFilter($scope.products,{'nama_barang':$scope.search});
+        else if($scope.type=='kode_barang')
+            $scope.filteredProducts=filterFilter($scope.products,{'kode_barang':$scope.search});  
+    }
+
     
 }]);
 
