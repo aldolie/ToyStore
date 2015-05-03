@@ -23,6 +23,22 @@ class PurchaseHeader extends Model {
         return $purchase;
     }
 
+
+    public static function getLastestPrice($customername,$id)
+    {
+        $purchase = DB::table('order_purchase_header')
+            ->join('order_purchase','order_purchase.purchaseid','=','order_purchase_header.id')
+            ->where('customer','=',$customername)
+            ->where('productid','=',$id)
+            ->orderBy('order_purchase_header.created_at', 'desc')
+            ->select('price','order_purchase_header.created_at')
+            ->first();
+        if($purchase)
+            return $purchase->price;
+        else
+            return 0;
+    }
+
     public static function getPurchaseDetailById($id){
         //  $scope.orders=[{kode_barang:null,nama_barang:'',harga:null,quantity:null,limit:-1}];
         $purchase = DB::table('order_purchase')
@@ -80,10 +96,21 @@ class PurchaseHeader extends Model {
             $id = DB::table('order_purchase_header')->insertGetId(['invoice'=>$purchaseid,'customer' => $customer, 'is_sales_order' => $isSalesOrder,'transactiondate'=>$transactiondate,'dp'=>$dp,'discount'=>$discount,'created_by'=>$userid]);
             //Insert DP HERE
             for($i=0;$i<count($data);$i++){
-                DB::table('order_purchase')->insert(['purchaseid' => $id, 'productid' => $data[$i]['kode_barang'],'price'=>$data[$i]['harga'],'quantity'=>$data[$i]['quantity'],'created_by'=>$userid]);
-                DB::table('product')->where('id', $data[$i]['kode_barang'])->decrement('quantity',$data[$i]['quantity'] );
-                DB::table('product')->where('id','=',$data[$i]['kode_barang'])
-                    ->whereRaw('(price='.$data[$i]['harga'].' or price=0)')->update(['price'=>$data[$i]['harga']]);
+
+                if($data[$i]['kode_barang']==0){
+                    $productid=DB::table('product')->insertGetId(['productname'=>$data[$i]['nama_barang'],'quantity'=>0,'price'=>0,'created_by'=>$userid]);
+                    DB::table('order_purchase')->insert(['purchaseid' => $id, 'productid' => $productid,'price'=>$data[$i]['harga'],'quantity'=>$data[$i]['quantity'],'created_by'=>$userid]);
+                    DB::table('product')->where('id', $productid)->decrement('quantity',$data[$i]['quantity'] );
+                  /*  DB::table('product')->where('id','=',$productid)
+                    ->whereRaw('(price='.$data[$i]['harga'].' or price=0)')->update(['price'=>$data[$i]['harga']]);*/
+                 }
+                else{
+                    DB::table('order_purchase')->insert(['purchaseid' => $id, 'productid' => $data[$i]['kode_barang'],'price'=>$data[$i]['harga'],'quantity'=>$data[$i]['quantity'],'created_by'=>$userid]);
+                    DB::table('product')->where('id', $data[$i]['kode_barang'])->decrement('quantity',$data[$i]['quantity'] );
+                    /*DB::table('product')->where('id','=',$data[$i]['kode_barang'])
+                    ->whereRaw('(price='.$data[$i]['harga'].' or price=0)')->update(['price'=>$data[$i]['harga']]);*/
+                }
+                
             }
             
             DB::commit();
@@ -140,27 +167,6 @@ class PurchaseHeader extends Model {
                  DB::table('product')->where('id', $deleted[$i]['kode_barang'])->increment('quantity',$deleted[$i]['old'] );
                    
             }
-            
-            /*  for($i=0;$i<count($data);$i++){
-                $product=DB::table('product')->where('id', $data[$i]['kode_barang'])
-                        ->select('id as kode_barang','quantity')->first();
-                if(($product->quantity)-$data[$i]['quantity'] <0||$data[$i]['quantity']<1){
-                    $error[$i]=$product;
-                }
-            }
-            if(count($error)>0)
-            return ['status'=>false,'error_code'=>-1,'products'=>$error];
-            */
-          
-          //  $id = DB::table('order_purchase_header')->insertGetId(['invoice'=>$purchaseid,'customer' => $customer, 'is_sales_order' => $isSalesOrder,'transactiondate'=>$transactiondate,'dp'=>$dp,'discount'=>$discount,'created_by'=>$userid]);
-            //Insert DP HERE
-            /*for($i=0;$i<count($data);$i++){
-                DB::table('order_purchase')->insert(['purchaseid' => $id, 'productid' => $data[$i]['kode_barang'],'price'=>$data[$i]['harga'],'quantity'=>$data[$i]['quantity'],'created_by'=>$userid]);
-                DB::table('product')->where('id', $data[$i]['kode_barang'])->decrement('quantity',$data[$i]['quantity'] );
-                DB::table('product')->where('id','=',$data[$i]['kode_barang'])
-                    ->whereRaw('(price='.$data[$i]['harga'].' or price=0)')->update(['price'=>$data[$i]['harga']]);
-            }*/
-            
             DB::commit();
             return ['status'=>true];
             

@@ -11,13 +11,13 @@
                         <div>
                             <span class="label-form">No Invoice Pembelian</span>
                             <span class="label-form-delimiter">:</span>
-                            <span>[[orderId]]</span>
+                            <span><input type="text" class="form-none"  ng-model="form.orderId" /></span>
                         </div>
 
                         <div>
                             <span class="label-form">Supplier</span>
                             <span class="label-form-delimiter">:</span>
-                            <span><input class="form-none" type="numeric" ng-model="supplier" /></span>
+                            <span><input class="form-none" type="text" ng-model="supplier" /></span>
                         </div>
 
                     </div>

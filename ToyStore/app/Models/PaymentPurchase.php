@@ -13,7 +13,7 @@ class PaymentPurchase extends Model {
 					->leftJoin(DB::raw('(select  purchaseid ,sum(paid) as paid from payment_purchase group by purchaseid) as p '),'p.purchaseid','=','order_purchase_header.id')
 					->leftJoin(DB::raw('(select  purchaseid ,sum(ongkos_kirim) as ongkos_kirim from sending_header group by purchaseid) as s '),'s.purchaseid','=','order_purchase_header.id')
 					->select('order_purchase_header.id as id','order_purchase_header.invoice as kode_invoice','order_purchase_header.customer'
-						,DB::raw('SUM(order_purchase.price*order_purchase.quantity) as jumlah_utang')
+						,DB::raw('SUM(order_purchase.price*order_purchase.quantity)-order_purchase_header.discount as jumlah_utang')
 						,'order_purchase_header.transactiondate as tanggal_penjualan'
 						,DB::raw('case when ongkos_kirim is null then 0 else ongkos_kirim end as ongkos_kirim')
 						,DB::raw('case when p.paid is null then 0 else p.paid end +order_purchase_header.dp as paid'))
@@ -65,6 +65,7 @@ class PaymentPurchase extends Model {
 	{
 				
         $payments=DB::table('order_purchase_header')->where('order_purchase_header.id','=',$id)
+        		->where('dp','>',0)
         		->select('order_purchase_header.created_at as tanggal_pembayaran','order_purchase_header.dp as jumlah_pembayaran'
         		,DB::raw("'Down Payment' as tipe_pembayaran"))->get();
         		

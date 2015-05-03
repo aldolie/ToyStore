@@ -24,7 +24,7 @@
                         <div>
                             <span class="label-form">No Invoice Penjualan</span>
                             <span class="label-form-delimiter">:</span>
-                            <span>[[form.orderId]]</span>
+                            <span><input type="text" class="form-none"  ng-model="form.orderId" /></span>
                         </div>
 
                         <div>
@@ -140,12 +140,18 @@
 
                 <div class="col-md-5 col-sm-offset-7">
                         <div>
+                            <span class="label-form">Total</span>
+                            <span class="label-form-delimiter">:</span>
+                            <span>Rp.  [[ getGrandTotal() ]]</span>
+                        </div>
+                </div>
+
+                 <div class="col-md-5 col-sm-offset-7">
+                        <div>
                             <span class="label-form">Grand Total</span>
                             <span class="label-form-delimiter">:</span>
-                            <span>Rp.  [[ getGrandTotal()-form.discount ]]</span>
+                            <span>Rp.  [[ getGrandTotal()-form.discount-form.dp ]]</span>
                         </div>
-
-                        
                 </div>
     
             </div>
@@ -266,13 +272,19 @@
 
                 <div class="col-md-5 col-sm-offset-7">
                         <div>
+                            <span class="label-form">Total</span>
+                            <span class="label-form-delimiter">:</span>
+                            <span>Rp.  [[ getGrandTotal() ]]</span>
+                        </div>
+                </div>
+
+                 <div class="col-md-5 col-sm-offset-7">
+                        <div>
                             <span class="label-form">Grand Total</span>
                             <span class="label-form-delimiter">:</span>
-                            <span>Rp.  [[ getGrandTotal()-form.discount ]]</span>
+                            <span>Rp.  [[ getGrandTotal()-form.discount-form.dp ]]</span>
                         </div>
-
-                        
-                </div> 
+                </div>
                     
                     <code>[[error]]</code>
                 </div>

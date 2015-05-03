@@ -18,6 +18,8 @@ Route::controllers([
 ]);
 
 
+Route::get('/test','WelcomeController@test');
+
 Route::group(['prefix'=>'/','middleware'=>'authpagesignin'],function(){
 
     Route::post('/signin/action','HomeController@doSignin');
@@ -41,6 +43,10 @@ Route::group(['prefix'=>'/','middleware'=>'authpage'],function(){
     Route::get('/Penjualan/Report/','HomeController@order_purchase_report');
     Route::get('/Surat/Jalan/','HomeController@send_document');
     Route::get('/Surat/Jalan/Report/','HomeController@send_document_report');
+    Route::get('/Konfigurasi/','HomeController@configuration');
+    Route::get('/Konfigurasi/backup','HomeController@backup');
+    Route::get('/Konfigurasi/delete','HomeController@delete');
+    Route::post('/Konfigurasi/restore','HomeController@restore');
     Route::get('/logout/','HomeController@logout');
 
 });
@@ -53,9 +59,15 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
     header('Access-Control-Allow-Credentials: true');
 
-    Route::get('/product/rop/{i}',  [ 'uses' => 'Service\AdminController@getROP']);
+
+    Route::get('/product/rop',  [ 'uses' => 'Service\AdminController@getROP']);
+    Route::get('/product/rop/load',  [ 'uses' => 'Service\AdminController@loadROP']);
+    Route::post('/product/rop/save',  [ 'uses' => 'Service\AdminController@editROP']);
     Route::get('/product/auto/',  [ 'uses' => 'Service\AdminController@getProductsSimpleList']);
     Route::get('/product/recap',  [ 'uses' => 'Service\AdminController@getProductsRecapList']);
+    Route::post('product/code/update',['uses'=>'Service\AdminController@updateProductCode']);
+
+
     Route::post('/order/supplier/save',  [ 'uses' => 'Service\AdminController@saveOrderSupplier']);
     Route::get('/order/supplier/id',  [ 'uses' => 'Service\AdminController@getNewOrderId']);
  	Route::get('/order/supplier/get',['uses'=>'Service\AdminController@getOrders']);   
@@ -67,10 +79,12 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     Route::get('/payment/purchase/get',['uses'=>'Service\AdminController@getPaymentPurchase']);
     Route::post('/payment/purchase/detail/get',['uses'=>'Service\AdminController@getPaymentPurchaseDetail']);
     Route::post('/payment/purchase/do',['uses'=>'Service\AdminController@doPaymentPurchase']);  
+
     
     Route::get('/order/purchase/id',  [ 'uses' => 'Service\AdminController@getNewPurchaseOrderId']);
     Route::post('/order/purchase/save',  [ 'uses' => 'Service\AdminController@saveOrderPurchase']);
     Route::post('/order/purchase/update',  [ 'uses' => 'Service\AdminController@updateOrderPurchase']);
+    Route::post('/order/purchase/price/get',['uses'=>'Service\AdminController@getLastestPrice']);
     
     Route::post('/order/purchase/header/get',['uses'=>'Service\AdminController@getPurchaseHeader']);
     Route::post('/order/purchase/detail/get',['uses'=>'Service\AdminController@getPurchaseDetail']);

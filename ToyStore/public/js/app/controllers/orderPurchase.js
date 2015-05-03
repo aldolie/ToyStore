@@ -6,7 +6,7 @@ angular.module('app').controller('OrderPurchaseController',['$scope','filterFilt
       return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
     };
    
-    $scope.form={orderId:1,customer:'',sales:'',salesId:0,date:'',dp:0,discount:0,salesOrder:false,data:[]};
+    $scope.form={orderId:'',customer:'',sales:'',salesId:0,date:'',dp:0,discount:0,salesOrder:false,data:[]};
     $scope.form.date=convertDate(new Date().toLocaleDateString());
     $scope.orders=[{kode_barang:null,nama_barang:'',harga:null,quantity:null,limit:-1}];
     $scope.products=[];
@@ -64,11 +64,11 @@ angular.module('app').controller('OrderPurchaseController',['$scope','filterFilt
                     $('#modal-save-error').modal('show');
                     return;
                 }
-                else if(data[i].limit<data[i].quantity){
+                /*else if(data[i].limit<data[i].quantity){
                     $scope.error='Stock tidak mencukupi';
                     $('#modal-save-error').modal('show');
                     return;
-                }
+                }*/
                 else if(data[i].quantity<1){
                     $scope.error='Quantity minimal 1';
                     $('#modal-save-error').modal('show');
@@ -136,9 +136,9 @@ angular.module('app').controller('OrderPurchaseController',['$scope','filterFilt
     (function(){
         
                 
-        purchaseService.loadOrderId().then(function(data){
+       /* purchaseService.loadOrderId().then(function(data){
             $scope.form.orderId=data;
-        },function(){});
+        },function(){});*/
         
         productService.loadProductsforAutoComplete().then(function(data){
             $scope.products=data;
@@ -162,7 +162,7 @@ angular.module('app').controller('OrderPurchaseController',['$scope','filterFilt
 }]);
 
 
-angular.module('app').controller('OrderPurchaseDetailController',['$scope','filterFilter',function($scope,filterFilter){
+angular.module('app').controller('OrderPurchaseDetailController',['$scope','filterFilter','PurchaseService',function($scope,filterFilter,purchaseService){
     
     $scope.styleQuantity='red';
 
@@ -172,10 +172,12 @@ angular.module('app').controller('OrderPurchaseDetailController',['$scope','filt
            $scope.filteredProducts=[];
            return;
         }
-        
         $scope.filteredProducts=filterFilter($scope.$parent.products,{'nama_barang':$scope.order.nama_barang,'isSelected':false});
-       
-       
+        if($scope.$parent.form.salesOrder){
+            $scope.filteredProducts.push({kode_barang:0,nama_barang:'Tambah Barang Baru',quantity:'',quantity:-1,harga:''});
+            
+        }
+        
     }
     
     $scope.reset=function(){
@@ -221,6 +223,11 @@ angular.module('app').controller('OrderPurchaseDetailController',['$scope','filt
         $scope.order.kode_barang=product.kode_barang;
          if($scope.order.kode_barang!=0)
         $scope.order.nama_barang=product.nama_barang;
+        purchaseService.loadPriceByCustomer($scope.$parent.form.customer,product.kode_barang).then(function (data){
+            $scope.order.harga=data.result;
+        },function(){
+            $scope.order.harga=product.harga;
+        });
         $scope.order.harga=product.harga;
         $scope.order.limit=product.quantity;
         $scope.filteredProducts=[];
@@ -232,7 +239,7 @@ angular.module('app').controller('OrderPurchaseDetailController',['$scope','filt
         $scope.$parent.orders.splice($scope.$index,1) ;
         $scope.order.isDisabled=false;
         if($scope.$parent.orders.length==0)
-            $scope.$parent.orders.push({kode_barang:'',nama_barang:'',harga:'',quantity:''}) ;
+            $scope.$parent.orders.push({kode_barang:'',nama_barang:'',harga:'',quantity:'',limit:-1}) ;
     };
     
     $scope.isErrorQuantity=function(){

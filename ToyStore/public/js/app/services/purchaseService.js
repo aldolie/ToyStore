@@ -61,6 +61,18 @@ angular.module('app').factory('PurchaseService',['$http','$rootScope','$q','$coo
             });
             return deferred.promise;
         },
+        loadPriceByCustomer:function(customer,id){
+            var deferred=$q.defer();
+            var url=service+'order/purchase/price/get';
+            $http.post(url,{
+                'customer':customer,
+                'pid':id
+            }).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+        },
         loadOrderPurchaseById:function(id){
             var deferred=$q.defer();
             var url=service+'order/purchase/getId';

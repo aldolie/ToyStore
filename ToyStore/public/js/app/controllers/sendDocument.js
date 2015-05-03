@@ -26,11 +26,12 @@ angular.module('app').controller('SendDocumentController',['$scope','PurchaseSer
             else{
                 $scope.orders=data.result;
                 $scope.form.purchaseId=data.result[0].id;
-                purchaseService.loadSuratJalanId().then(function(data){
+                 $scope.lock=true;
+               /* purchaseService.loadSuratJalanId().then(function(data){
                      $scope.form.id=data;
-                     $scope.lock=true;
+                    
                      
-                },function(){});
+                },function(){});*/
             }
         },function(){});
     };

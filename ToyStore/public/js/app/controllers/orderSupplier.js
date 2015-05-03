@@ -3,7 +3,7 @@ angular.module('app').controller('OrderSupplyController',['$scope','filterFilter
     
     var convertDate = function(usDate) {
       var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-      return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
+      return dateParts[3] + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2])) + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1]));
     };
 
 	$scope.orderId='';
@@ -102,10 +102,10 @@ angular.module('app').controller('OrderSupplyController',['$scope','filterFilter
 	(function(){
         
                 
-        orderService.loadOrderId().then(function(data){
-            $scope.orderId=data;
-            $scope.form.orderId=$scope.orderId;
-        },function(){});
+        /*orderService.loadOrderId().then(function(data){
+          //  $scope.orderId=data;
+           // $scope.form.orderId=$scope.orderId;
+        },function(){});*/
         
 		productService.loadProductsforAutoComplete().then(function(data){
 			$scope.products=data;

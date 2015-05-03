@@ -13,6 +13,7 @@ use Illuminate\Http\Request as Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash as Hash;
 use Illuminate\Support\Facades\Session as Session;
+use Illuminate\Support\Facades\Storage as Storage;
 
 class AdminController extends Controller {
 
@@ -108,9 +109,22 @@ class AdminController extends Controller {
         return (['status' => 200, 'result' => $products]);
 	}
 
-    public function getROP($i)
+    public function getLastestPrice(Request $request){
+        if($request->input('customer')!=null&&$request->input('pid')!=null){
+            $customername=$request->input('customer');
+            $pid=$request->input('pid');
+            $price=PurchaseHeader::getLastestPrice($customername,$pid);
+            return (['status'=>200,'result'=>$price]);
+        }
+        return ['status'=>200,'result'=>0];
+    }
+
+    public function getROP()
     {
-        $counts=Product::getROP($i);
+        if(!Storage::disk('local')->exists('rop.txt'))
+            Storage::disk('local')->put('rop.txt', '5');
+        $rop = Storage::disk('local')->get('rop.txt');
+        $counts=Product::getROP($rop);
         return (['status'=>200,'result'=>$counts]);
     }
     
@@ -489,6 +503,32 @@ class AdminController extends Controller {
         
     }
     
+    public function loadROP(){
+        if(!Storage::disk('local')->exists('rop.txt'))
+            Storage::disk('local')->put('rop.txt', '5');
+        $rop = Storage::disk('local')->get('rop.txt');
+        return ['status'=>200,'rop'=>$rop];
+    }
+
+     public function editROP(Request $request){
+        if($request->input('rop')!=null){
+            $r=$request->input('rop');
+            Storage::disk('local')->put('rop.txt', $r);
+            $rop = Storage::disk('local')->get('rop.txt');
+            return ['status'=>200,'rop'=>$rop];
+       }
+    }
+
+    public function updateProductCode(Request $request){
+        if($request->input('id')!=null&&$request->input('code')!=null){
+            $id=$request->input('id');
+            $code=$request->input('code');
+            $status=Product::updateCode($id,$code);
+            return ['status'=>200,'isSuccess'=>$status];
+        }
+    }
+
+
 
     public function updateOrderPurchase(Request $request){
         

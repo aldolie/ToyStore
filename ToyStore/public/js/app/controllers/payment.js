@@ -3,16 +3,27 @@ angular.module('app').controller('PaymentController',['$scope','filterFilter','o
 
     $scope.payments=[];
     $scope.filteredPayments=[];
+
+    var filterSearch=function (){
+         if($scope.type=='supplier')
+            $scope.filteredPayments=filterFilter($scope.payments,{'supplier':$scope.search});
+        else if($scope.type=='kode_invoice')
+            $scope.filteredPayments=filterFilter($scope.payments,{'kode_invoice':$scope.search});
+        
+    }
+
     $scope.filterPayments=function(){
-        $scope.filteredPayments=filterFilter($scope.payments,{'supplier':$scope.search});
+        filterSearch();
         $scope.filteredPayments=orderByFilter($scope.filteredPayments,['tanggal_pembelian','supplier'],true);
       //  cons
     };
 
+
+
     (function(){
         paymentService.loadPayments().then(function(data){
             $scope.payments=data.result;
-            $scope.filteredPayments=filterFilter($scope.payments,{'supplier':$scope.search});
+            filterSearch();
             $scope.filteredPayments=orderByFilter($scope.filteredPayments,['tanggal_pembelian','supplier'],true);
         },function(){
 
@@ -31,8 +42,7 @@ angular.module('app').controller('PaymentDetailController',['$scope','PaymentSer
                 changeYear: false,
                 defaultDate: new Date(),
                 yearRange: '1970:2030',
-                dateFormat: 'yy-mm-dd',
-                stepMonths:false
+                dateFormat: 'yy-mm-dd'
         });
             
     };

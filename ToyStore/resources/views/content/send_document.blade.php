@@ -20,7 +20,7 @@
                         <div ng-show="isLock()">
                             <span class="label-form">No Surat Jalan</span>
                             <span class="label-form-delimiter">:</span>
-                            <span>[[form.id]]</span>
+                            <span><input type="text"  class="form-none medium"  ng-model="form.id" /></span>
                         </div>
                     </div>
 

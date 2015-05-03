@@ -7,11 +7,17 @@
             
           <div id="payment-form">
                <div class="row" id="payment-header-form">
-                    <div class="col-md-5 ">
+                    <div class="col-md-8 ">
                         <div>
                             <span class="label-form">Search</span>
                             <span class="label-form-delimiter">:</span>
-                            <span><input type="text" class="form-control large-input" style="display:inline-block;" ng-model="search" ng-init="search=''" ng-change="filterPayments()" /> </span>
+                            <span>
+                               <select class="form-control" style="display:inline-block;width:200px;" ng-model="type" ng-init="type='kode_invoice'" ng-change="filterPayments()">
+                                    <option value="kode_invoice">Kode Invoice</option>
+                                    <option value="supplier">Supplier</option>
+                                </select>
+                              <input type="text" class="form-control large-input" style="display:inline-block;" ng-model="search" ng-init="search=''" ng-change="filterPayments()" />
+                            </span>
                         </div>
 
                     </div>

@@ -26,12 +26,12 @@
                         <th>Tracking Number</th>
                         <th>Ongkos Kirim</th>
                         
-                         <th>
+                         <th >
                             Tanggal Pembelian
                             <span class="glyphicon glyphicon-chevron-up" ng-show="isReverse" ng-click="orderDesc()"  style="cursor:pointer;"  aria-hidden="true" ></span>
                             <span class="glyphicon glyphicon-chevron-down" ng-hide="isReverse" ng-click="orderAsc()" style="cursor:pointer;"  aria-hidden="true" ></span>
                         </th>
-                        <th>Action</th>
+                        <th style="max-width:300px;min-width:200px;" >Action</th>
                        </tr>
                     </thead>
                     <tbody>
@@ -43,7 +43,10 @@
                             <td><input type="text" class="form-none small" ng-model="document.tracking_number" /> </td>
                             <td><input type="text" do-numeric class="form-none small" ng-model="document.ongkos_kirim" /> </td>
                             <td>[[document.transactiondate]]</td>
-                            <td><button class="btn btn-primary" ng-click="update()">Update</button></td>
+                            <td>
+                                <button class="btn btn-primary" ng-click="update()">Update</button>
+                                <button class="btn btn-danger" ng-click="showDelete()">Delete</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

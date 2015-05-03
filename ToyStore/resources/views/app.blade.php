@@ -115,6 +115,12 @@
 				<li>
                     <a href="{{ url('/Surat/Jalan/Report/') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pengiriman</a>
                 </li>
+
+                 @if($role=='admin') 
+                 <li>
+                    <a href="{{ url('/Konfigurasi/') }}"><span class="glyphicon glyphicon-cog" style="margin-right:10px;" aria-hidden="true"></span>Konfigurasi</a>
+                </li>
+                @endif
                
             </ul>
         </div>
