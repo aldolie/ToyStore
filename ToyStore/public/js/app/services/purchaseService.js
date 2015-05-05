@@ -151,6 +151,17 @@ angular.module('app').factory('PurchaseService',['$http','$rootScope','$q','$coo
                 $rootScope.$phase;
             });
             return deferred.promise;
+        },
+        deleteSuratJalan:function(id){
+            var deferred=$q.defer();
+            var url=service+'surat/jalan/delete';
+            $http.post(url,{
+                'id':id,
+            }).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
         }
     
     }

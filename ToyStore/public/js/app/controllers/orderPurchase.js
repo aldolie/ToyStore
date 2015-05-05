@@ -1,5 +1,5 @@
 
-angular.module('app').controller('OrderPurchaseController',['$scope','filterFilter','ProductService','PurchaseService','UserService',function($scope,filterFilter,productService,purchaseService,userService){
+angular.module('app').controller('OrderPurchaseController',['$scope','filterFilter','ProductService','PurchaseService','UserService','PrintService',function($scope,filterFilter,productService,purchaseService,userService,printService){
     
    var convertDate = function(usDate) {
       var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
@@ -132,6 +132,11 @@ angular.module('app').controller('OrderPurchaseController',['$scope','filterFilt
         }
         $('#modal-save').modal('hide');
     };
+
+    $scope.print=function(){
+        printService.print("order-form-confirmation");
+       
+    };
     
     (function(){
         
@@ -228,7 +233,7 @@ angular.module('app').controller('OrderPurchaseDetailController',['$scope','filt
         },function(){
             $scope.order.harga=product.harga;
         });
-        $scope.order.harga=product.harga;
+       // $scope.order.harga=product.harga;
         $scope.order.limit=product.quantity;
         $scope.filteredProducts=[];
         $scope.order.isDisabled=true;

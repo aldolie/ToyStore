@@ -1,10 +1,9 @@
-angular.module('app').controller('UpdatePurchaseController',['$scope','filterFilter','ProductService','PurchaseService','UserService',function($scope,filterFilter,productService,purchaseService,userService){
+angular.module('app').controller('UpdatePurchaseController',['$scope','filterFilter','ProductService','PurchaseService','UserService','PrintService',function($scope,filterFilter,productService,purchaseService,userService,printService){
     
-    var convertDate = function(usDate) {
+   var convertDate = function(usDate) {
       var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
       return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
     };
-
    
     $scope.form={orderId:1,customer:'',sales:'',salesId:0,date:'',dp:0,discount:0,salesOrder:false,data:[]};
     $scope.form.date=convertDate(new Date().toLocaleDateString());
@@ -15,6 +14,10 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
     $scope.addOrder=function(){
         $scope.orders.push({kode_barang:'',nama_barang:'',harga:'',quantity:'',limit:-1}) ;
     };
+
+    $scope.print=function(){
+        printService.print("order-form-confirmation");
+    }
     
     $scope.getGrandTotal=function(){
         var total=0;
@@ -204,7 +207,7 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
 }]);
 
 
-angular.module('app').controller('UpdatePurchaseDetailController',['$scope','filterFilter',function($scope,filterFilter){
+angular.module('app').controller('UpdatePurchaseDetailController',['$scope','filterFilter','PurchaseService',function($scope,filterFilter,purchaseService){
     
     $scope.styleQuantity='red';
 
@@ -215,8 +218,11 @@ angular.module('app').controller('UpdatePurchaseDetailController',['$scope','fil
            return;
         }
         
-        $scope.filteredProducts=filterFilter($scope.$parent.products,{'nama_barang':$scope.order.nama_barang,'isSelected':false});
-       
+         $scope.filteredProducts=filterFilter($scope.$parent.products,{'nama_barang':$scope.order.nama_barang,'isSelected':false});
+        if($scope.$parent.form.salesOrder){
+            $scope.filteredProducts.push({kode_barang:0,nama_barang:'Tambah Barang Baru',quantity:'',quantity:-1,harga:''});
+            
+        }
        
     }
     
@@ -273,7 +279,12 @@ angular.module('app').controller('UpdatePurchaseDetailController',['$scope','fil
         $scope.order.kode_barang=product.kode_barang;
          if($scope.order.kode_barang!=0)
         $scope.order.nama_barang=product.nama_barang;
-        $scope.order.harga=product.harga;
+        //$scope.order.harga=product.harga;
+          purchaseService.loadPriceByCustomer($scope.$parent.form.customer,product.kode_barang).then(function (data){
+                    $scope.order.harga=data.result;
+                },function(){
+                    $scope.order.harga=product.harga;
+                });
         $scope.order.limit=product.quantity;
         $scope.filteredProducts=[];
         $scope.order.isDisabled=true;

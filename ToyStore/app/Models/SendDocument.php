@@ -34,6 +34,24 @@ class SendDocument extends Model {
        
     }
     
+    public static function deleteTrack($id){
+        DB::beginTransaction();
+        try {
+            DB::table('sending_header')
+            ->where('id','=',$id)
+            ->delete();
+            DB::table('sending')
+                ->where('sendingid','=',$id)
+                ->delete();
+              DB::commit();
+              return ['status'=>true];
+        } catch (\Exception $e) {
+              DB::rollback();
+              return ['status'=>false];
+        }
+       
+    }
+
     public static function insertSendingDocument($sd,$userid,$to,$address,$date,$data,$purchaseid)
 	{
         $error=[];

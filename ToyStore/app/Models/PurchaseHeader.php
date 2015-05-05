@@ -150,11 +150,22 @@ class PurchaseHeader extends Model {
                 }
                 else
                 {
-                    DB::table('order_purchase')->insert(['purchaseid' => $purchaseid, 'productid' => $data[$i]['kode_barang'],'price'=>$data[$i]['harga'],'quantity'=>$data[$i]['quantity'],'created_by'=>$userid]);
-                    DB::table('product')->where('id', $data[$i]['kode_barang'])->decrement('quantity',$data[$i]['quantity'] );
-                    DB::table('product')->where('id','=',$data[$i]['kode_barang'])
-                    ->whereRaw('(price='.$data[$i]['harga'].' or price=0)')
-                    ->update(['price'=>$data[$i]['harga']]);
+
+                    if($data[$i]['kode_barang']==0){
+                         $productid=DB::table('product')->insertGetId(['productname'=>$data[$i]['nama_barang'],'quantity'=>0,'price'=>0,'created_by'=>$userid]);
+                         DB::table('order_purchase')->insert(['purchaseid' => $purchaseid, 'productid' => $productid,'price'=>$data[$i]['harga'],'quantity'=>$data[$i]['quantity'],'created_by'=>$userid]);
+                         DB::table('product')->where('id', $productid)->decrement('quantity',$data[$i]['quantity'] );
+                  
+
+                    }
+                    else{
+                        DB::table('order_purchase')->insert(['purchaseid' => $purchaseid, 'productid' => $data[$i]['kode_barang'],'price'=>$data[$i]['harga'],'quantity'=>$data[$i]['quantity'],'created_by'=>$userid]);
+                        DB::table('product')->where('id', $data[$i]['kode_barang'])->decrement('quantity',$data[$i]['quantity'] );
+                        DB::table('product')->where('id','=',$data[$i]['kode_barang'])
+                        ->whereRaw('(price='.$data[$i]['harga'].' or price=0)')
+                        ->update(['price'=>$data[$i]['harga']]);
+                    }
+
                 }
                
             }

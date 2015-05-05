@@ -153,6 +153,7 @@
     <script src="{{ asset('/js/app/services/productService.js') }}"></script>
     <script src="{{ asset('/js/app/services/purchaseService.js') }}"></script>
     <script src="{{ asset('/js/app/services/userService.js') }}"></script>
+    <script src="{{ asset('/js/app/services/printService.js') }}"></script>
     <script src="{{ asset('/js/app/controllers/documentRecapitulation.js') }}"></script>
     <script src="{{ asset('/js/app/controllers/orderPurchase.js') }}"></script>
     <script src="{{ asset('/js/app/controllers/orderPurchaseRecapitulation.js') }}"></script>

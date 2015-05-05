@@ -118,7 +118,7 @@
                     </tbody>
                 </table>
     
-                <div class="col-md-5 col-sm-offset-7" ng-show="form.isDp" ng-show="isFound">
+                  <div class="col-md-5 col-sm-offset-7" ng-show="form.isDp">
                         <div>
                             <span class="label-form">Down Payment</span>
                             <span class="label-form-delimiter">:</span>
@@ -127,7 +127,7 @@
 
                 </div>
 
-                <div class="col-md-5 col-sm-offset-7" ng-show="form.isDiscount" ng-show="isFound" >
+                <div class="col-md-5 col-sm-offset-7" ng-show="form.isDiscount">
                         <div>
                             <span class="label-form">Discount</span>
                             <span class="label-form-delimiter">:</span>
@@ -136,14 +136,20 @@
 
                 </div>
 
-                <div class="col-md-5 col-sm-offset-7" ng-show="isFound" >
+                <div class="col-md-5 col-sm-offset-7">
+                        <div>
+                            <span class="label-form">Total</span>
+                            <span class="label-form-delimiter">:</span>
+                            <span>Rp.  [[ getGrandTotal() ]]</span>
+                        </div>
+                </div>
+
+                 <div class="col-md-5 col-sm-offset-7">
                         <div>
                             <span class="label-form">Grand Total</span>
                             <span class="label-form-delimiter">:</span>
-                            <span>Rp.  [[ getTotalAll() ]]</span>
+                            <span>Rp.  [[ getGrandTotal()-form.discount-form.dp ]]</span>
                         </div>
-
-                        
                 </div>
     
             </div>
@@ -198,7 +204,7 @@
                                     </div>
                             </div>
 
-                            <div class="col-md-6 ">
+                            <div class="col-md-6">
                                 <div>
                                     <span class="label-form">Tanggal</span>
                                     <span class="label-form-delimiter">:</span>
@@ -211,7 +217,11 @@
                                 </div>
                                 <div>
                                     <span class="label-form"></span>
-                                    <span class="label-form-delimiter"><input type="checkbox" ng-model="form.salesOrder" ng-disabled="true"/></span>
+                                    <span class="label-form-delimiter">
+
+                                        <input type="checkbox" ng-show="form.salesOrder"   checked="checked" ng-disabled="true"/>
+                                        <input type="checkbox" ng-hide="form.salesOrder" ng-disabled="true"/>
+                                    </span>
                                     <span>Sales Order</span>
                                 </div>
                             </div>
@@ -237,19 +247,19 @@
                                 </td>
                                 <td>
                                     
-                                    <div class="form-none small-input"><span>Rp. </span>[[order.harga]]</div>
+                                    <div class="form-none small-input"><span></span>[[order.harga|currency:'Rp.']]</div>
                                 </td>
-                                <td><span>Rp. </span>[[ (order.quantity*order.harga) ]]</td>
+                                <td><span></span>[[ (order.quantity*order.harga)|currency:'Rp.' ]]</td>
                             </tr>
                         </tbody>
                     </table>
                     
 
-                    <div class="col-md-5 col-sm-offset-7" ng-show="form.isDp">
+                         <div class="col-md-5 col-sm-offset-7" ng-show="form.isDp">
                         <div>
                             <span class="label-form">Down Payment</span>
                             <span class="label-form-delimiter">:</span>
-                            <span>Rp. [[form.dp]]</span>
+                            <span>[[form.dp |currency:'Rp.']]</span>
                         </div>
 
                 </div>
@@ -258,20 +268,26 @@
                         <div>
                             <span class="label-form">Discount</span>
                             <span class="label-form-delimiter">:</span>
-                            <span><span>Rp. [[form.discount]]</span>
+                            <span><span>[[form.discount |currency:'Rp.']]</span>
                         </div>
 
                 </div>
 
                 <div class="col-md-5 col-sm-offset-7">
                         <div>
+                            <span class="label-form">Total</span>
+                            <span class="label-form-delimiter">:</span>
+                            <span> [[ getGrandTotal() |currency:'Rp.' ]]</span>
+                        </div>
+                </div>
+
+                 <div class="col-md-5 col-sm-offset-7">
+                        <div>
                             <span class="label-form">Grand Total</span>
                             <span class="label-form-delimiter">:</span>
-                            <span>Rp.  [[ getTotalAll() ]]</span>
+                            <span>[[ getGrandTotal()-form.discount-form.dp|currency:'Rp.' ]]</span>
                         </div>
-
-                        
-                </div> 
+                </div>
                     
                     <code>[[error]]</code>
                 </div>
@@ -279,6 +295,10 @@
                      <button class="btn btn-primary" ng-click="submitOrder()">
                              <span class="glyphicon glyphicon-floppy-save" style="margin-right:10px;" aria-hidden="true" ></span>Simpan Penjualan
                     </button>
+                    <button class="btn btn-warning" ng-click="print()">
+                            <span class="glyphicon glyphicon-print" style="margin-right:10px;" aria-hidden="true" ></span>Print Penjualan
+                    </button>
+
                     <button class="btn btn-danger" ng-click="cancelOrder()">
                             <span class="glyphicon glyphicon-remove" style="margin-right:10px;" aria-hidden="true" ></span>Cancel Penjualan
                     </button>

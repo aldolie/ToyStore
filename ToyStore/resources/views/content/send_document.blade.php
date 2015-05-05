@@ -94,12 +94,12 @@
                         <h4 class="modal-title">Konfirmasi</h4>
                       </div>
                      <div id="order-form-confirmation">
-                       <div class="col-md-5 ">
+                       <div class="col-md-5" style="float:left;">
                         <div>
                             <span class="label-form">No Invoice Penjualan</span>
                             <span class="label-form-delimiter">:</span>
                             <span>
-                                <input do-numeric type="text" class="form-none small" ng-model="search" />
+                                <span class="form-none small" >[[search]]</span>
                             </span>
                         </div>
 
@@ -110,19 +110,20 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6 col-sm-offset-1">
+                    <div class="col-md-6 col-sm-offset-1" style="float:right;">
                         <div>
                             <span class="label-form">Kepada</span>
                             <span class="label-form-delimiter">:</span>
-                            <span><input type="text" ng-model="form.to"  class="form-none medium" ng-disabled="true"/></span>
+                            <span><span type="text" ng-model="form.to"  class="form-none medium" >[[form.to]]</span></span>
                         </div>
                         <div>
                             <span class="label-form">Alamat</span>
                             <span class="label-form-delimiter">:</span>
-                            <span><input type="text" class="form-none medium" ng-model="form.address" ng-disabled="true"/></span>
+                            <span><span type="text" class="form-none medium" style="max-width:100px;display:inline-block;vertical-align:top;"  >[[form.address]]</span></span>
                         </div>
                         
                     </div>
+                    <div style="clear:both;"></div>
                 
                 <table class="table table-condensed">
                    <thead>
@@ -134,13 +135,13 @@
                     <tbody>
                         <tr ng-controller="SendDocumentDetailController" ng-repeat="order in orders track by $index">
                              <td>
-                                <input do-numeric  class="form-none small-input" type="text" ng-model="order.quantity" ng-disabled="true" />
+                                <span  class="form-none small-input">[[order.quantity]]</span>
                             </td>
                             <td>[[order.nama_barang]]</td>
                         </tr>
                     </tbody>
                 </table>  
-                <div class="col-md-5">
+                <div class="col-md-5" style="float:left;">
                         <div>
                             <span class="label-form">Penerima</span>
                             <div style="margin:20px 0px;">&nbsp;</div>
@@ -149,7 +150,7 @@
 
                 </div>
 
-                <div class="col-md-5" >
+                <div class="col-md-5" style="float:left;">
                         <div>
                             <span class="label-form">Hormat Kami</span>
                             <div style="margin:20px 0px;">&nbsp;</div>
@@ -157,6 +158,10 @@
                         </div>
 
                 </div>
+                <div style="clear:both;"></div>
+                
+
+              </div>
                 <div>
                     <code>[[error]]</code>
                 </div>
@@ -164,12 +169,13 @@
                      <button class="btn btn-primary" ng-click="submitSuratJalan()">
                              <span class="glyphicon glyphicon-floppy-save" style="margin-right:10px;" aria-hidden="true" ></span>Simpan Surat Jalan
                     </button>
+                     <button class="btn btn-warning" ng-click="print()">
+                            <span class="glyphicon glyphicon-print" style="margin-right:10px;" aria-hidden="true" ></span>Print SuratJalan
+                    </button>
                     <button class="btn btn-danger" ng-click="cancelSuratJalan()">
                             <span class="glyphicon glyphicon-remove" style="margin-right:10px;" aria-hidden="true" ></span>Cancel Surat Jalan
                     </button>
                 </div>
-
-              </div>
             </div>
 		</div>
 

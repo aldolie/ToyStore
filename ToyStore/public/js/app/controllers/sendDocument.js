@@ -1,5 +1,5 @@
 
-angular.module('app').controller('SendDocumentController',['$scope','PurchaseService',function($scope,purchaseService){
+angular.module('app').controller('SendDocumentController',['$scope','PurchaseService','PrintService',function($scope,purchaseService,printService){
     $scope.search='';
     $scope.form={
         id:'',
@@ -9,6 +9,10 @@ angular.module('app').controller('SendDocumentController',['$scope','PurchaseSer
     };
     $scope.orders=[];
     $scope.lock=false;
+
+    $scope.print=function(){
+        printService.print("order-form-confirmation");
+    };
 
     $scope.searchTransaction=function(){
         purchaseService.loadOrderPurchaseById($scope.search).then(function(data){

@@ -99,6 +99,10 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     Route::get('/surat/jalan/get',['uses'=>'Service\AdminController@getSuratJalan']);
     Route::get('/surat/jalan/id',['uses'=>'Service\AdminController@getNewSendId']);
     Route::post('/surat/jalan/updatetrack',['uses'=>'Service\AdminController@updatetrack']);
+    Route::post('/surat/jalan/delete',['uses'=>'Service\AdminController@deleteSuratJalan']);
+    
+
+
     Route::post('/authenticate/user',['uses'=>'Service\AdminController@authenticateUser']);
     Route::post('/authenticate/user/check',['uses'=>'Service\AdminController@authenticateUserCheck']);
 

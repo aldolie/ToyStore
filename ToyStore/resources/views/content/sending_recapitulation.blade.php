@@ -45,7 +45,7 @@
                             <td>[[document.transactiondate]]</td>
                             <td>
                                 <button class="btn btn-primary" ng-click="update()">Update</button>
-                                <button class="btn btn-danger" ng-click="showDelete()">Delete</button>
+                                <button class="btn btn-danger" ng-click="delete()">Delete</button>
                             </td>
                         </tr>
                     </tbody>

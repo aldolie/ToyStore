@@ -207,6 +207,12 @@ class AdminController extends Controller {
     }
     
 
+    public function deleteSuratJalan(Request $request){
+        $id=$request->input('id');
+        $status=SendDocument::deleteTrack($id);
+        return ['status'=>200,'isSuccess'=>$status];
+    }
+
     public function getPaymentDetail(Request $request){
         $id=$request->input('i');
         $payments=Payment::getPaymentDetail($id);
