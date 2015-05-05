@@ -78,8 +78,9 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
 
     Route::get('/payment/purchase/get',['uses'=>'Service\AdminController@getPaymentPurchase']);
     Route::post('/payment/purchase/detail/get',['uses'=>'Service\AdminController@getPaymentPurchaseDetail']);
-    Route::post('/payment/purchase/do',['uses'=>'Service\AdminController@doPaymentPurchase']);  
-
+    Route::post('/payment/purchase/do',['uses'=>'Service\AdminController@doPaymentPurchase']); 
+    Route::post('/payment/purchase/delete',['uses'=>'Service\AdminController@deletePaymentPurchase']);  
+    
     
     Route::get('/order/purchase/id',  [ 'uses' => 'Service\AdminController@getNewPurchaseOrderId']);
     Route::post('/order/purchase/save',  [ 'uses' => 'Service\AdminController@saveOrderPurchase']);

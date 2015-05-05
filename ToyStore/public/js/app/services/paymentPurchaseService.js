@@ -38,6 +38,20 @@ angular.module('app').factory('PaymentPurchaseService',['$http','$rootScope','$q
             });
             return deferred.promise;
         }
+        ,
+        deletePayment:function(i,p){
+            var deferred=$q.defer();
+            var url=service+'payment/purchase/delete';
+            $http.post(url,{
+                'i':i,
+                'purchase':p
+            }).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+
+        }
     
     }
     var instance=new PaymentPurchaseService();

@@ -38,7 +38,7 @@
                           <td>[[payment.kode_invoice]]</td>
                           <td>[[payment.jumlah_utang | currency:'Rp.']]</td>
                           <td>[[payment.ongkos_kirim | currency:'Rp.']]</td>
-                          <td>[[payment.jumlah_utang+payment.ongkos_kirim-payment.paid | currency:'Rp.']]</td>
+                          <td><code ng-show="isBase()">LUNAS</code><span ng-hide="isBase()">[[payment.jumlah_utang+payment.ongkos_kirim-payment.paid | currency:'Rp.']]</span></td>
                           <td>[[payment.customer]]</td>
                         </tr>
                         <tr ng-show="isShowDetail">
@@ -53,13 +53,15 @@
                                   <th>Tanggal Bayar</th>
                                   <th>Jumlah Bayar</th>
                                   <th>Tipe Pembayaran</th>
+                                  <th>Delete</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr ng-repeat="detail in paymentDetails">
+                                <tr ng-repeat="detail in paymentDetails track by $index" ng-controller="PaymentController">
                                   <td>[[detail.tanggal_pembayaran]]</td>
                                   <td>[[detail.jumlah_pembayaran | currency:'Rp.']]</td>
                                   <td>[[detail.tipe_pembayaran]]</td>
+                                  <td><button class="btn btn-danger" ng-show="detail.tipe_pembayaran!='Down Payment'" ng-click="deletePayment()">Delete</button></td>
                                 </tr>
                               </tbody>
                             </table>

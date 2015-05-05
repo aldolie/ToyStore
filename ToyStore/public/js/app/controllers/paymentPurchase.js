@@ -41,7 +41,10 @@ angular.module('app').controller('PaymentPurchaseDetailController',['$scope','Pa
     $scope.isShowDetail=false;
     $scope.paymentDetails=[];
 
-    
+    $scope.reload=function(){
+        loadPaymentDetail($scope.payment.id);
+
+     };
 
     var loadPaymentDetail=function(id){
         paymentPurchaseService.loadPaymentDetail(id).then(function(data){
@@ -97,8 +100,32 @@ angular.module('app').controller('PaymentPurchaseDetailController',['$scope','Pa
 
         });
     }
-  
+
+    $scope.isBase=function(){
+        if($scope.payment.jumlah_utang+$scope.payment.ongkos_kirim-$scope.payment.paid>0)
+            return false;
+        return true;
+    };
+
+    $scope.changeTotalPaid=function(paid){
+        $scope.payment.paid=paid;
+    }
 
 
+}]);
+
+
+angular.module('app').controller('PaymentController',['$scope','PaymentPurchaseService',function ($scope,PaymentPurchaseService){
+    $scope.deletePayment=function(){
+        PaymentPurchaseService.deletePayment($scope.detail.id,$scope.$parent.payment.id).then(function(data){
+            if(data.isSuccess){
+                $scope.$parent.paymentDetails.splice($scope.$index,1);
+                $scope.$parent.reload();
+                $scope.$parent.changeTotalPaid(data.result);
+            }
+        },function(){
+
+        });
+    };
 }]);
 

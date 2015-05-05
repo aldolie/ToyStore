@@ -149,6 +149,16 @@ class AdminController extends Controller {
         return (['status'=>200,'result'=>$payments]);
     }
 
+
+    public function deletePaymentPurchase(Request $request){
+        $id=$request->input('i');
+        $purchase=$request->input('purchase');
+        $status=PaymentPurchase::deletePayment($id);
+        $totalPaid=PaymentPurchase::getTotalPaid($purchase);
+        return ['status'=>200,'isSuccess'=>$status,'result'=>$totalPaid];
+
+    }
+
     public function doPaymentPurchase(Request $request){
          $v = Validator::make($request->all(), [
             'i' => 'required|integer',
@@ -185,7 +195,7 @@ class AdminController extends Controller {
                     $user=SessionTable::getSession($token);
                     $status = PaymentPurchase::doPayment($user->id,$id,$paid,$date,$type);
                     if($status){
-                        $totalPaid=PaymentPurchase::getTotalPaid($id)->paid;
+                        $totalPaid=PaymentPurchase::getTotalPaid($id);
                         return (['status'=>200,'isSuccess'=>true,'reason'=>[],'result'=>$totalPaid]);
                     }
                     else{

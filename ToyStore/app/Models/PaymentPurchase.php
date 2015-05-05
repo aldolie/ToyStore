@@ -43,7 +43,14 @@ class PaymentPurchase extends Model {
 					->select(DB::raw('sum(paid) as paid'))
 					->groupBy('purchaseid')
 					->first();
-        return $paid;
+		$dp=DB::table('order_purchase_header')
+				->where('id','=',$id)
+				->select('dp')
+				->first();
+		$down=$dp->dp;
+		if($paid)
+			$down+=$paid->paid;
+        return $down;
 	}
 
 	public static function doPayment($userid,$id,$paid,$date,$type){
@@ -61,17 +68,38 @@ class PaymentPurchase extends Model {
 		return false;
 	}
 
+
+	public static function deletePayment($id){
+		DB::beginTransaction();
+        try {
+           
+           DB::table('payment_purchase')->where('id','=',$id)->delete(); 
+           DB::commit();
+           return true;
+            
+        } catch (\Exception $e) {
+            DB::rollback();
+            
+        }
+		return false;
+	}
+
+
+
+
 	public static function getPaymentDetail($id)
 	{
 				
-        $payments=DB::table('order_purchase_header')->where('order_purchase_header.id','=',$id)
+        $dp=DB::table('order_purchase_header')->where('order_purchase_header.id','=',$id)
         		->where('dp','>',0)
-        		->select('order_purchase_header.created_at as tanggal_pembayaran','order_purchase_header.dp as jumlah_pembayaran'
-        		,DB::raw("'Down Payment' as tipe_pembayaran"))->get();
+        		->select(DB::raw('0 as id'),'order_purchase_header.created_at as tanggal_pembayaran','order_purchase_header.dp as jumlah_pembayaran'
+        		,DB::raw("'Down Payment' as tipe_pembayaran"))->first();
         		
         $payment = DB::table('payment_purchase')->where('payment_purchase.purchaseid','=',$id)
-					->select('payment_purchase.paymentdate as tanggal_pembayaran','payment_purchase.paid as jumlah_pembayaran','payment_purchase.paymenttype as tipe_pembayaran')->get();
-        array_push($payments, $payment);
-        return $payments;
+					->select('payment_purchase.id','payment_purchase.paymentdate as tanggal_pembayaran','payment_purchase.paid as jumlah_pembayaran','payment_purchase.paymenttype as tipe_pembayaran')->get();
+        if($dp)
+        	array_unshift($payment,$dp);
+		return $payment;
+        
 	}
 }
