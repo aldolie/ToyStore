@@ -14,14 +14,16 @@ class Product extends Model {
     
     public static function getProductsRecap()
     {
-        $products = DB::table('product')->select('id as kode_barang','code','productname as nama_barang','quantity',DB::raw('0 as harga'))->get();
+        $products = DB::table('product')->select('id as kode_barang','code','rop','productname as nama_barang','quantity',DB::raw('0 as harga'))->get();
         return $products;
     }
 
-    public static function getROP($rop){
-        $count=DB::table('product')->where('quantity','<',$rop)->count();
+    public static function getROP(){
+        $count=DB::table('product')->whereRaw('product.quantity < product.rop')->count();
         return $count;
     }
+
+
 
     public static function updateCode($id,$code){
         DB::beginTransaction();
@@ -29,6 +31,22 @@ class Product extends Model {
            
            DB::table('product')->where('id','=',$id)
                 ->update(['code'=>$code]);
+           DB::commit();
+           return true;
+            
+        } catch (\Exception $e) {
+            DB::rollback();
+            
+        }
+        return false;
+    }
+
+    public static function updateROP($id,$rop){
+        DB::beginTransaction();
+        try {
+           
+           DB::table('product')->where('id','=',$id)
+                ->update(['rop'=>$rop]);
            DB::commit();
            return true;
             

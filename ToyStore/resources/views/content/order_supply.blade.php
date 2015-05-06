@@ -132,22 +132,22 @@
                       </div>
                      <div id="order-form-confirmation">
                         <div class="row" id="order-header-form">
-                            <div class="col-md-6 ">
+                            <div class="col-md-6" style="float:left;">
                                 <div>
                                     <span class="label-form">No Invoice Pembelian</span>
                                     <span class="label-form-delimiter">:</span>
-                                    <span>[[orderId]]</span>
+                                    <span>[[form.orderId]]</span>
                                 </div>
 
                                 <div>
                                     <span class="label-form">Supplier</span>
                                     <span class="label-form-delimiter">:</span>
-                                    <span><input class="form-none" ng-disabled="true" type="numeric" ng-model="supplier" /></span>
+                                    <span><span class="form-none" >[[supplier]]</span></span>
                                 </div>
 
                             </div>
 
-                            <div class="col-md-6 ">
+                            <div class="col-md-4" style="float:right;">
                                 <div>
                                     <span class="label-form">Tanggal</span>
                                     <span class="label-form-delimiter">:</span>
@@ -157,15 +157,17 @@
                                 <div>
                                     <span class="label-form">Mata Uang</span>
                                     <span class="label-form-delimiter">:</span>
-                                    <span><input ng-disabled="true" class="form-none" type="numeric" ng-model="currency" /></span>
+                                    <span><span  class="form-none" >[[currency]]</span></span>
                                 </div>
                                 <div>
                                     <span class="label-form">Dikirim oleh</span>
                                     <span class="label-form-delimiter">:</span>
-                                    <span><input ng-disabled="true" class="form-none" type="numeric" ng-model="shipper" /></span>
+                                    <span><span class="form-none"  />[[shipper]]</span></span>
                                 </div>
                             </div>
+                            <div style="clear:both;"></div>
                     </div>
+
                     <table class="table">
                        <thead>
                            <tr>
@@ -204,11 +206,15 @@
 
                     </div>  
                     
-                    <code>[[error]]</code>
+                    
                 </div>
                 <div>
+                    <code>[[error]]</code>
                      <button class="btn btn-primary" ng-click="submitOrder()">
                              <span class="glyphicon glyphicon-floppy-save" style="margin-right:10px;" aria-hidden="true" ></span>Simpan Pembelian
+                    </button>
+                      <button class="btn btn-warning" ng-click="print()">
+                            <span class="glyphicon glyphicon-print" style="margin-right:10px;" aria-hidden="true" ></span>Print Pembelian
                     </button>
                     <button class="btn btn-danger" ng-click="cancelOrder()">
                             <span class="glyphicon glyphicon-remove" style="margin-right:10px;" aria-hidden="true" ></span>Cancel Pembelian

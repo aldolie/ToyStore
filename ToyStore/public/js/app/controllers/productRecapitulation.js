@@ -50,11 +50,11 @@ angular.module('app').controller('ProductRecapitulationController',['$scope','fi
 angular.module('app').controller('ProductRecapitulationDetailController',['$scope','ProductService',function($scope,productService){
     
 	$scope.isReOrderPoint=function(){
-        if($scope.product.quantity<$scope.$parent.rop)
+        if($scope.product.quantity<$scope.product.rop)
             return true;
         else
             return false;
-    }
+    };
     
     
     $scope.isAvailable=function(){
@@ -62,7 +62,7 @@ angular.module('app').controller('ProductRecapitulationDetailController',['$scop
             return false;
         else
             return true;
-    }
+    };
 	
     $scope.updateProductCode=function(){
         productService.updateProductCode($scope.product.kode_barang,$scope.product.code).then(function(data){
@@ -76,6 +76,21 @@ angular.module('app').controller('ProductRecapitulationDetailController',['$scop
         },function(){
 
         });
-    }
+    };
+
+    $scope.updateProductROP=function(){
+        productService.updateProductROP($scope.product.kode_barang,$scope.product.rop).then(function(data){
+            if(data.isSuccess){
+                console.log('SUCCESS');
+            }
+            else{
+                
+            }
+        },function(){
+
+        });
+    };
+
+    
     
 }]);

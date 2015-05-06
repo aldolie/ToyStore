@@ -64,6 +64,18 @@ angular.module('app').factory('ProductService',['$http','$rootScope','$q','$cook
                 $rootScope.$phase;
             });
             return deferred.promise;
+        },
+        updateProductROP:function(id,rop){
+            var deferred=$q.defer();
+            var url=service+'product/rop/update';
+            $http.post(url,{
+                'id':id,
+                'rop':rop
+            }).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
         }
 	}
 	var instance=new ProductService();

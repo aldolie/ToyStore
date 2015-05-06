@@ -1,5 +1,5 @@
 
-angular.module('app').controller('PaymentController',['$scope','filterFilter','orderByFilter','PaymentService',function($scope,filterFilter,orderByFilter,paymentService){
+angular.module('app').controller('PaymentSupplyController',['$scope','filterFilter','orderByFilter','PaymentService',function($scope,filterFilter,orderByFilter,paymentService){
 
     $scope.payments=[];
     $scope.filteredPayments=[];
@@ -19,11 +19,10 @@ angular.module('app').controller('PaymentController',['$scope','filterFilter','o
     };
 
 
-
     (function(){
         paymentService.loadPayments().then(function(data){
             $scope.payments=data.result;
-            filterSearch();
+           filterSearch();
             $scope.filteredPayments=orderByFilter($scope.filteredPayments,['tanggal_pembelian','supplier'],true);
         },function(){
 
@@ -33,7 +32,7 @@ angular.module('app').controller('PaymentController',['$scope','filterFilter','o
 
 
 
-angular.module('app').controller('PaymentDetailController',['$scope','PaymentService',function($scope,paymentService){
+angular.module('app').controller('PaymentSupplyDetailController',['$scope','PaymentService',function($scope,paymentService){
     
     var showDatePicker=function(){
      

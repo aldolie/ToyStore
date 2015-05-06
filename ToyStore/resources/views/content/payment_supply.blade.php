@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('content')
-<div class="container" ng-controller="PaymentController">
+<div class="container" ng-controller="PaymentSupplyController">
 	<div class="row">
         <div class="col-md-10">
             
@@ -34,7 +34,7 @@
                         <th>Tanggal Pembelian</th>
                        </tr>
                     </thead>
-                    <tbody ng-controller="PaymentDetailController" ng-repeat="payment in filteredPayments" ng-init="isShowDetail=false">
+                    <tbody ng-controller="PaymentSupplyDetailController" ng-repeat="payment in filteredPayments" ng-init="isShowDetail=false">
                         <tr>
                           <td>
                             <span class="glyphicon glyphicon-chevron-up" ng-show="isShowDetail" ng-click="hideDetail()"   style="cursor:pointer;"  aria-hidden="true" ></span>

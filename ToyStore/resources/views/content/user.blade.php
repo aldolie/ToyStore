@@ -1,9 +1,9 @@
 @extends('app')
 
 @section('content')
-<div class="container" ng-controller="ProductRecapitulationController">
-	<div class="row">
-		<div class="col-md-10">
+<div class="container" ng-controller="UserController">
+    <div class="row">
+        <div class="col-md-10">
             <!--<div style="margin-top:30px;">
                 <form ng-submit="updateROP()">
                     <span class="label-form">Update Re-Order Point</span>
@@ -22,49 +22,49 @@
                             <span class="label-form">Search</span>
                             <span class="label-form-delimiter">:</span>
                             <span>
-                                <select class="form-control" style="display:inline-block;width:200px;" ng-model="type" ng-init="type='nama_barang'" ng-change="filterProduct()">
+                               <!-- <select class="form-control" style="display:inline-block;width:200px;" ng-model="type" ng-init="type='nama_barang'" ng-change="filterProduct()">
                                     <option value="code">Kode Barang</option>
                                     <option value="nama_barang">Nama Barang</option>
-                                </select>
-                                <input type="text" class="form-control large-input" style="display:inline-block;" ng-model="search" ng-init="search=''" ng-change="filterProduct()" />
+                                </select>-->
+                                <input type="text" class="form-control large-input" style="display:inline-block;" ng-model="search" ng-init="search=''" ng-change="filterUser()" />
                             </span>
                         </div>
 
                     </div>
                 </div>
-                <div class="alert alert-info" style="margin-top:20px;" ng-show="filteredProducts.length==0">There is no data</div>
-                <table class="table" ng-hide="filteredProducts.length==0">
+                <div class="alert alert-info" style="margin-top:20px;" ng-show="filteredUsers.length==0">There is no data</div>
+                <table class="table" ng-hide="filteredUsers.length==0">
                    <thead>
                        <tr>
-                        <th>Kode Barang</th>
-                        <th>Re Order Point</th>
-                        <th>Nama Barang</th>
-                        <th>Stock</th>
-                       <!-- <th>Harga Jual</th>-->
+                        <th>Username</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Role</th>
+                        <th>Action</th>
                        </tr>
                     </thead>
                     <tbody>
-                        <tr ng-controller="ProductRecapitulationDetailController" ng-repeat="product in filteredProducts track by $index">
-                            <td>
-                                <input class="form-none small" type="text" ng-model="product.code" />
-                                <span class="glyphicon glyphicon-pencil" style="cursor:pointer;" ng-click="updateProductCode()"></span>
-                            </td>
-                            <td> <input class="form-none small" type="text" ng-model="product.rop" />
-                                <span class="glyphicon glyphicon-pencil" style="cursor:pointer;" ng-click="updateProductROP()"></span>
-                            </td>
-                            <td>[[product.nama_barang]]</td>
-                            <td>[[product.quantity]] <code ng-show="isReOrderPoint()">Order</code></td>
-                           <!-- <td>
-                                <span ng-show="isAvailable()">[[product.harga | currency:'Rp.']]</span>
-                                <code ng-hide="isAvailable()">Belum Ada Transaksi</code>
-                            </td>-->
+                        <tr ng-controller="UserDetailController" ng-repeat="user in filteredUsers track by $index">
+                          <td>[[user.username]]</td>  
+                          <td><input type="text" class="form-none large" ng-model="user.firstname"  /></td>  
+                          <td><input type="text" class="form-none large" ng-model="user.lastname" /></td>  
+                          <td>
+                          <select ng-model="user.role" class="form-control" ng-disabled="user.id=='{{$userid}}'">
+                              <option value="admin">Admin</option>
+                              <option value="sales">Sales</option>
+                          </select>
+                          </td>  
+                          <td>
+                              <button class="btn btn-primary" ng-click="updateUser()">Update</button>
+                              <button class="btn btn-danger" ng-click="deleteUser()" ng-show="user.id!='{{$userid}}'">Delete</button>
+                          </td>
                         </tr>
                     </tbody>
                 </table>
     
     
             </div>
-	</div>
+    </div>
 
 
 
@@ -81,7 +81,11 @@
         <h4 class="modal-title" id="myModalLabel">Error Message</h4>
       </div>    
         <div class="modal-body">
-            [[error]]
+        <div class="alert alert-danger">
+            <ul>
+                <li ng-repeat="err in error">[[err]]</li>
+            </ul>
+        </div>
       </div>
     </div>
   </div>

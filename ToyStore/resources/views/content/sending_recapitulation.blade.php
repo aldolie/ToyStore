@@ -16,7 +16,8 @@
 
                     </div>
                 </div>
-                <table class="table">
+                <div class="alert alert-info" style="margin-top:20px;" ng-show="filteredDocuments.length==0">There is no data</div>
+                <table class="table" ng-hide="filteredDocuments.length==0">
                    <thead ng-init="isReverse=false">
                        <tr>
                         <th style="max-width:150px;">Kode Invoice</th>

@@ -1,9 +1,9 @@
 
-angular.module('app').controller('OrderSupplyController',['$scope','filterFilter','ProductService','OrderService',function($scope,filterFilter,productService,orderService){
+angular.module('app').controller('OrderSupplyController',['$scope','filterFilter','ProductService','OrderService','PrintService',function($scope,filterFilter,productService,orderService,printService){
     
     var convertDate = function(usDate) {
       var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-      return dateParts[3] + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2])) + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1]));
+      return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
     };
 
 	$scope.orderId='';
@@ -14,7 +14,9 @@ angular.module('app').controller('OrderSupplyController',['$scope','filterFilter
         $scope.orders.push({kode_barang:'',nama_barang:'',harga:'',quantity:''}) ;
     };
     $scope.form={orderId:'',supplier:'',currency:'',shipper:'',date:$scope.date,data:[]};
-    
+    $scope.print=function(){
+        printService.print("order-form-confirmation");
+    };
     $scope.getGrandTotal=function(){
         var total=0;
         for(var i=0;i<$scope.orders.length;i++)
@@ -109,6 +111,7 @@ angular.module('app').controller('OrderSupplyController',['$scope','filterFilter
         
 		productService.loadProductsforAutoComplete().then(function(data){
 			$scope.products=data;
+           
              
 		},function(){});
 

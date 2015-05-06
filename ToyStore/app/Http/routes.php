@@ -44,6 +44,7 @@ Route::group(['prefix'=>'/','middleware'=>'authpage'],function(){
     Route::get('/Surat/Jalan/','HomeController@send_document');
     Route::get('/Surat/Jalan/Report/','HomeController@send_document_report');
     Route::get('/Konfigurasi/','HomeController@configuration');
+    Route::get('/User/','HomeController@user');
     Route::get('/Konfigurasi/backup','HomeController@backup');
     Route::get('/Konfigurasi/delete','HomeController@delete');
     Route::post('/Konfigurasi/restore','HomeController@restore');
@@ -63,6 +64,8 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     Route::get('/product/rop',  [ 'uses' => 'Service\AdminController@getROP']);
     Route::get('/product/rop/load',  [ 'uses' => 'Service\AdminController@loadROP']);
     Route::post('/product/rop/save',  [ 'uses' => 'Service\AdminController@editROP']);
+    Route::post('/product/rop/update',  [ 'uses' => 'Service\AdminController@updateROP']);
+    
     Route::get('/product/auto/',  [ 'uses' => 'Service\AdminController@getProductsSimpleList']);
     Route::get('/product/recap',  [ 'uses' => 'Service\AdminController@getProductsRecapList']);
     Route::post('product/code/update',['uses'=>'Service\AdminController@updateProductCode']);
@@ -105,6 +108,9 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
 
     Route::post('/authenticate/user',['uses'=>'Service\AdminController@authenticateUser']);
     Route::post('/authenticate/user/check',['uses'=>'Service\AdminController@authenticateUserCheck']);
+    Route::get('/user/get',['uses'=>'Service\AdminController@getUsers']);
+    Route::post('/user/update',['uses'=>'Service\AdminController@updateUser']);
+    Route::post('/user/delete',['uses'=>'Service\AdminController@deleteUser']);
 
    
 });

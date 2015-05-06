@@ -118,6 +118,9 @@
 
                  @if($role=='admin') 
                  <li>
+                    <a href="{{ url('/User/') }}"><span class="glyphicon glyphicon-user" style="margin-right:10px;" aria-hidden="true"></span>User</a>
+                </li>
+                 <li>
                     <a href="{{ url('/Konfigurasi/') }}"><span class="glyphicon glyphicon-cog" style="margin-right:10px;" aria-hidden="true"></span>Konfigurasi</a>
                 </li>
                 @endif
@@ -160,6 +163,7 @@
     <script src="{{ asset('/js/app/controllers/orderRecapitulation.js') }}"></script>
     <script src="{{ asset('/js/app/controllers/orderSupplier.js') }}"></script>
     <script src="{{ asset('/js/app/controllers/payment.js') }}"></script>
+    <script src="{{ asset('/js/app/controllers/user.js') }}"></script>
     <script src="{{ asset('/js/app/controllers/paymentPurchase.js') }}"></script>
     <script src="{{ asset('/js/app/controllers/productRecapitulation.js') }}"></script>
     <script src="{{ asset('/js/app/controllers/sendDocument.js') }}"></script>

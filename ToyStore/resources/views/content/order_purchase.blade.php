@@ -185,7 +185,7 @@
                       </div>
                      <div id="order-form-confirmation">
                         <div class="row" id="order-header-form">
-                            <div class="col-md-6 ">
+                            <div class="col-md-6 " style="float:left;">
                                    <div>
                                         <span class="label-form">No Invoice Penjualan</span>
                                         <span class="label-form-delimiter">:</span>
@@ -205,7 +205,7 @@
                                     </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" style="float:right;">
                                 <div>
                                     <span class="label-form">Tanggal</span>
                                     <span class="label-form-delimiter">:</span>
@@ -226,6 +226,7 @@
                                     <span>Sales Order</span>
                                 </div>
                             </div>
+                            <div style="clear:both;"></div>
                     </div>
                     <table class="table">
                        <thead>

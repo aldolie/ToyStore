@@ -26,8 +26,15 @@ class HomeController extends Controller {
 	 *
 	 * @return void
 	 */
+	private $mysqldump;
+	private $mysql;
+
 	public function __construct()
 	{
+		//$this->mysqldump="C:\xampp\mysql\bin\mysqldump";
+		//$this->mysql="C:\xampp\mysql\bin\mysql";
+		$this->mysqldump='D:\DO\07.Software\XAMPP\mysql\bin\mysqldump';
+		$this->mysql='D:\DO\07.Software\XAMPP\mysql\bin\mysql';
 		//$this->middleware('auth');
 	}
 
@@ -45,6 +52,14 @@ class HomeController extends Controller {
 			return view('content/configuration',$this->getData($user));
 	}
 
+	public function user(){
+		$user=SessionTable::getSession(Session::get('user'));
+		if($user->role!='admin')
+			return view('404',$this->getData($user));
+		else
+			return view('content/user',$this->getData($user));
+	}
+
 	public function backup(){
 		$user=SessionTable::getSession(Session::get('user'));
 		if($user->role!='admin')
@@ -58,13 +73,13 @@ class HomeController extends Controller {
 
 			$backup_file = 'back_up_' . date("Y-m-d-H-i-s") . '.sql';
 			//exec('mysqldump -u='.$dbuser.' --host='.$dbhost.' ts > backup/'.$backup_file);
-			shell_exec('C:\xampp\mysql\bin\mysqldump -u root  ts > backup/'.$backup_file);
+			shell_exec($this->mysqldump.' -u root  ts > backup/'.$backup_file);
 			$file= public_path(). '\backup\\'.$backup_file;
 	        $headers = array(
 	              'Content-Type: application/octet-stream',
 	              "Content-Transfer-Encoding: Binary"
 	            );
-	        return Response::download($file, $backup_file, $headers);
+	        return Response::download($file, $backup_file, $headers)->deleteFileAfterSend(true);
 		}
 	}
 
@@ -82,7 +97,7 @@ class HomeController extends Controller {
 
 				$backup_file = 'back_up_' . date("Y-m-d-H-i-s") . '.sql';
 				//exec('mysqldump -u='.$dbuser.' --host='.$dbhost.' ts > backup/'.$backup_file);
-				shell_exec('C:\xampp\mysql\bin\mysqldump -u root  ts > backup/'.$backup_file);
+				shell_exec($this->mysqldump.' -u root  ts > backup/'.$backup_file);
 				$file= public_path(). '\backup\\'.$backup_file;
 		        $headers = array(
 	              'Content-Type: application/octet-stream',
@@ -99,7 +114,7 @@ class HomeController extends Controller {
 					if($row[0]!='user'&&$row[0]!='session_storage')
 						$res2 = $con->query("TRUNCATE TABLE `$row[0]`");
 				}
-				 return Response::download($file, $backup_file, $headers);
+				 return Response::download($file, $backup_file, $headers)->deleteFileAfterSend(true);
 			} catch (Exception $e) {
 					
 				return 'FAILED';
@@ -122,7 +137,7 @@ class HomeController extends Controller {
 			}
 			else{
 
-				shell_exec('C:\xampp\mysql\bin\mysql -u root  ts < '.$file->getPathName());
+				shell_exec($this->mysql.' -u root  ts < '.$file->getPathName());
 				return redirect('/Konfigurasi');
 	        	
 			}
@@ -130,7 +145,7 @@ class HomeController extends Controller {
 	}
 
 	private function getData($user){
-		return ['role'=>$user->role,'name'=>$user->lastname];
+		return ['role'=>$user->role,'name'=>$user->lastname,'userid'=>$user->id];
 	}
 
 	public function index()

@@ -44,6 +44,45 @@ class AdminController extends Controller {
 	 * @return Response
 	 */
 
+    public function updateUser(Request $request){
+        $v = Validator::make($request->all(), [
+        'id' => 'required',
+        'firstname' => 'required',
+        'lastname'=>'required',
+        'role'=>'required'
+        ]);
+        if ($v->fails())
+        {
+           return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>$v->messages()->all()]);
+        }
+        else{
+            $id=$request->input('id');
+            $firstname=$request->input('firstname');
+            $lastname=$request->input('lastname');
+            $role=$request->input('role');
+            if($role!='admin'&&$role!='sales'){
+                return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>['0'=>'Role tidak sesuai']]);
+            }
+            else{
+                $status=User::updateUser($id,$firstname,$lastname,$role);
+                return (['status'=>200,'isSuccess'=>$status,'result'=>[],'reason'=>[]]);
+            }
+        }
+    }
+
+    public function deleteUser(Request $request){
+        if($request->input('id')!=null){
+            $id=$request->input('id');
+            $status=User::deleteUser($id);
+            return ['status'=>200,'isSuccess'=>$status];
+        }
+    }
+
+
+    public function getUsers(){
+        $user=User::getUsers();
+        return ['status'=>200,'result'=>$user];
+    }
 
     public function getCurrentUser(Request $request){
        
@@ -121,10 +160,10 @@ class AdminController extends Controller {
 
     public function getROP()
     {
-        if(!Storage::disk('local')->exists('rop.txt'))
+        /*if(!Storage::disk('local')->exists('rop.txt'))
             Storage::disk('local')->put('rop.txt', '5');
-        $rop = Storage::disk('local')->get('rop.txt');
-        $counts=Product::getROP($rop);
+        $rop = Storage::disk('local')->get('rop.txt');*/
+        $counts=Product::getROP();
         return (['status'=>200,'result'=>$counts]);
     }
     
@@ -532,6 +571,15 @@ class AdminController extends Controller {
             Storage::disk('local')->put('rop.txt', $r);
             $rop = Storage::disk('local')->get('rop.txt');
             return ['status'=>200,'rop'=>$rop];
+       }
+    }
+
+    public function updateROP(Request $request){
+        if($request->input('rop')!=null&&$request->input('id')!=null){
+            $r=$request->input('rop');
+            $i=$request->input('id');
+            $status=Product::updateROP($i,$r);
+            return ['status'=>200,'isSuccess'=>$status];
        }
     }
 
