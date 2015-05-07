@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2015 at 11:03 AM
+-- Generation Time: May 07, 2015 at 10:16 AM
 -- Server version: 5.6.11
 -- PHP Version: 5.5.1
 
@@ -39,15 +39,18 @@ CREATE TABLE IF NOT EXISTS `order_purchase` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `order_purchase`
 --
 
 INSERT INTO `order_purchase` (`id`, `purchaseid`, `productid`, `quantity`, `price`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, 1990000, 2, 2, '2015-05-06 02:09:54', NULL),
-(2, 1, 2, 2, 2000000, 2, NULL, '2015-05-06 02:10:42', NULL);
+(1, 1, 1, 2, 6000000, 8, 9, '2015-05-07 03:12:52', NULL),
+(2, 1, 6, 5, 800000, 8, 9, '2015-05-07 03:12:52', NULL),
+(3, 2, 4, 2, 4000000, 9, NULL, '2015-05-07 03:15:53', NULL),
+(4, 3, 1, 1, 5800000, 9, NULL, '2015-05-07 03:17:35', NULL),
+(5, 4, 10, 3, 6800000, 9, NULL, '2015-05-07 03:27:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -69,14 +72,17 @@ CREATE TABLE IF NOT EXISTS `order_purchase_header` (
   `invoice` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `invoice` (`invoice`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `order_purchase_header`
 --
 
 INSERT INTO `order_purchase_header` (`id`, `transactiondate`, `customer`, `is_sales_order`, `dp`, `discount`, `created_by`, `updated_by`, `created_at`, `updated_at`, `invoice`) VALUES
-(1, '2015-05-06', 'FEB', 0, 2000000, 300000, 2, 2, '2015-05-06 02:09:54', '2015-05-05 19:10:42', 'PENJ0001');
+(1, '2015-05-07', 'Kenrick', 0, 4000000, 300000, 8, 9, '2015-05-07 03:12:52', '2015-05-06 21:45:54', 'PJ000001'),
+(2, '2015-05-07', 'Sri Utami', 0, 0, 0, 9, NULL, '2015-05-07 03:15:53', NULL, 'PJ000002'),
+(3, '2015-05-07', 'Kenrick', 0, 0, 0, 9, NULL, '2015-05-07 03:17:35', NULL, 'PJ000003'),
+(4, '2015-05-07', 'Mestika', 1, 2000000, 0, 9, NULL, '2015-05-07 03:27:36', NULL, 'PJ000004');
 
 -- --------------------------------------------------------
 
@@ -95,15 +101,23 @@ CREATE TABLE IF NOT EXISTS `order_supply` (
   `created_by` int(11) NOT NULL,
   `updated_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `order_supply`
 --
 
 INSERT INTO `order_supply` (`id`, `orderid`, `productid`, `price`, `quantity`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
-(1, 1, 1, 299, 10, '2015-05-06 02:05:49', NULL, 1, NULL),
-(2, 1, 2, 399.99, 10, '2015-05-06 02:05:49', NULL, 1, NULL);
+(1, 1, 1, 499, 20, '2015-05-07 02:47:00', NULL, 1, NULL),
+(2, 1, 2, 399, 40, '2015-05-07 02:47:00', NULL, 1, NULL),
+(3, 1, 3, 245, 24, '2015-05-07 02:47:00', NULL, 1, NULL),
+(4, 2, 4, 3800000, 20, '2015-05-07 02:51:51', NULL, 1, NULL),
+(5, 2, 5, 2500000, 5, '2015-05-07 02:51:51', NULL, 1, NULL),
+(6, 4, 6, 45, 10, '2015-05-07 02:54:35', NULL, 1, NULL),
+(7, 5, 7, 66, 5, '2015-05-07 02:55:53', NULL, 1, NULL),
+(8, 6, 8, 28, 6, '2015-05-07 02:57:55', NULL, 1, NULL),
+(9, 6, 9, 38, 10, '2015-05-07 02:57:55', NULL, 1, NULL),
+(10, 7, 6, 46, 10, '2015-05-07 02:59:07', NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -124,14 +138,19 @@ CREATE TABLE IF NOT EXISTS `order_supply_header` (
   `updated_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `invoice` (`invoice`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `order_supply_header`
 --
 
 INSERT INTO `order_supply_header` (`id`, `invoice`, `supplier`, `currency`, `transactiondate`, `shipped_by`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
-(1, 'PENJ0001', 'Supplier', 'USD', '2015-05-06', 'JNE', '2015-05-06 02:05:49', NULL, 1, NULL);
+(1, 'PB000001', 'GLOBAL PERSADA', 'USD', '2015-05-07', 'FED EX', '2015-05-07 02:47:00', NULL, 1, NULL),
+(2, 'PB000002', 'Maxsoft', 'IDR', '2015-05-07', 'DHL', '2015-05-07 02:51:51', NULL, 1, NULL),
+(4, 'PB000003', 'GLOBAL PERSADA', 'USD', '2015-05-05', 'FED EX', '2015-05-07 02:54:35', NULL, 1, NULL),
+(5, 'PB000004', 'GLOBAL PERSADA', 'USD', '2015-05-07', 'FED EX', '2015-05-07 02:55:53', NULL, 1, NULL),
+(6, 'PB000005', 'Maxsoft', 'USD', '2015-05-07', 'DHL', '2015-05-07 02:57:55', NULL, 1, NULL),
+(7, 'PB000006', 'GLOBAL PERSADA', 'USD', '2015-05-07', 'FED EX', '2015-05-07 02:59:07', NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -149,7 +168,17 @@ CREATE TABLE IF NOT EXISTS `payment` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `payment`
+--
+
+INSERT INTO `payment` (`id`, `orderid`, `paymentdate`, `paid`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+(1, 2, '2015-07-05', 20000000, 1, NULL, '2015-05-07 03:04:59', NULL),
+(2, 5, '2015-07-05', 330, 1, NULL, '2015-05-07 03:06:58', NULL),
+(3, 4, '2015-07-05', 450, 1, NULL, '2015-05-07 03:07:15', NULL),
+(4, 7, '2015-07-05', 100, 1, NULL, '2015-05-07 03:07:34', NULL);
 
 -- --------------------------------------------------------
 
@@ -168,14 +197,15 @@ CREATE TABLE IF NOT EXISTS `payment_purchase` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `payment_purchase`
 --
 
 INSERT INTO `payment_purchase` (`id`, `purchaseid`, `paymentdate`, `paymenttype`, `paid`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 1, '2015-05-05', 'Cash', 1000000, 2, NULL, '2015-05-06 02:12:34', NULL);
+(2, 2, '2015-05-07', 'Debit', 8000000, 9, NULL, '2015-05-07 03:25:10', NULL),
+(4, 1, '2015-05-07', 'Cash', 4000000, 9, NULL, '2015-05-07 04:43:53', NULL);
 
 -- --------------------------------------------------------
 
@@ -196,15 +226,23 @@ CREATE TABLE IF NOT EXISTS `product` (
   `rop` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `product`
 --
 
 INSERT INTO `product` (`id`, `productname`, `quantity`, `price`, `created_at`, `updated_at`, `created_by`, `updated_by`, `code`, `rop`) VALUES
-(1, 'PS Vita', 9, 1990000, '2015-05-06 02:05:49', NULL, 1, NULL, NULL, 0),
-(2, 'Playstation 5', 8, 2000000, '2015-05-06 02:05:49', NULL, 1, NULL, NULL, 0);
+(1, 'Sony Playstation 4', 17, 6000000, '2015-05-07 02:47:00', NULL, 1, NULL, 'KB000001', 5),
+(2, 'Sony Playstation 3', 40, 0, '2015-05-07 02:47:00', NULL, 1, NULL, NULL, 5),
+(3, 'Sony PS Vita', 24, 0, '2015-05-07 02:47:00', NULL, 1, NULL, 'KB000003', 5),
+(4, 'Nintendo 3DS XL', 18, 0, '2015-05-07 02:51:51', NULL, 1, NULL, NULL, 10),
+(5, 'Black Wii U Deluxe w/Nintendo Land Bundle', 5, 0, '2015-05-07 02:51:51', NULL, 1, NULL, NULL, 7),
+(6, 'Dualshock 4 Wireless Controller', 15, 800000, '2015-05-07 02:54:35', NULL, 1, NULL, 'KB000002', 5),
+(7, 'Playstation Camera', 5, 0, '2015-05-07 02:55:53', NULL, 1, NULL, NULL, 8),
+(8, 'Wii Remote Plus/Wii Nunchuk - Refurbished (Wii U, Wii mini, Wii)', 6, 0, '2015-05-07 02:57:55', NULL, 1, NULL, NULL, 5),
+(9, 'New Super Mario Bros U./New Super Luigi U - Refurbished (Wii U)', 10, 0, '2015-05-07 02:57:55', NULL, 1, NULL, NULL, 5),
+(10, 'Sony Playstation 5', -3, 0, '2015-05-07 03:27:36', NULL, 9, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -222,7 +260,14 @@ CREATE TABLE IF NOT EXISTS `sending` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `sending`
+--
+
+INSERT INTO `sending` (`id`, `sendingid`, `productid`, `quantity`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+(3, 3, 1, 2, 9, NULL, '2015-05-07 04:45:14', NULL);
 
 -- --------------------------------------------------------
 
@@ -245,7 +290,14 @@ CREATE TABLE IF NOT EXISTS `sending_header` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `invoice` (`invoice`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `sending_header`
+--
+
+INSERT INTO `sending_header` (`id`, `invoice`, `purchaseid`, `destination`, `address`, `transactiondate`, `tracking_number`, `ongkos_kirim`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+(3, 'SJ00001', 1, 'Kenrick', 'Jl Pejogolan No 34', '2015-05-07', 'PJDA0013454', 150000, 9, NULL, '2015-05-07 04:45:14', NULL);
 
 -- --------------------------------------------------------
 
@@ -260,7 +312,7 @@ CREATE TABLE IF NOT EXISTS `session_storage` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `payload` (`payload`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
 
 --
 -- Dumping data for table `session_storage`
@@ -294,7 +346,27 @@ INSERT INTO `session_storage` (`id`, `payload`, `userid`, `created_at`) VALUES
 (25, '$2y$10$3t80UGLVPkovcVLk8r2mGeOz9Og0iGeyfGw4FxCUD2hMBz79aeHpm', 1, '2015-05-06 07:36:36'),
 (26, '$2y$10$sBX1NvEqyvicTUGlvUU0lOPBDTBkQl7f0tb4vaoC7AcDp5RIrQs6W', 1, '2015-05-06 07:37:30'),
 (27, '$2y$10$NRqP0tsvzgFEpYBLb9VIEOsNaVK48v.32GCd6Ja8K5FxJx.K9hITy', 2, '2015-05-06 07:38:00'),
-(28, '$2y$10$3FCnHN7pk/c/DOKJUXWoau4W9mcuFIhkoTD6oloC1KfY0tgUZ1uOK', 1, '2015-05-06 07:38:10');
+(28, '$2y$10$3FCnHN7pk/c/DOKJUXWoau4W9mcuFIhkoTD6oloC1KfY0tgUZ1uOK', 1, '2015-05-06 07:38:10'),
+(29, '$2y$10$zImH1c8E8NOnyyYR725Ot.CZKfFj5T.zmj9dEicmj3B6AKKHZIenW', 1, '2015-05-07 01:17:28'),
+(30, '$2y$10$znMzs6rCq2BNI.U.klsGeO2QOsk95M8iIYHQnwY7WHY2jQxQnzyIe', 1, '2015-05-07 02:26:57'),
+(31, '$2y$10$8tG6ZdoKNbPvgfKV98XBrewZ0bsoMdSYVWHY6nui1ha/W.USeDiqO', 2, '2015-05-07 02:27:07'),
+(32, '$2y$10$PAZUvnBw9JriKa1Waz7BOe/41uBKDyk8SBigHOb900hJWu0rOCEje', 1, '2015-05-07 02:42:48'),
+(33, '$2y$10$AYNtY2Nk9LqL59pltH/jEeFva.76zodHmtDc0r3S9emY1Lq4.irb2', 1, '2015-05-07 03:03:25'),
+(34, '$2y$10$QJUj8i.zXxWqL7I0iU7YVeMpATzcMIxZS4fjwAoiejIes5kl0yuQO', 8, '2015-05-07 03:03:50'),
+(35, '$2y$10$uaWGE5BxtihjRyRypEYnhuQ.F030HhoHLKdrKdr2hw3uF/Ls/0G1a', 1, '2015-05-07 03:04:04'),
+(36, '$2y$10$lZy.RPhiAWAov6AdC8vWluJTiM2xEzjiYI5JSfiWbBu2QXAgPGnpy', 8, '2015-05-07 03:08:19'),
+(37, '$2y$10$kP0rR49EjQgVbVAkni9BxufbNefhg/..Ufsu1WaNDnrGTVbEGlzum', 1, '2015-05-07 03:09:41'),
+(38, '$2y$10$K6jWo.sJRn77JeDGxOd5oefoo0lnLmnh42urmBSxLYaBQpmKJQeOm', 8, '2015-05-07 03:09:55'),
+(39, '$2y$10$nxdiJeuakRiIhlJTPhI0Su6hxm4KG4G1UW5xRoZIcARfSQ7gDrmBG', 1, '2015-05-07 03:11:47'),
+(40, '$2y$10$N30LCO2kmImz3FaFBGWcb.zXj7d8rdROMOd.LQSdwT64ZdMYjgUR2', 9, '2015-05-07 03:15:10'),
+(41, '$2y$10$7qcsLGD9Gb4evMPwHHeVs.G7MIMqj9vLN6z5xwc/m.2YvUH.SqZ86', 1, '2015-05-07 07:21:00'),
+(42, '$2y$10$u0Q3EHf51VKFYh/6lCTpEOpLm.UIE8zmxwlAh6amT4pQMPloCq7Zi', 1, '2015-05-07 08:04:49'),
+(43, '$2y$10$X6Rsy6q/uHosIkc1vpjv5Or4AzVNBBq94DXb/I3Bmk68DWRtDPAqu', 8, '2015-05-07 08:05:53'),
+(44, '$2y$10$//cPWiR07AtfPAJKsYH1pOLSYglHUPplojkYVk/i2UQ1a1kW7Dz1y', 8, '2015-05-07 08:06:14'),
+(45, '$2y$10$pdEcUc.tmzMHBFm7ILa.r.tiADH/2pQtxlXSlD7zIPCGp8DHhjXmu', 1, '2015-05-07 08:06:24'),
+(46, '$2y$10$e94xLYM7jvE8fqjxulNJ3.adpzgTsis9R0PjzvLldenUlGwx0rRT2', 8, '2015-05-07 08:06:35'),
+(47, '$2y$10$N.SV7RCHZwmIlgcZkjRT6OH7wpDizut.ZkBFgNKPwKC7auOOGUPuG', 1, '2015-05-07 08:08:24'),
+(48, '$2y$10$OZ5.JHrBu796wL96tkSXFO/8MTPUlQe/bvMKkFDb.VAksiWtSgj.e', 1, '2015-05-07 08:08:25');
 
 -- --------------------------------------------------------
 
@@ -313,7 +385,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `active` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `user`
@@ -321,7 +393,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `firstname`, `lastname`, `username`, `password`, `role`, `created_at`, `active`) VALUES
 (1, 'admin', 'admin', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin', '2015-03-25 11:19:40', 1),
-(2, 'sales', 'sales', 'sales', '9ed083b1436e5f40ef984b28255eef18', 'sales', '2015-04-30 23:57:52', 1);
+(2, 'sales', 'sales', 'sales', '9ed083b1436e5f40ef984b28255eef18', 'sales', '2015-04-30 23:57:52', 1),
+(8, 'Budi', 'Irwansyah', 'budi', '9c5fa085ce256c7c598f6710584ab25d', 'sales', '2015-05-07 03:03:43', 1),
+(9, 'Cantika', 'Permata Sari', 'cantika', '5f52a10f22935c00f60666c7dd4d7a68', 'sales', '2015-05-07 03:04:22', 1);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
