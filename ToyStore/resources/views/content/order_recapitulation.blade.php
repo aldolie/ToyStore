@@ -40,9 +40,9 @@
                             <td>[[order.nama_barang]]</td>
                             <td>[[order.supplier]]</td>
                             <td>[[order.currency]]</td>
-                            <td>[[order.price]] </td>
+                            <td>[[order.price|currency:'']] </td>
                             <td>[[order.quantity]] </td>
-                            <td>[[order.price*order.quantity]]</td>
+                            <td>[[order.price*order.quantity |currency:'']]</td>
                             <td>[[order.tanggal_transaksi]]</td>
                         </tr>
                     </tbody>

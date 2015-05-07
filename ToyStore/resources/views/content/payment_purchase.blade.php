@@ -75,10 +75,7 @@
 
                                      <div class="form-group">
                                       <label for="type">Tipe Pembayaran</label>
-                                      <select ng-model="form.type" class="form-control"  ng-init="form.type='Cash'">
-                                        <option value="Cash">Cash</option>
-                                        <option value="Voucher">Voucher</option>
-                                      </select>
+                                      <input type="text" class="form-control" ng-model="form.type" name="type" />
                                     </div>
                                    
                                     <div class="form-group">

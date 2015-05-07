@@ -44,13 +44,63 @@ class AdminController extends Controller {
 	 * @return Response
 	 */
 
+    public function resetPassword(Request $request){
+        if($request->input('id')!=null){
+            $id=$request->input('id');
+            $status=User::resetPassword($id);
+            return (['status'=>200,'isSuccess'=>$status,'result'=>[],'reason'=>[]]);
+        }
+    }
+
+    public function changePassword(Request $request){
+        $v = Validator::make($request->all(), [
+        'id' => 'required',
+        'password' => 'required',
+        'cpassword'=>'required',
+        'oldpassword'=>'required'
+        ],[
+        'id.required'=>'Id tidak ditemukan',
+        'password.required'=>'Password harus diisi',
+        'cpassword.required'=>'Konfirmasi Password harus diisi',
+        'oldpassword.required'=>'Password harus di isi']);
+        if($v->fails()){
+            return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>$v->messages()->all()]);
+        }
+        else{
+            $id=$request->input('id');
+            $password=$request->input('password');
+            $cpassword=$request->input('cpassword');
+            $oldpassword=$request->input('oldpassword');
+            $user=User::getUserById($id);
+            if($user){
+                if($password!=$cpassword){
+                    return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>['0'=>'Password dan Konfirmasi Password tidak sesuai']]);
+                }
+                else if($user->password!=md5($oldpassword)){
+                    return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>['0'=>'Password lama tidak sesuai']]);    
+                }
+                else{
+                    $status=User::changePassword($id,$password);
+                    return (['status'=>200,'isSuccess'=>$status,'result'=>[],'reason'=>[]]);
+                }
+            }
+            else{
+                 return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>['0'=>'User tidak ditemukan']]);
+            }
+        }
+    }
+
     public function updateUser(Request $request){
         $v = Validator::make($request->all(), [
         'id' => 'required',
         'firstname' => 'required',
         'lastname'=>'required',
         'role'=>'required'
-        ]);
+        ],[
+        'id.required'=>'Id tidak ditemukan',
+        'firstname.required'=>'Firstname harus diisi',
+        'lastname.required'=>'Lastname harus diisi',
+        'role.required'=>'Role tidak ditemukan']);
         if ($v->fails())
         {
            return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>$v->messages()->all()]);
@@ -65,6 +115,40 @@ class AdminController extends Controller {
             }
             else{
                 $status=User::updateUser($id,$firstname,$lastname,$role);
+                return (['status'=>200,'isSuccess'=>$status,'result'=>[],'reason'=>[]]);
+            }
+        }
+    }
+
+    public function createUser(Request $request){
+     $v = Validator::make($request->all(), [
+        'username' => 'required',
+        'firstname' => 'required',
+        'lastname'=>'required',
+        'role'=>'required'
+        ],[
+        'username.required'=>'Username harus diisi',
+        'firstname.required'=>'Firstname harus diisi',
+        'lastname.required'=>'Lastname harus diisi',
+        'role.required'=>'Role tidak ditemukan']);
+        if ($v->fails())
+        {
+           return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>$v->messages()->all()]);
+        }
+        else{
+            $username=$request->input('username');
+
+            $firstname=$request->input('firstname');
+            $lastname=$request->input('lastname');
+            $role=$request->input('role');
+            if(User::getUser($username)){
+                return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>['0'=>'Username sudah ada,pilih yang lain']]);
+            }
+            else if($role!='admin'&&$role!='sales'){
+                return (['status'=>200,'isSuccess'=>false,'result'=>[],'reason'=>['0'=>'Role tidak sesuai']]);
+            }
+            else{
+                $status=User::createUser($username,$firstname,$lastname,$role);
                 return (['status'=>200,'isSuccess'=>$status,'result'=>[],'reason'=>[]]);
             }
         }
@@ -88,7 +172,7 @@ class AdminController extends Controller {
        
         $token=Session::get('user');
         $user=SessionTable::getSession($token);
-        return (['status' => 200, 'result' =>['userid'=>$user->id,'name'=>$user->lastname.' '.$user->lastname]]);
+        return (['status' => 200, 'result' =>['userid'=>$user->id,'name'=>$user->firstname.' '.$user->lastname]]);
     }
 
     public function authenticateUser(Request $request){

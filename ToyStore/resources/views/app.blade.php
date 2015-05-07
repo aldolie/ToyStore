@@ -124,6 +124,9 @@
                     <a href="{{ url('/Konfigurasi/') }}"><span class="glyphicon glyphicon-cog" style="margin-right:10px;" aria-hidden="true"></span>Konfigurasi</a>
                 </li>
                 @endif
+                 <li>
+                    <a href="{{ url('/ChangePassword/') }}"><span class="glyphicon glyphicon-flag" style="margin-right:10px;" aria-hidden="true"></span>Change Password</a>
+                </li>
                
             </ul>
         </div>

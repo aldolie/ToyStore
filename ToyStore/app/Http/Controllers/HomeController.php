@@ -44,6 +44,11 @@ class HomeController extends Controller {
 	 * @return Response
 	 */
 
+	public function changePassword(){
+		$user=SessionTable::getSession(Session::get('user'));
+		return view('content/changepassword',$this->getData($user));
+	}
+
 	public function configuration(){
 		$user=SessionTable::getSession(Session::get('user'));
 		if($user->role!='admin')

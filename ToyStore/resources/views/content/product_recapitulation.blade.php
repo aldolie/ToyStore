@@ -36,28 +36,25 @@
                 <table class="table" ng-hide="filteredProducts.length==0">
                    <thead>
                        <tr>
-                        <th>Kode Barang</th>
-                        <th>Re Order Point</th>
+                        <th >Kode Barang</th>
+                        <th >Re Order Point</th>
                         <th>Nama Barang</th>
                         <th>Stock</th>
-                       <!-- <th>Harga Jual</th>-->
                        </tr>
                     </thead>
                     <tbody>
                         <tr ng-controller="ProductRecapitulationDetailController" ng-repeat="product in filteredProducts track by $index">
-                            <td>
+                            <td  width="200">
                                 <input class="form-none small" type="text" ng-model="product.code" />
                                 <span class="glyphicon glyphicon-pencil" style="cursor:pointer;" ng-click="updateProductCode()"></span>
                             </td>
-                            <td> <input class="form-none small" type="text" ng-model="product.rop" />
+                            <td width="200"> 
+                                <input class="form-none small" type="text" ng-model="product.rop" />
                                 <span class="glyphicon glyphicon-pencil" style="cursor:pointer;" ng-click="updateProductROP()"></span>
                             </td>
                             <td>[[product.nama_barang]]</td>
                             <td>[[product.quantity]] <code ng-show="isReOrderPoint()">Order</code></td>
-                           <!-- <td>
-                                <span ng-show="isAvailable()">[[product.harga | currency:'Rp.']]</span>
-                                <code ng-hide="isAvailable()">Belum Ada Transaksi</code>
-                            </td>-->
+                          
                         </tr>
                     </tbody>
                 </table>

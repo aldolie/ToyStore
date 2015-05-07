@@ -220,9 +220,8 @@
                                     <span class="label-form-delimiter">
 
                                         <input type="checkbox" ng-show="form.salesOrder"   checked="checked" ng-disabled="true"/>
-                                        <input type="checkbox" ng-hide="form.salesOrder" ng-disabled="true"/>
                                     </span>
-                                    <span>Sales Order</span>
+                                    <span ng-show="form.salesOrder">Sales Order</span>
                                 </div>
                             </div>
                             <div style="clear:both;"></div>

@@ -66,7 +66,7 @@
                               <tbody>
                                 <tr ng-repeat="detail in paymentDetails">
                                   <td>[[detail.tanggal_pembayaran]]</td>
-                                  <td>[[payment.currency]]&nbsp; [[detail.jumlah_pembayaran]]</td>
+                                  <td>[[payment.currency]]&nbsp; [[detail.jumlah_pembayaran|currency:'']]</td>
                                 </tr>
                               </tbody>
                             </table>

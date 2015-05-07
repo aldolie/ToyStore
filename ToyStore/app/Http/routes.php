@@ -48,6 +48,7 @@ Route::group(['prefix'=>'/','middleware'=>'authpage'],function(){
     Route::get('/Konfigurasi/backup','HomeController@backup');
     Route::get('/Konfigurasi/delete','HomeController@delete');
     Route::post('/Konfigurasi/restore','HomeController@restore');
+    Route::get('/ChangePassword','HomeController@changePassword');
     Route::get('/logout/','HomeController@logout');
 
 });
@@ -111,7 +112,9 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     Route::get('/user/get',['uses'=>'Service\AdminController@getUsers']);
     Route::post('/user/update',['uses'=>'Service\AdminController@updateUser']);
     Route::post('/user/delete',['uses'=>'Service\AdminController@deleteUser']);
-
+    Route::post('/user/create',['uses'=>'Service\AdminController@createUser']);
+    Route::post('/user/reset',['uses'=>'Service\AdminController@resetPassword']);
+    Route::post('/user/change',['uses'=>'Service\AdminController@changePassword']);
    
 });
 

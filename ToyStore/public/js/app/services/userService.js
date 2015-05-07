@@ -46,6 +46,42 @@ angular.module('app').factory('UserService',['$http','$rootScope','$q','$cookies
                 $rootScope.$phase;
             });
             return deferred.promise;
+        },createNewUser:function(username,firstname,lastname,role){
+            var deferred=$q.defer();
+            var url=service+'user/create';
+            $http.post(url,{
+                'username':username,
+                'firstname':firstname,
+                'lastname':lastname,
+                'role':role
+            }).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
+        },resetPassword:function(id){
+           var deferred=$q.defer();
+            var url=service+'user/reset';
+            $http.post(url,{
+                'id':id
+            }).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise; 
+        },changePassword:function(id,password,cpassword,oldpassword){
+           var deferred=$q.defer();
+            var url=service+'user/change';
+            $http.post(url,{
+                'id':id,
+                'password':password,
+                'cpassword':cpassword,
+                'oldpassword':oldpassword
+            }).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise; 
         }
     
     }

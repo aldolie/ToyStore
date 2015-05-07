@@ -28,14 +28,14 @@ angular.module('app').controller('PaymentPurchaseDetailController',['$scope','Pa
 
     var convertDate = function(usDate) {
       var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-      return dateParts[3] + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2])) + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1]));
+      return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
     };
 
 
     $scope.form={
         date:convertDate(new Date().toLocaleDateString()),
         paid:'',
-        type:'Cash'
+        type:''
     };
 
     $scope.isShowDetail=false;
@@ -79,7 +79,7 @@ angular.module('app').controller('PaymentPurchaseDetailController',['$scope','Pa
             return true;
         if($scope.form.paid=='')
             return true;
-        if($scope.form.type!='Cash'&&$scope.form.type!='Voucher')
+        if($scope.form.type==''||$scope.form.type=='Down Payment')
             return true;
         if(parseFloat($scope.form.paid)>(parseFloat($scope.payment.jumlah_utang+$scope.payment.ongkos_kirim-$scope.payment.paid).toFixed(2)))
             return true;

@@ -136,6 +136,7 @@ class PurchaseHeader extends Model {
                     ->update(['customer' => $customer, 'is_sales_order' => $isSalesOrder,'transactiondate'=>$transactiondate,'dp'=>$dp,'discount'=>$discount,
                         'updated_by'=>$userid
                         ,'updated_at'=> date("Y-m-d H:i:s")]);
+            $flag=false;
             for($i=0;$i<count($data);$i++){
                 if(isset($data[$i]['old']))
                 {
@@ -143,6 +144,9 @@ class PurchaseHeader extends Model {
                              ->where('productid',$data[$i]['kode_barang'])
                              ->where('purchaseid',$purchaseid)
                              ->update(['price'=>$data[$i]['harga'],'quantity'=>$data[$i]['quantity'],'updated_by'=>$userid]);
+                    if($data[$i]['old']!=$data[$i]['quantity'])
+                        $flag=true;
+
                     DB::table('product')->where('id', $data[$i]['kode_barang'])->increment('quantity',$data[$i]['old'] );
                     DB::table('product')->where('id', $data[$i]['kode_barang'])->decrement('quantity',$data[$i]['quantity']);
                     DB::table('product')->where('id','=',$data[$i]['kode_barang'])
@@ -151,6 +155,7 @@ class PurchaseHeader extends Model {
                 else
                 {
 
+                    $flag=true;
                     if($data[$i]['kode_barang']==0){
                          $productid=DB::table('product')->insertGetId(['productname'=>$data[$i]['nama_barang'],'quantity'=>0,'price'=>0,'created_by'=>$userid]);
                          DB::table('order_purchase')->insert(['purchaseid' => $purchaseid, 'productid' => $productid,'price'=>$data[$i]['harga'],'quantity'=>$data[$i]['quantity'],'created_by'=>$userid]);
@@ -171,12 +176,25 @@ class PurchaseHeader extends Model {
             }
 
             for($i=0;$i<count($deleted);$i++){
+                 $flag=true;
                  DB::table('order_purchase')
                          ->where('productid','=',$deleted[$i]['kode_barang'])
                          ->where('purchaseid','=',$purchaseid)
                          ->delete();
                  DB::table('product')->where('id', $deleted[$i]['kode_barang'])->increment('quantity',$deleted[$i]['old'] );
                    
+            }
+            if($flag){
+                DB::table('payment_purchase')
+                    ->where('purchaseid','=',$purchaseid)
+                    ->delete();
+                DB::table('sending')
+                    ->join('sending_header','sending_header.id','=','sending.sendingid')
+                    ->where('sending_header.purchaseid','=',$purchaseid)
+                    ->delete();
+                DB::table('sending_header')
+                ->where('sending_header.purchaseid','=',$purchaseid)
+                ->delete();
             }
             DB::commit();
             return ['status'=>true];

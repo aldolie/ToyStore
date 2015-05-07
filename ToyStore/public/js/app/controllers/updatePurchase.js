@@ -113,8 +113,8 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
         purchaseService.updateOrderPurchase($scope.form).then(function(data){
             
             if(data.isSuccess){
-              // $('#modal-save').modal('hide');
-              //  window.location.href='/Penjualan/';
+               $('#modal-save').modal('hide');
+                window.location.href='/Penjualan/';
             }
             else{
                for(var i=0;i<data.reason.length;i++){

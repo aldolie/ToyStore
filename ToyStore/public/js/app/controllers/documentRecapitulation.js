@@ -6,7 +6,7 @@ angular.module('app').controller('DocumentRecapitulationController',['$scope','P
     $scope.documents=[];
     $scope.filteredDocuments=[];
     $scope.filterOrder=function(){
-        $scope.filteredDocuments=filterFilter($scope.documents,{'id':$scope.search});
+        $scope.filteredDocuments=filterFilter($scope.documents,{'suratJalan':$scope.search});
         $scope.filteredDocuments=orderByFilter($scope.filteredDocuments,'transactiondate',$scope.isReverse);
     };
     $scope.orderAsc=function(){
@@ -21,7 +21,7 @@ angular.module('app').controller('DocumentRecapitulationController',['$scope','P
     $scope.loadData=function(){
        purchaseService.loadSuratJalan().then(function(data){
             $scope.documents=data.result;
-            $scope.filteredDocuments=filterFilter($scope.documents,{'id':$scope.search});
+            $scope.filteredDocuments=filterFilter($scope.documents,{'suratJalan':$scope.search});
             $scope.filteredDocuments=orderByFilter($scope.filteredDocuments,'transactiondate',$scope.isReverse);
         },function(){});
     };
