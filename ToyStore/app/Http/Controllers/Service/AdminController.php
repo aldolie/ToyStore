@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash as Hash;
 use Illuminate\Support\Facades\Session as Session;
 use Illuminate\Support\Facades\Storage as Storage;
+use phpmailer\PHPMailerAutoload;
 
 class AdminController extends Controller {
 
@@ -732,11 +733,54 @@ class AdminController extends Controller {
             }
             
             else{
+                $pr=PurchaseHeader::getInvoice($purchaseid);
+                $invoice=$pr->invoice;
+                try {
+                    $this->email($invoice,$user->username);
+                } catch (Exception $e) {
+                    
+                }
                 return (['status'=>200,'isSuccess'=>true,'reason'=>[]]);
             }
             
        }
         
+    }
+
+
+    public function email($kd,$user){
+        $mail = new \PHPMailer(true);
+      //  $mail->SMTPDebug = 3;                               // Enable verbose debug output
+        $mail->isSMTP();                                      // Set mailer to use SMTP
+        $mail->Host = 'ssl://smtp.gmail.com';  // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = 'myvalz94@gmail.com';                 // SMTP username
+        $mail->Password = 'L3g3nD4ddy';                           // SMTP password
+        $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 465;                                    // TCP port to connect to
+
+        $mail->From = 'myvalz94@gmail.com';
+        $mail->FromName = 'D\'Piss APPLICATION MAILER';
+        $mail->addAddress('aldo.lie@outlook.com', 'Aldo');     // Add a recipient
+        //$mail->addAddress('ellen@example.com');               // Name is optional
+        $mail->addReplyTo('myvalz94@gmail.com', 'Aldo');
+        //$mail->addCC('cc@example.com');
+        //$mail->addBCC('bcc@example.com');
+
+        //$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+        //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+        $mail->isHTML(true);                                  // Set email format to HTML
+
+        $mail->Subject = 'Notification from D\'Piss Application';
+        $mail->Body    = '<div style="width:300px;min-height:200px;border:1px solid #666;padding:10px;box-shadow:1px 1px 1px #000000;">Terdapat perubahan pada penjualan dengan kode <b>'.$kd.'</b> oleh user <b>'.$user.'</b></div>';
+        $mail->AltBody = 'Terdapat perubahan pada penjualan dengan kode '.$kd.' oleh '.$user;
+
+        if(!$mail->send()) {
+          //  echo 'Message could not be sent.';
+           // echo 'Mailer Error: ' . $mail->ErrorInfo;
+        } else {
+           // echo 'Message has been sent';
+        }
     }
     
 

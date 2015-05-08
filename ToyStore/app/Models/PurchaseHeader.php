@@ -60,6 +60,13 @@ class PurchaseHeader extends Model {
         return $purchase;
     }
 
+    public static function getInvoice($id){
+        $purchase=DB::table('order_purchase_header')
+            ->where('id','=',$id)
+            ->first();
+        return $purchase;
+    }
+
     public static function getPurchaseById($id){
         $purchase = DB::table('order_purchase_header')
             ->join('order_purchase','order_purchase_header.id','=','order_purchase.purchaseid')
@@ -123,6 +130,8 @@ class PurchaseHeader extends Model {
 		return ['status'=>false,'error_code'=>-2];
         
 	}
+
+
 
 
     public static function updateOrder($purchaseid,$userid,$customer,$transactiondate,$isSalesOrder,$discount,$dp,$data,$deleted)

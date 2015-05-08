@@ -298,7 +298,9 @@
                     <button class="btn btn-warning" ng-click="print()">
                             <span class="glyphicon glyphicon-print" style="margin-right:10px;" aria-hidden="true" ></span>Print Penjualan
                     </button>
-
+                      <button class="btn btn-default" ng-click="printStruk()">
+                            <span class="glyphicon glyphicon-print" style="margin-right:10px;" aria-hidden="true" ></span>Print Struk Penjualan
+                    </button>
                     <button class="btn btn-danger" ng-click="cancelOrder()">
                             <span class="glyphicon glyphicon-remove" style="margin-right:10px;" aria-hidden="true" ></span>Cancel Penjualan
                     </button>
@@ -311,5 +313,103 @@
 <!-- Confirmation Dialog -->
 
 	</div>
+
+
+
+
+
+<div style="display:none;">
+    <div id="order-form-struk">
+                        <div class="row" id="order-header-form">
+                            <div class="col-md-6 ">
+                                   <div>
+                                        <span class="label-form">No Invoice Penjualan</span>
+                                        <span class="label-form-delimiter">:</span>
+                                        <span>[[form.orderId]]</span>
+                                    </div>
+
+                                    <div>
+                                        <span class="label-form">Customer</span>
+                                        <span class="label-form-delimiter">:</span>
+                                        <span>[[form.customer]]</span>
+                                    </div>
+
+                                    <div>
+                                        <span class="label-form">Salesman</span>
+                                        <span class="label-form-delimiter">:</span>
+                                        <span>[[form.sales]]</span>
+                                    </div>
+                                    <div>
+                                        <span class="label-form">Tanggal</span>
+                                        <span class="label-form-delimiter">:</span>
+                                        <span>[[form.date]]</span>
+                                    </div>
+                                    <div>
+                                        <span class="label-form"></span>
+                                        <span class="label-form-delimiter"></span>
+                                        <span></span>
+                                    </div>
+                                    <div>
+                                        <span class="label-form"></span>
+                                        <span class="label-form-delimiter">
+
+                                            <input type="checkbox" ng-show="form.salesOrder"   checked="checked" ng-disabled="true"/>
+                                        </span>
+                                        <span ng-show="form.salesOrder">Sales Order</span>
+                                    </div>
+                            </div>
+
+                    </div>
+                        <div style="border-top:1px solid #666;width:100%;margin:5px 0px;" >&nbsp;</div>
+                            <div ng-controller="OrderPurchaseDetailController" ng-repeat="order in orders track by $index" style="margin-bottom:8px;">
+                                <div class="col-xs-12" style="font-weight:bold;letter-spacing:2px;">[[order.nama_barang]]</div>
+                                    <div class="small-input col-xs-1 col-xs-offset-1">[[order.quantity]]</div>
+                                    <div class="small-input col-xs-1">X</div>
+                                    <div class="small-input col-xs-3"><span></span>[[order.harga |currency:'Rp.']]</div>
+                                    <div style="text-align:right;">[[ (order.quantity*order.harga) |currency:'Rp.']]</div>
+                            </div>
+                       <div style="clear:both;"></div> 
+                    <div style="border-top:1px solid #666;width:100%;margin:5px 0px;" >&nbsp;</div>
+                <div class="col-md-5 col-sm-offset-7" ng-show="form.isDp">
+                    <div>
+                        <span class="label-form">Down Payment</span>
+                        <span class="label-form-delimiter">:</span>
+                        <span>[[form.dp |currency:'Rp.']]</span>
+                    </div>
+
+                </div>
+
+                <div class="col-md-5 col-sm-offset-7" ng-show="form.isDiscount">
+                        <div>
+                            <span class="label-form">Discount</span>
+                            <span class="label-form-delimiter">:</span>
+                            <span><span>[[form.discount |currency:'Rp.']]</span>
+                        </div>
+
+                </div>
+
+                <div class="col-md-5 col-sm-offset-7">
+                        <div>
+                            <span class="label-form">Total</span>
+                            <span class="label-form-delimiter">:</span>
+                            <span>[[ getGrandTotal() |currency:'Rp.']]</span>
+                        </div>
+                </div>
+
+                 <div class="col-md-5 col-sm-offset-7">
+                        <div>
+                            <span class="label-form">Grand Total</span>
+                            <span class="label-form-delimiter">:</span>
+                            <span> [[ getGrandTotal()-form.discount-form.dp |currency:'Rp.']]</span>
+                        </div>
+                </div>
+                </div>
+              </div>
+  </div>
+
+
+
+
+
 </div>
 @endsection

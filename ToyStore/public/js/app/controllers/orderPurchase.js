@@ -137,6 +137,10 @@ angular.module('app').controller('OrderPurchaseController',['$scope','filterFilt
         printService.print("order-form-confirmation");
        
     };
+
+    $scope.printStruk=function(){
+        printService.print("order-form-struk");
+    };
     
     (function(){
         

@@ -18,6 +18,10 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
     $scope.print=function(){
         printService.print("order-form-confirmation");
     }
+
+    $scope.printStruk=function(){
+        printService.print("order-form-struk");
+    };
     
     $scope.getGrandTotal=function(){
         var total=0;
