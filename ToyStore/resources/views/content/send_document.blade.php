@@ -28,12 +28,16 @@
                         <div>
                             <span class="label-form">Kepada</span>
                             <span class="label-form-delimiter">:</span>
-                            <span><input type="text"  class="form-none medium"  ng-model="form.to" /></span>
+                            <span>
+                                <input type="text"  class="form-none medium"  ng-model="form.to" />
+                            </span>
                         </div>
                         <div>
                             <span class="label-form">Alamat</span>
                             <span class="label-form-delimiter">:</span>
-                            <span><input type="text" class="form-none medium" ng-model="form.address"/></span>
+                            <span>
+                                <input type="text" class="form-none medium" ng-model="form.address"/>
+                            </span>
                         </div>
                         
                     </div>

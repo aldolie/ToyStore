@@ -1,5 +1,5 @@
 
-angular.module('app').controller('OrderPurchaseController',['$scope','filterFilter','ProductService','PurchaseService','UserService','PrintService',function($scope,filterFilter,productService,purchaseService,userService,printService){
+angular.module('app').controller('OrderPurchaseController',['$scope','filterFilter','ProductService','PurchaseService','UserService','PrintService','CustomerService',function($scope,filterFilter,productService,purchaseService,userService,printService,customerService){
     
    var convertDate = function(usDate) {
       var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
@@ -141,6 +141,41 @@ angular.module('app').controller('OrderPurchaseController',['$scope','filterFilt
     $scope.printStruk=function(){
         printService.print("order-form-struk");
     };
+
+
+    $scope.searchCustomer=function(){
+        if($scope.form.customer=='')
+        {
+           $scope.filteredCustomers=[];
+           return;
+        }
+        $scope.filteredCustomers=filterFilter($scope.customers,{'username':$scope.form.customer});  
+    };
+
+
+    $scope.onClickAutoCompleteCustomer=function(customer){
+        
+        $scope.form.customer=customer.username;
+        customerService.loadAddressCustomerforAutoComplete(customer.username).then(function(data){
+            $scope.addresses=data;
+             
+        },function(){});
+        $scope.filteredAddresses=$scope.addresses;
+        $scope.filteredCustomers=[];
+    };
+
+
+
+    $scope.searchAddress=function(){
+        $scope.filteredAddresses=filterFilter($scope.addresses,{'address':$scope.form.address});  
+    };
+
+
+    $scope.onClickAutoCompleteAddress=function(address){
+        
+        $scope.form.address=address.address;
+        $scope.filteredAddresses=[];
+    };
     
     (function(){
         
@@ -156,6 +191,15 @@ angular.module('app').controller('OrderPurchaseController',['$scope','filterFilt
             }
              
         },function(){});
+
+
+        customerService.loadCustomerforAutoComplete().then(function(data){
+            $scope.customers=data;
+             
+        },function(){});
+
+
+        
 
         userService.loadCurrenctUser().then(function(data){
             if(data.result){

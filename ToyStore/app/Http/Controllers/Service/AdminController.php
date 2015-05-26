@@ -9,6 +9,7 @@ use App\Models\SendDocument;
 use App\Models\Session as SessionTable;
 use App\Models\PurchaseHeader;
 use App\Models\PaymentPurchase;
+use App\Models\Customer;
 use Illuminate\Http\Request as Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash as Hash;
@@ -745,6 +746,17 @@ class AdminController extends Controller {
             
        }
         
+    }
+
+
+    public function getCustomers(){
+        $customer = Customer::getCustomersName();
+        return (['status' => 200, 'result' => $customer]);
+    }
+
+    public function getCustomerAddresses($username){
+        $addresses=Customer::getCustomerAddresses($username);
+        return (['status' => 200, 'result' => $addresses]);
     }
 
 

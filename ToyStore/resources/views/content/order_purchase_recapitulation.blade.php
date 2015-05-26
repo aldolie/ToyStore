@@ -7,9 +7,15 @@
             
             <div id="order-report">
                 <div class="row" id="order-header-report">
-                    <div class="col-md-5 ">
+                    <div class="col-md-8">
                         <div>
-                            <span class="label-form">Search By Customer</span>
+                            <span class="label-form">Search By</span>
+                            <span>
+                                <select class="form-control" style="display:inline-block;width:200px;" ng-model="searchBy" ng-init="searchBy='customer'" ng-change="filterOrder()">
+                                    <option value="customer">Customer</option>
+                                    <option value="nama_barang">Nama Barang</option>
+                                </select>
+                            </span>
                             <span class="label-form-delimiter">:</span>
                             <span><input type="text" class="form-control large-input" style="display:inline-block;" ng-model="search" ng-init="search=''" ng-change="filterOrder()" /> </span>
                         </div>

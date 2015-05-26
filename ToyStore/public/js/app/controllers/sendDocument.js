@@ -29,6 +29,8 @@ angular.module('app').controller('SendDocumentController',['$scope','PurchaseSer
             }
             else{
                 $scope.orders=data.result;
+                $scope.form.to=data.result[0].customer;
+                $scope.form.address=data.result[0].address;
                 $scope.form.purchaseId=data.result[0].id;
                  $scope.lock=true;
                /* purchaseService.loadSuratJalanId().then(function(data){

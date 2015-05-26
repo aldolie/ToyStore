@@ -77,7 +77,7 @@ class PurchaseHeader extends Model {
             })
             ->where('order_purchase_header.invoice','=',$id)
             ->where(DB::Raw('order_purchase.quantity- ( case when p.total is null then 0 else p.total end)'),'>',0)
-            ->select('order_purchase_header.invoice','order_purchase_header.id as id','product.id as kode_barang','productname as nama_barang','customer','order_purchase.price',DB::Raw('order_purchase.quantity- ( case when p.total is null then 0 else p.total end)   as remaining'),'transactiondate as tanggal_transaksi')
+            ->select('order_purchase_header.invoice','order_purchase_header.id as id','product.id as kode_barang','productname as nama_barang','customer','address','order_purchase.price',DB::Raw('order_purchase.quantity- ( case when p.total is null then 0 else p.total end)   as remaining'),'transactiondate as tanggal_transaksi')
             ->get();
         return $purchase;
     }

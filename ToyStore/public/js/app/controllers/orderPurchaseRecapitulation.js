@@ -4,7 +4,12 @@ angular.module('app').controller('OrderPurchaseRecapitulationController',['$scop
     $scope.orders=[];
     $scope.filteredOrders=[];
     $scope.filterOrder=function(){
-        $scope.filteredOrders=filterFilter($scope.orders,{'customer':$scope.search});
+        var searchBy=$scope.searchBy;
+        if(searchBy=='customer')
+            $scope.filteredOrders=filterFilter($scope.orders,{'customer':$scope.search});
+        else if(searchBy=='nama_barang')
+            $scope.filteredOrders=filterFilter($scope.orders,{'nama_barang':$scope.search});
+        
         $scope.filteredOrders=orderByFilter($scope.filteredOrders,'tanggal_transaksi',$scope.isReverse);
     };
     $scope.orderAsc=function(){

@@ -67,6 +67,8 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     Route::post('/product/rop/save',  [ 'uses' => 'Service\AdminController@editROP']);
     Route::post('/product/rop/update',  [ 'uses' => 'Service\AdminController@updateROP']);
     
+    Route::get('/customer/auto/',['uses'=>'Service\AdminController@getCustomers']);
+    Route::get('/customer/address/auto/{username}',['uses'=>'Service\AdminController@getCustomerAddresses']);
     Route::get('/product/auto/',  [ 'uses' => 'Service\AdminController@getProductsSimpleList']);
     Route::get('/product/recap',  [ 'uses' => 'Service\AdminController@getProductsRecapList']);
     Route::post('product/code/update',['uses'=>'Service\AdminController@updateProductCode']);
