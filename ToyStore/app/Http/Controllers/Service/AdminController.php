@@ -775,6 +775,13 @@ class AdminController extends Controller {
     }
 
 
+     public function getPurchaseSales(Request $request){
+        $fromDate=$request->input('fromDate');
+        $toDate=$request->input('toDate');
+        $purchase=PurchaseHeader::getPurchaseSales($fromDate,$toDate);
+        return (['status' => 200, 'result' => $purchase]);
+    }
+
     public function email($kd,$user){
         $mail = new \PHPMailer(true);
       //  $mail->SMTPDebug = 3;                               // Enable verbose debug output

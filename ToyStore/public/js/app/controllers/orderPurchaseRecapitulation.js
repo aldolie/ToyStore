@@ -31,6 +31,31 @@ angular.module('app').controller('OrderPurchaseRecapitulationController',['$scop
 
 }]);
 
+
+angular.module('app').controller('PurchaseSalesRecapitulationController',['$scope','PurchaseService','filterFilter','orderByFilter',function($scope,purchaseService,filterFilter,orderByFilter){
+    var convertDate = function(usDate) {
+      var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
+    };
+    $scope.orders=[];
+    $scope.generate=function(){
+         purchaseService.loadPurchaseSales($scope.fromDate,$scope.toDate).then(function(data){
+            $scope.orders=data.result;
+       },function(){});
+    };
+
+     (function(){
+            var d=new Date();
+            $scope.toDate=convertDate(d.toLocaleDateString());
+            d.setDate(d.getDate()-30);
+            $scope.fromDate=convertDate(d.toLocaleDateString());
+            $scope.generate();
+        
+    })();
+
+}]);
+
+
 angular.module('app').controller('OrderPurchaseRecapitulationDetailController',['$scope',function($scope){
 
 }]);

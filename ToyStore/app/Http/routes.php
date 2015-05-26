@@ -50,6 +50,7 @@ Route::group(['prefix'=>'/','middleware'=>'authpage'],function(){
     Route::post('/Konfigurasi/restore','HomeController@restore');
     Route::get('/ChangePassword','HomeController@changePassword');
     Route::get('/logout/','HomeController@logout');
+    Route::get('/Sales','HomeController@salesPurchase');
 
 });
 
@@ -93,6 +94,7 @@ Route::group(['prefix' => 'apiv1', 'after' => 'allowOrigin'], function() {
     Route::post('/order/purchase/save',  [ 'uses' => 'Service\AdminController@saveOrderPurchase']);
     Route::post('/order/purchase/update',  [ 'uses' => 'Service\AdminController@updateOrderPurchase']);
     Route::post('/order/purchase/price/get',['uses'=>'Service\AdminController@getLastestPrice']);
+    Route::post('/order/purchase/sales/get',['uses'=>'Service\AdminController@getPurchaseSales']);
     
     Route::post('/order/purchase/header/get',['uses'=>'Service\AdminController@getPurchaseHeader']);
     Route::post('/order/purchase/detail/get',['uses'=>'Service\AdminController@getPurchaseDetail']);

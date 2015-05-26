@@ -116,6 +116,9 @@
                  <li>
                     <a href="{{ url('/User/') }}"><span class="glyphicon glyphicon-user" style="margin-right:10px;" aria-hidden="true"></span>User</a>
                 </li>
+                <li>
+                    <a href="{{ url('/Sales/') }}"><span class="glyphicon glyphicon-user" style="margin-right:10px;" aria-hidden="true"></span>Penjualan Sales</a>
+                </li>
                  <li>
                     <a href="{{ url('/Konfigurasi/') }}"><span class="glyphicon glyphicon-cog" style="margin-right:10px;" aria-hidden="true"></span>Konfigurasi</a>
                 </li>

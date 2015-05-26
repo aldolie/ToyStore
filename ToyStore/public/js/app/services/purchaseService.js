@@ -163,6 +163,18 @@ angular.module('app').factory('PurchaseService',['$http','$rootScope','$q','$coo
                 $rootScope.$phase;
             });
             return deferred.promise;
+        },
+        loadPurchaseSales:function(fromDate,toDate){
+            var deferred=$q.defer();
+            var url=service+'order/purchase/sales/get';
+            $http.post(url,{
+                'fromDate':fromDate,
+                'toDate':toDate
+            }).success(function(data){
+                deferred.resolve(data);
+                $rootScope.$phase;
+            });
+            return deferred.promise;
         }
     
     }

@@ -65,6 +65,15 @@ class HomeController extends Controller {
 			return view('content/user',$this->getData($user));
 	}
 
+
+	public function salesPurchase(){
+		$user=SessionTable::getSession(Session::get('user'));
+		if($user->role!='admin')
+			return view('404',$this->getData($user));
+		else
+			return view('content/purchase_sales',$this->getData($user));
+	}
+
 	public function backup(){
 		$user=SessionTable::getSession(Session::get('user'));
 		if($user->role!='admin')

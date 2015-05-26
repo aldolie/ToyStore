@@ -81,6 +81,27 @@ class PurchaseHeader extends Model {
             ->get();
         return $purchase;
     }
+
+
+    public static function getPurchaseSales($fromDate,$toDate){
+        $purchase = DB::table('order_purchase_header')
+            ->join('order_purchase','order_purchase_header.id','=','order_purchase.purchaseid')
+            ->join('product','product.id','=','order_purchase.productid')
+            ->join('user','user.id','=','order_purchase_header.created_by')
+            ->where('order_purchase_header.transactiondate','>=',$fromDate)
+            ->where('order_purchase_header.transactiondate','<=',$toDate)
+            ->select(
+                    'user.id as userid',
+                    'user.firstname',
+                    'user.lastname',
+                    DB::raw('SUM(order_purchase.price*order_purchase.quantity) as penjualan')
+                )
+            ->groupBy('user.id',
+                    'user.firstname',
+                    'user.lastname')
+            ->get();
+        return $purchase;
+    }
     
     public static function insertOrder($purchaseid,$userid,$customer,$transactiondate,$isSalesOrder,$discount,$dp,$data)
 	{
