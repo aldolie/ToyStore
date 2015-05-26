@@ -10,13 +10,14 @@ class PaymentPurchase extends Model {
 	{
 		$payment = DB::table('order_purchase_header')
 					->join('order_purchase','order_purchase.purchaseid','=','order_purchase_header.id')
-					->leftJoin(DB::raw('(select  purchaseid ,sum(paid) as paid from payment_purchase group by purchaseid) as p '),'p.purchaseid','=','order_purchase_header.id')
+					->leftJoin(DB::raw('(select  purchaseid ,sum(paid) as paid,sum(case when status=0 then 0 else paid end) as paid_verify from payment_purchase group by purchaseid) as p '),'p.purchaseid','=','order_purchase_header.id')
 					->leftJoin(DB::raw('(select  purchaseid ,sum(ongkos_kirim) as ongkos_kirim from sending_header group by purchaseid) as s '),'s.purchaseid','=','order_purchase_header.id')
 					->select('order_purchase_header.id as id','order_purchase_header.invoice as kode_invoice','order_purchase_header.customer'
 						,DB::raw('SUM(order_purchase.price*order_purchase.quantity)-order_purchase_header.discount as jumlah_utang')
 						,'order_purchase_header.transactiondate as tanggal_penjualan'
 						,DB::raw('case when ongkos_kirim is null then 0 else ongkos_kirim end as ongkos_kirim')
-						,DB::raw('case when p.paid is null then 0 else p.paid end +order_purchase_header.dp as paid'))
+						,DB::raw('case when p.paid is null then 0 else p.paid end +order_purchase_header.dp as paid')
+						,DB::raw('case when p.paid_verify is null then 0 else p.paid_verify end +order_purchase_header.dp as paid_verify'))
 					->groupBy('order_purchase_header.transactiondate','order_purchase_header.customer','order_purchase_header.id','order_purchase_header.invoice')
 					->get();
         return $payment;
@@ -41,6 +42,24 @@ class PaymentPurchase extends Model {
 		$paid = DB::table('payment_purchase')
 					->where('purchaseid','=',$id)
 					->select(DB::raw('sum(paid) as paid'))
+					->groupBy('purchaseid')
+					->first();
+		$dp=DB::table('order_purchase_header')
+				->where('id','=',$id)
+				->select('dp')
+				->first();
+		$down=$dp->dp;
+		if($paid)
+			$down+=$paid->paid;
+        return $down;
+	}
+
+
+	public static function getTotalPaidVerify($id)
+	{
+		$paid = DB::table('payment_purchase')
+					->where('purchaseid','=',$id)
+					->select(DB::raw('sum(case when status=0 then 0 else paid end) as paid'))
 					->groupBy('purchaseid')
 					->first();
 		$dp=DB::table('order_purchase_header')
@@ -85,6 +104,21 @@ class PaymentPurchase extends Model {
 	}
 
 
+	public static function verifyPayment($id){
+		DB::beginTransaction();
+        try {
+           
+           DB::table('payment_purchase')->where('id','=',$id)->update(['status'=>1]);
+           DB::commit();
+           return true;
+            
+        } catch (\Exception $e) {
+            DB::rollback();
+            
+        }
+		return false;
+	}
+
 
 
 	public static function getPaymentDetail($id)
@@ -93,10 +127,11 @@ class PaymentPurchase extends Model {
         $dp=DB::table('order_purchase_header')->where('order_purchase_header.id','=',$id)
         		->where('dp','>',0)
         		->select(DB::raw('0 as id'),'order_purchase_header.created_at as tanggal_pembayaran','order_purchase_header.dp as jumlah_pembayaran'
-        		,DB::raw("'Down Payment' as tipe_pembayaran"))->first();
+        		,DB::raw("'Down Payment' as tipe_pembayaran")
+        		,DB::raw("1 as status"))->first();
         		
         $payment = DB::table('payment_purchase')->where('payment_purchase.purchaseid','=',$id)
-					->select('payment_purchase.id','payment_purchase.paymentdate as tanggal_pembayaran','payment_purchase.paid as jumlah_pembayaran','payment_purchase.paymenttype as tipe_pembayaran')->get();
+					->select('payment_purchase.id','payment_purchase.paymentdate as tanggal_pembayaran','payment_purchase.paid as jumlah_pembayaran','payment_purchase.paymenttype as tipe_pembayaran','payment_purchase.status')->get();
         if($dp)
         	array_unshift($payment,$dp);
 		return $payment;

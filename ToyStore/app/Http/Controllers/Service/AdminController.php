@@ -280,6 +280,17 @@ class AdminController extends Controller {
         $purchase=$request->input('purchase');
         $status=PaymentPurchase::deletePayment($id);
         $totalPaid=PaymentPurchase::getTotalPaid($purchase);
+        $totalPaidVerify=PaymentPurchase::getTotalPaidVerify($purchase);
+        return ['status'=>200,'isSuccess'=>$status,'result'=>['paid'=>$totalPaid,'paid_verify'=>$totalPaidVerify]];
+
+    }
+
+
+    public function verifyPaymentPurchase(Request $request){
+        $id=$request->input('i');
+        $purchase=$request->input('purchase');
+        $status=PaymentPurchase::verifyPayment($id);
+        $totalPaid=PaymentPurchase::getTotalPaidVerify($purchase);
         return ['status'=>200,'isSuccess'=>$status,'result'=>$totalPaid];
 
     }
@@ -590,12 +601,14 @@ class AdminController extends Controller {
             'customer' => 'required|max:255',
             'date' => 'required|date',
             'is_sales_order'=>'required',
-            'purchaseid'=>'required'
+            'purchaseid'=>'required',
+            'address'=>'required'
         ],[
             'purchaseid.required'=>'Purchaseid harus diisi',
             'customer.required'=>'Nama Customer  harus diisi',
             'date.required'=>'Tanggal Pembelian harus diisi',
-            'is_sales_order.required'=>'Sales Order harus di isi'
+            'is_sales_order.required'=>'Sales Order harus di isi',
+            'address.required'=>'Alamat harus diisi'
         ]);
        
        if ($v->fails())
@@ -613,6 +626,7 @@ class AdminController extends Controller {
             $isDiscount=$request->input('isDiscount');
             $isDp=$request->input('isDp');
             $purchaseid=$request->input('purchaseid');
+            $address=$request->input('address');
             if(!$isDiscount)
                 $discount=0;
             if(!$isDp)
@@ -637,6 +651,7 @@ class AdminController extends Controller {
             }
             
             else{
+                Customer::insertCustomer($customer,$address);
                 return (['status'=>200,'isSuccess'=>true,'reason'=>[]]);
             }
             

@@ -16,6 +16,7 @@ angular.module('app').factory('PurchaseService',['$http','$rootScope','$q','$coo
                'isDiscount':form.isDiscount,
                'discount':form.discount,
                'dp':form.dp,
+               'address':form.address,
                'data':form.data
            }).success(function(data){
              deferred.resolve(data);

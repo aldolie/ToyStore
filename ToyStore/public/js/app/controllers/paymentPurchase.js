@@ -99,7 +99,17 @@ angular.module('app').controller('PaymentPurchaseDetailController',['$scope','Pa
         },function(){
 
         });
-    }
+    };
+
+
+
+
+
+    $scope.isBaseVerified=function(){
+        if($scope.payment.jumlah_utang+$scope.payment.ongkos_kirim-$scope.payment.paid_verify>0)
+            return false;
+        return true;
+    };
 
     $scope.isBase=function(){
         if($scope.payment.jumlah_utang+$scope.payment.ongkos_kirim-$scope.payment.paid>0)
@@ -109,6 +119,10 @@ angular.module('app').controller('PaymentPurchaseDetailController',['$scope','Pa
 
     $scope.changeTotalPaid=function(paid){
         $scope.payment.paid=paid;
+    }
+
+     $scope.changeTotalPaidVerify=function(paid){
+        $scope.payment.paid_verify=paid;
     }
 
 
@@ -121,11 +135,26 @@ angular.module('app').controller('PaymentController',['$scope','PaymentPurchaseS
             if(data.isSuccess){
                 $scope.$parent.paymentDetails.splice($scope.$index,1);
                 $scope.$parent.reload();
-                $scope.$parent.changeTotalPaid(data.result);
+                $scope.$parent.changeTotalPaid(data.result.paid);
+                $scope.$parent.changeTotalPaidVerify(data.result.paid_verify);
+
             }
         },function(){
 
         });
+    };
+
+    $scope.verifyPayment=function(){
+        PaymentPurchaseService.verifyPayment($scope.detail.id,$scope.$parent.payment.id).then(function(data){
+            if(data.isSuccess){
+                $scope.$parent.reload();
+                $scope.$parent.changeTotalPaidVerify(data.result);
+
+            }
+        },function(){
+
+        });
+        
     };
 }]);
 

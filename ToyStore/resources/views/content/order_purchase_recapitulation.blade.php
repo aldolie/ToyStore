@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container" ng-controller="OrderPurchaseRecapitulationController">
-	<div class="row">
+
         <div class="col-md-10">
-            
+             
             <div id="order-report">
                 <div class="row" id="order-header-report">
                     <div class="col-md-8">
@@ -22,6 +22,8 @@
 
                     </div>
                 </div>
+                <div class="row">
+
                 <div class="alert alert-info" style="margin-top:20px;" ng-show="filteredOrders.length==0">There is no data</div>
                 <table class="table" ng-hide="filteredOrders.length==0">
                    <thead ng-init="isReverse=false">

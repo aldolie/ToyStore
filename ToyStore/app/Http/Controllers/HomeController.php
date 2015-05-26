@@ -204,7 +204,7 @@ class HomeController extends Controller {
 
 	public function order_purchase(){
 		$user=SessionTable::getSession(Session::get('user'));
-		if($user->role!='sales')
+		if($user->role!='admin'&&$user->role!='sales')
 			return view('404',$this->getData($user));
 		else
 			return view('content/order_purchase',$this->getData($user));
@@ -215,7 +215,7 @@ class HomeController extends Controller {
 		
 
 		$user=SessionTable::getSession(Session::get('user'));
-		if($user->role!='sales')
+		if($user->role!='admin'&&$user->role!='sales')
 			return view('404',$this->getData($user));
 		else{
 			if($request->input('search')==null||$request->input('search')=='')
@@ -237,7 +237,7 @@ class HomeController extends Controller {
 	public function update_purchaseView(Request $request){
 
 		$user=SessionTable::getSession(Session::get('user'));
-		if($user->role!='sales')
+		if($user->role!='admin'&&$user->role!='sales')
 			return view('404',$this->getData($user));
 		else{
 			$data=$this->getData($user);
@@ -261,7 +261,7 @@ class HomeController extends Controller {
 
 	public function send_document(){
 		$user=SessionTable::getSession(Session::get('user'));
-		if($user->role!='sales')
+		if($user->role!='admin'&&$user->role!='sales')
 			return view('404',$this->getData($user));
 		else
 			return view('content/send_document',$this->getData($user));
@@ -277,7 +277,7 @@ class HomeController extends Controller {
 
 	public function payment_purchase(){
 		$user=SessionTable::getSession(Session::get('user'));
-		if($user->role!='sales')
+		if($user->role!='admin'&&$user->role!='sales')
 			return view('404',$this->getData($user));
 		else
 			return view('content/payment_purchase',$this->getData($user));

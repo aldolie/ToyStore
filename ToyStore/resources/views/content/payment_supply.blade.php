@@ -6,7 +6,55 @@
         <div class="col-md-10">
             
           <div id="payment-form">
+
                <div class="row" id="payment-header-form">
+                    <div class="col-md-8" style="margin-bottom:20px;padding-bottom:10px">
+                        <div>
+                            <span class="label-form">Filter From</span>
+                            <span class="label-form-delimiter">:</span>
+                            <span>
+                               <input class="form-none" type="text" id="datepicker" ng-model="fromDate"/>
+                                <script>
+                                (function(){
+                                    var d = new Date();
+                                    $('#datepicker').datepicker({
+                                            changeMonth: true,
+                                            changeYear: true,
+                                            defaultDate: d,
+                                            yearRange: '2000:2030',
+                                            dateFormat: 'yy-mm-dd',
+                                            stepMonths:true
+                                    });
+
+                                })();
+                                </script>
+                            </span>
+                            <span>To : </span>
+                             <span>
+                               <input class="form-none" type="text" id="datepicker" ng-model="toDate"/>
+                                <script>
+                                (function(){
+                                    var d = new Date();
+                                    $('#datepicker').datepicker({
+                                            changeMonth: true,
+                                            changeYear: true,
+                                            defaultDate: d,
+                                            yearRange: '2000:2030',
+                                            dateFormat: 'yy-mm-dd',
+                                            stepMonths:true
+                                    });
+
+                                })();
+                                </script>
+                            </span>
+                            <span>
+                              <button class="btn btn-primary" ng-click="loadPaymentsHeader()">Filter</button>
+                            </span>
+
+                        </div>
+
+                    </div>
+
                     <div class="col-md-8 ">
                         <div>
                             <span class="label-form">Search</span>

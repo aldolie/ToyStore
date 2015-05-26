@@ -1,5 +1,10 @@
 
 angular.module('app').controller('PaymentSupplyController',['$scope','filterFilter','orderByFilter','PaymentService',function($scope,filterFilter,orderByFilter,paymentService){
+    $scope.realPayments=[];
+    var convertDate = function(usDate) {
+      var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      return dateParts[3] + "-" + (dateParts[1].length==2?dateParts[1]:('0'+dateParts[1])) + "-" + (dateParts[2].length==2?dateParts[2]:('0'+dateParts[2]));
+    };
 
     $scope.payments=[];
     $scope.filteredPayments=[];
@@ -18,15 +23,29 @@ angular.module('app').controller('PaymentSupplyController',['$scope','filterFilt
       //  cons
     };
 
-
-    (function(){
+    $scope.loadPaymentsHeader=function(){
         paymentService.loadPayments().then(function(data){
-            $scope.payments=data.result;
-           filterSearch();
+            $scope.realPayments=data.result;
+            $scope.payments=[];
+            for(var i=0;i<$scope.realPayments.length;i++){
+                if($scope.realPayments[i].tanggal_pembelian>=$scope.fromDate&&$scope.realPayments[i].tanggal_pembelian<=$scope.toDate){
+                    $scope.payments.push($scope.realPayments[i]);
+                }
+            }
+            filterSearch();
             $scope.filteredPayments=orderByFilter($scope.filteredPayments,['tanggal_pembelian','supplier'],true);
         },function(){
 
         });
+    };
+
+    (function(){
+            var d=new Date();
+            $scope.toDate=convertDate(d.toLocaleDateString());
+            d.setDate(d.getDate()-30);
+            $scope.fromDate=convertDate(d.toLocaleDateString());
+            $scope.loadPaymentsHeader();
+        
     })();
 }]);
 

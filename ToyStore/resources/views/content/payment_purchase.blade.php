@@ -38,7 +38,7 @@
                           <td>[[payment.kode_invoice]]</td>
                           <td>[[payment.jumlah_utang | currency:'Rp.']]</td>
                           <td>[[payment.ongkos_kirim | currency:'Rp.']]</td>
-                          <td><code ng-show="isBase()">LUNAS</code><span ng-hide="isBase()">[[payment.jumlah_utang+payment.ongkos_kirim-payment.paid | currency:'Rp.']]</span></td>
+                          <td><code ng-show="isBaseVerified()">LUNAS</code><span ng-hide="isBaseVerified()">[[payment.jumlah_utang+payment.ongkos_kirim-payment.paid_verify | currency:'Rp.']]</span></td>
                           <td>[[payment.customer]]</td>
                         </tr>
                         <tr ng-show="isShowDetail">
@@ -53,6 +53,11 @@
                                   <th>Tanggal Bayar</th>
                                   <th>Jumlah Bayar</th>
                                   <th>Tipe Pembayaran</th>
+                                  @if($role=='admin')
+                                    <th>Verifikasi</th>
+                                  @else
+                                    <th>Status</th>
+                                  @endif
                                   <th>Delete</th>
                                 </tr>
                               </thead>
@@ -61,11 +66,23 @@
                                   <td>[[detail.tanggal_pembayaran]]</td>
                                   <td>[[detail.jumlah_pembayaran | currency:'Rp.']]</td>
                                   <td>[[detail.tipe_pembayaran]]</td>
+                                  @if($role=='admin')
+                                    <td><button class="btn btn-warning" ng-show="detail.tipe_pembayaran!='Down Payment'&&detail.status==0" ng-click="verifyPayment()">Verifikasi</button></td>
+                                  @else
+                                    <td>
+                                      <span ng-show="detail.status==0">Not Verified</span>
+                                      <span ng-show="detail.status==1">Verified</span>
+                                    </td>
+                                  @endif
+                                  @if($role=='admin')
                                   <td><button class="btn btn-danger" ng-show="detail.tipe_pembayaran!='Down Payment'" ng-click="deletePayment()">Delete</button></td>
+                                  @else
+                                  <td><button class="btn btn-danger" ng-show="detail.tipe_pembayaran!='Down Payment'&&detail.status==0" ng-click="deletePayment()">Delete</button></td>
+                                  @endif
                                 </tr>
                               </tbody>
                             </table>
-                            <div class="alert alert-info"  ng-show="isBase()" role="alert">Sudah Lunas</div>
+                            <div class="alert alert-info"  ng-show="isBaseVerified()" role="alert">Sudah Lunas</div>
                             <form ng-hide="isBase()" ng-submit="doPayment()">
                                 <div class="form-group">
                                     <div>

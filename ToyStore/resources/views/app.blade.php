@@ -83,7 +83,6 @@
                 </li>
 
                 @endif 
-                @if($role=='sales')
                 <li>
                     <a href="{{ url('/Penjualan/') }}"><span class="glyphicon glyphicon-export" style="margin-right:10px;" aria-hidden="true"></span>Penjualan</a>
                 </li>
@@ -91,18 +90,15 @@
                <li>
                     <a href="{{ url('/Surat/Jalan/') }}"><span class="glyphicon glyphicon-envelope" style="margin-right:10px;" aria-hidden="true"></span>Surat Jalan</a>
                 </li>
-                 @endif 
-               
+                
                <li>
                     <a href="{{ url('/Product/') }}"><span class="glyphicon glyphicon-folder-close" style="margin-right:10px;" aria-hidden="true"></span>Stock Barang
                         <code class="ng-cloak" ng-cloak ng-show="isROP()">[[rop]]</code>
                     </a>
                 </li>
-                 @if($role=='sales')
                  <li>
                     <a href="{{ url('/Tagihan/') }}"><span class="glyphicon glyphicon-check" style="margin-right:10px;" aria-hidden="true"></span>Tagihan Pembayaran</a>
                 </li>
-                 @endif
                  @if($role=='admin') 
 				 <li>
                     <a href="{{ url('/Pembelian/Report/') }}"><span class="glyphicon glyphicon-book" style="margin-right:10px;" aria-hidden="true"></span>Laporan Pembelian</a>

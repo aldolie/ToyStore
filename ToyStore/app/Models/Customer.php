@@ -19,6 +19,18 @@ class Customer extends Model {
         return $customer;
 	}
     
+    public static function insertCustomer($username,$addr){
+
+    	$customer=DB::table('customer')->where('username','=',$username)->first();
+    	if(!$customer){
+    		DB::table('customer')->insert(['username' => $username]);
+    	}
+    	$address=DB::table('address')->where('address','=',$addr)->where('username','=',$username)->first();
+    	if(!$address){
+    		DB::table('address')->insert(['username'=>$username,'address'=>$addr])
+    	}
+
+    }
     
 
 
