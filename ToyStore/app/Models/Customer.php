@@ -27,7 +27,7 @@ class Customer extends Model {
     	}
     	$address=DB::table('address')->where('address','=',$addr)->where('username','=',$username)->first();
     	if(!$address){
-    		DB::table('address')->insert(['username'=>$username,'address'=>$addr])
+    		DB::table('address')->insert(['username'=>$username,'address'=>$addr]);
     	}
 
     }

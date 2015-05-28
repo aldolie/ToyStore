@@ -2,6 +2,11 @@ angular.module('app').controller('PaymentPurchaseController',['$scope','PaymentP
     
     $scope.payments=[];
     $scope.filteredPayments=[];
+
+    $scope.filterPayments=function(){
+
+        $scope.filteredPayments=filterFilter($scope.payments,{'customer':$scope.search});
+    };
     (function(){
         PaymentPurchaseService.loadPayments().then(function(data){
             $scope.payments=data.result;

@@ -122,7 +122,7 @@ angular.module('app').controller('SendDocumentDetailController',['$scope','Purch
         }
         else if($scope.order.quantity<1)
             $scope.order.quantity= before;
-        else if($scope.order.remaining<$scope.order.quantity)
+        else if(parseInt($scope.order.remaining)<parseInt($scope.order.quantity))
            $scope.order.quantity= before;
         if(typeof $scope.order.quantity==='undefined')
             $scope.order.quantity='';

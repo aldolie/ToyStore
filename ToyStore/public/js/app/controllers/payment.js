@@ -1,5 +1,5 @@
 
-angular.module('app').controller('PaymentSupplyController',['$scope','filterFilter','orderByFilter','PaymentService',function($scope,filterFilter,orderByFilter,paymentService){
+angular.module('app').controller('PaymentSupplyController',['$scope','filterFilter','orderByFilter','PaymentService','PrintService',function($scope,filterFilter,orderByFilter,paymentService,printService){
     $scope.realPayments=[];
     var convertDate = function(usDate) {
       var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
@@ -21,6 +21,10 @@ angular.module('app').controller('PaymentSupplyController',['$scope','filterFilt
         filterSearch();
         $scope.filteredPayments=orderByFilter($scope.filteredPayments,['tanggal_pembelian','supplier'],true);
       //  cons
+    };
+
+    $scope.print=function(){
+        printService.print("payment_supply");
     };
 
     $scope.loadPaymentsHeader=function(){

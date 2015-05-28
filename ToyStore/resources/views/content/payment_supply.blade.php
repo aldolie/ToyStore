@@ -50,7 +50,9 @@
                             <span>
                               <button class="btn btn-primary" ng-click="loadPaymentsHeader()">Filter</button>
                             </span>
-
+                            <span>
+                              <button class="btn btn-default" ng-click="print()">Print</button>
+                            </span>
                         </div>
 
                     </div>
@@ -70,7 +72,8 @@
 
                     </div>
                 </div>
-                <table class="table table-condensed" >
+                <div id="payment_supply">
+                <table  class="table table-condensed" >
                     <thead >
                        <tr>
                         <th>#</th>
@@ -139,7 +142,7 @@
                         </tr>
                     </tbody>
                 </table>
-
+                </div>
           </div>
               
     
