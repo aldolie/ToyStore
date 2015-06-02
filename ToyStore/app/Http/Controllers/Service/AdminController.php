@@ -198,7 +198,10 @@ class AdminController extends Controller {
                     $token=Hash::make($username.'|'.$password.'|'.$request->ip().'|'.str_random(60).'|'.date_format(date_create(), 'U'));
                     SessionTable::setSession($user->id,$token);
                     Session::put('user',$token);
-                    return (['status'=>200,'isSuccess'=>true,'result'=>$token,'reason'=>[]]);
+                    $response = new \Illuminate\Http\Response(['status'=>200,'isSuccess'=>true,'result'=>$token,'reason'=>[]]);
+                    $response->withCookie(cookie('c_piss', $token, 60*60));;
+                    return $response;
+                    //return ();
                 }
                 else
                 {
@@ -506,6 +509,7 @@ class AdminController extends Controller {
             }
             
             else{
+                Customer::insertCustomer($to,$address);
                 return (['status'=>200,'isSuccess'=>true,'reason'=>[]]);
             }
             
@@ -638,7 +642,7 @@ class AdminController extends Controller {
 
             $token=Session::get('user');
             $user=SessionTable::getSession($token);
-            $result = PurchaseHeader::insertOrder($purchaseid,$user->id,$customer,$date,$isSalesOrder,$discount,$dp,$data);
+            $result = PurchaseHeader::insertOrder($purchaseid,$user->id,$customer,$date,$isSalesOrder,$discount,$dp,$data,$address);
 
             if($result['status']==false){
                 if($result['error_code']==-2){
@@ -701,12 +705,14 @@ class AdminController extends Controller {
             'customer' => 'required|max:255',
             'date' => 'required|date',
             'is_sales_order'=>'required',
-            'purchaseid'=>'required'
+            'purchaseid'=>'required',
+            'address'=>'required'
         ],[
             'purchaseid.required'=>'Purchaseid harus diisi',
             'customer.required'=>'Nama Customer  harus diisi',
             'date.required'=>'Tanggal Pembelian harus diisi',
-            'is_sales_order.required'=>'Sales Order harus di isi'
+            'is_sales_order.required'=>'Sales Order harus di isi',
+            'address.required'=>'Alamat harus di isi'
         ]);
        
        if ($v->fails())
@@ -724,6 +730,7 @@ class AdminController extends Controller {
             $isDiscount=$request->input('isDiscount');
             $isDp=$request->input('isDp');
             $purchaseid=$request->input('purchaseid');
+            $address=$request->input('address');
             if(!$isDiscount)
                 $discount=0;
             if(!$isDp)
@@ -736,7 +743,7 @@ class AdminController extends Controller {
 
             $token=Session::get('user');
             $user=SessionTable::getSession($token);
-            $result = PurchaseHeader::updateOrder($purchaseid,$user->id,$customer,$date,$isSalesOrder,$discount,$dp,$data,$deleted);
+            $result = PurchaseHeader::updateOrder($purchaseid,$user->id,$customer,$date,$isSalesOrder,$discount,$dp,$data,$deleted,$address);
 
             if($result['status']==false){
                 if($result['error_code']==-2){
@@ -749,10 +756,12 @@ class AdminController extends Controller {
             }
             
             else{
+
+                Customer::insertCustomer($customer,$address);
                 $pr=PurchaseHeader::getInvoice($purchaseid);
                 $invoice=$pr->invoice;
                 try {
-                    $this->email($invoice,$user->username);
+                    //$this->email($invoice,$user->username);
                 } catch (Exception $e) {
                     
                 }

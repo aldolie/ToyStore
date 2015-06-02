@@ -36,6 +36,10 @@ class AuthenticateService {
 		{
 			return $next($request);
 		}
+		else if($request->cookie('c_piss','')!=''){
+		 	Session::put('user',$request->cookie('c_piss',''));
+			return $next($request);
+		}
 		else{
 			return response('Unauthorized.', 401);
 		}

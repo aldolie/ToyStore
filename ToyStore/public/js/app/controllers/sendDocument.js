@@ -1,5 +1,5 @@
 
-angular.module('app').controller('SendDocumentController',['$scope','PurchaseService','PrintService',function($scope,purchaseService,printService){
+angular.module('app').controller('SendDocumentController',['$scope','PurchaseService','PrintService','CustomerService','filterFilter',function($scope,purchaseService,printService,customerService,filterFilter){
     $scope.search='';
     $scope.form={
         id:'',
@@ -15,6 +15,8 @@ angular.module('app').controller('SendDocumentController',['$scope','PurchaseSer
     };
 
     $scope.searchTransaction=function(){
+
+         
         purchaseService.loadOrderPurchaseById($scope.search).then(function(data){
             if(!data.result)
             {
@@ -32,7 +34,11 @@ angular.module('app').controller('SendDocumentController',['$scope','PurchaseSer
                 $scope.form.to=data.result[0].customer;
                 $scope.form.address=data.result[0].address;
                 $scope.form.purchaseId=data.result[0].id;
-                 $scope.lock=true;
+                $scope.lock=true;
+                customerService.loadAddressCustomerforAutoComplete( $scope.form.to).then(function(data){
+                    $scope.addresses=data;
+                     
+                },function(){});
                /* purchaseService.loadSuratJalanId().then(function(data){
                      $scope.form.id=data;
                     
@@ -110,6 +116,51 @@ angular.module('app').controller('SendDocumentController',['$scope','PurchaseSer
 
         });
     }
+
+    $scope.searchCustomer=function(){
+        
+        if($scope.form.to=='')
+        {
+           $scope.filteredCustomers=[];
+           return;
+        }
+
+        $scope.filteredCustomers=filterFilter($scope.customers,{'username':$scope.form.to});  
+    };
+
+
+    $scope.onClickAutoCompleteCustomer=function(customer){
+        
+        $scope.form.customer=customer.username;
+        customerService.loadAddressCustomerforAutoComplete(customer.username).then(function(data){
+            $scope.addresses=data;
+             
+        },function(){});
+        $scope.filteredAddresses=$scope.addresses;
+        $scope.filteredCustomers=[];
+    };
+
+
+
+    $scope.searchAddress=function(){
+        $scope.filteredAddresses=filterFilter($scope.addresses,{'address':$scope.form.address});  
+    };
+
+
+    $scope.onClickAutoCompleteAddress=function(address){
+        
+        $scope.form.address=address.address;
+        $scope.filteredAddresses=[];
+    };
+
+    (function(){
+        customerService.loadCustomerforAutoComplete().then(function(data){
+            $scope.customers=data;
+             
+        },function(){});
+
+    })();
+    
 
 }]);
 

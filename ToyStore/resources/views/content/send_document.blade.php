@@ -26,17 +26,28 @@
 
                     <div class="col-md-5 col-sm-offset-2" ng-show="isLock()">
                         <div>
-                            <span class="label-form">Kepada</span>
+                            <span class="label-form">Kepada </span>
                             <span class="label-form-delimiter">:</span>
                             <span>
-                                <input type="text"  class="form-none medium"  ng-model="form.to" />
+                                <div class="container-auto-complete" style="display:inline-block;" >
+                                    <input class="form-none" type="text" ng-model="form.to" ng-change="searchCustomer()" />
+                                    <ul class="content-auto-complete">
+                                        <li ng-repeat="customer in filteredCustomers track by $index" ng-click="onClickAutoCompleteCustomer(customer)">[[customer.username]]</li>
+                                    </ul>
+                                </div>
                             </span>
                         </div>
+
                         <div>
                             <span class="label-form">Alamat</span>
                             <span class="label-form-delimiter">:</span>
                             <span>
-                                <input type="text" class="form-none medium" ng-model="form.address"/>
+                                <div class="container-auto-complete" style="display:inline-block;" >
+                                    <input class="form-none" type="text" ng-model="form.address" ng-change="searchAddress()" />
+                                    <ul class="content-auto-complete">
+                                        <li ng-repeat="address in filteredAddresses track by $index" ng-click="onClickAutoCompleteAddress(address)">[[address.address]]</li>
+                                    </ul>
+                                </div>
                             </span>
                         </div>
                         
@@ -115,7 +126,8 @@
                     </div>
 
                     <div class="col-md-6 col-sm-offset-1" style="float:right;">
-                        <div>
+                        
+                       <div>
                             <span class="label-form">Kepada</span>
                             <span class="label-form-delimiter">:</span>
                             <span><span type="text" ng-model="form.to"  class="form-none medium" >[[form.to]]</span></span>

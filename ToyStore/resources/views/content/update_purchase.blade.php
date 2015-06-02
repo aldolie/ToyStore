@@ -27,12 +27,19 @@
                             <span class="label-form-delimiter">:</span>
                             <span ng-init="form.orderId='{{$id}}'" >[[form.orderId]]</span>
                         </div>
-
                         <div ng-init="init()">
                             <span class="label-form">Customer</span>
                             <span class="label-form-delimiter">:</span>
-                            <span><input class="form-none" type="numeric" ng-model="form.customer" /></span>
+                            <span>
+                                <div class="container-auto-complete" style="display:inline-block;" >
+                                    <input class="form-none" type="text" ng-model="form.customer" ng-change="searchCustomer()" />
+                                    <ul class="content-auto-complete">
+                                        <li ng-repeat="customer in filteredCustomers track by $index" ng-click="onClickAutoCompleteCustomer(customer)">[[customer.username]]</li>
+                                    </ul>
+                                </div>
+                            </span>
                         </div>
+                        
 
                         <div>
                             <span class="label-form">Salesman</span>
@@ -61,6 +68,18 @@
 
                                 })();
                                 </script>
+                            </span>
+                        </div>
+                        <div>
+                            <span class="label-form">Alamat</span>
+                            <span class="label-form-delimiter">:</span>
+                            <span>
+                                <div class="container-auto-complete" style="display:inline-block;" >
+                                    <input class="form-none" type="text" ng-model="form.address" ng-change="searchAddress()" />
+                                    <ul class="content-auto-complete">
+                                        <li ng-repeat="address in filteredAddresses track by $index" ng-click="onClickAutoCompleteAddress(address)">[[address.address]]</li>
+                                    </ul>
+                                </div>
                             </span>
                         </div>
                         <div>
@@ -210,10 +229,12 @@
                                     <span class="label-form-delimiter">:</span>
                                     <span>[[form.date]]</span>
                                 </div>
-                                <div>
-                                    <span class="label-form"></span>
-                                    <span class="label-form-delimiter"></span>
-                                    <span></span>
+                                 <div>
+                                    <span class="label-form">Alamat</span>
+                                    <span class="label-form-delimiter">:</span>
+                                    <span>
+                                         [[form.address]]
+                                    </span>
                                 </div>
                                 <div>
                                     <span class="label-form"></span>

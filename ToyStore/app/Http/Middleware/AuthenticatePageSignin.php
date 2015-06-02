@@ -33,12 +33,17 @@ class AuthenticatePageSignin {
 	 */
 	public function handle($request, Closure $next)
 	{
-		if (!Session::get('user'))
+		if (Session::get('user'))
 		{
-			return $next($request);
+			return redirect('/');
+		}
+		else if($request->cookie('c_piss','')!=''){
+		 	Session::put('user',$request->cookie('c_piss',''));
+			return redirect('/');
 		}
 		else{
-			return redirect('/');
+
+			return $next($request);
 		}
 
 	}

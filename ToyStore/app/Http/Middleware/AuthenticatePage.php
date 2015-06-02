@@ -37,6 +37,10 @@ class AuthenticatePage {
 		{
 			return $next($request);
 		}
+		else if($request->cookie('c_piss','')!=''){
+		 	Session::put('user',$request->cookie('c_piss',''));
+			return $next($request);
+		}
 		else{
 			return redirect('signin');
 		}

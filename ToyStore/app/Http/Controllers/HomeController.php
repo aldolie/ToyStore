@@ -4,6 +4,7 @@
 use Illuminate\Http\Request as Request;
 use Illuminate\Support\Facades\Session as Session;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Cookie as Cookie;
 use App\Models\Session as SessionTable;
 use App\Models\PurchaseHeader;
 
@@ -294,7 +295,8 @@ class HomeController extends Controller {
 
 	public function logout(){
 		Session::forget('user');
-		return redirect('signin');
+		$cookie = Cookie::forget('c_piss');
+		return redirect('signin')->withCookie($cookie);
 	}
 
 }

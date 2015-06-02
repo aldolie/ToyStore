@@ -18,7 +18,8 @@ class PurchaseHeader extends Model {
             ->where('invoice','=',$id)
             ->select('customer','dp','discount','order_purchase_header.id','is_sales_order',
                 'firstname','lastname',
-                'user.id as userid','transactiondate')
+                'user.id as userid','transactiondate',
+                'address')
             ->first();
         return $purchase;
     }
@@ -103,7 +104,7 @@ class PurchaseHeader extends Model {
         return $purchase;
     }
     
-    public static function insertOrder($purchaseid,$userid,$customer,$transactiondate,$isSalesOrder,$discount,$dp,$data)
+    public static function insertOrder($purchaseid,$userid,$customer,$transactiondate,$isSalesOrder,$discount,$dp,$data,$address)
 	{
         $isSalesOrder=($isSalesOrder?1:0);
         $error=[];
@@ -121,7 +122,7 @@ class PurchaseHeader extends Model {
             return ['status'=>false,'error_code'=>-1,'products'=>$error];
             */
             
-            $id = DB::table('order_purchase_header')->insertGetId(['invoice'=>$purchaseid,'customer' => $customer, 'is_sales_order' => $isSalesOrder,'transactiondate'=>$transactiondate,'dp'=>$dp,'discount'=>$discount,'created_by'=>$userid]);
+            $id = DB::table('order_purchase_header')->insertGetId(['invoice'=>$purchaseid,'customer' => $customer, 'is_sales_order' => $isSalesOrder,'transactiondate'=>$transactiondate,'dp'=>$dp,'discount'=>$discount,'created_by'=>$userid,'address'=>$address]);
             //Insert DP HERE
             for($i=0;$i<count($data);$i++){
 
@@ -155,7 +156,7 @@ class PurchaseHeader extends Model {
 
 
 
-    public static function updateOrder($purchaseid,$userid,$customer,$transactiondate,$isSalesOrder,$discount,$dp,$data,$deleted)
+    public static function updateOrder($purchaseid,$userid,$customer,$transactiondate,$isSalesOrder,$discount,$dp,$data,$deleted,$address)
     {
         $isSalesOrder=($isSalesOrder?1:0);
         $error=[];
@@ -164,7 +165,8 @@ class PurchaseHeader extends Model {
             
             DB::table('order_purchase_header')->where('id','=',$purchaseid)
                     ->update(['customer' => $customer, 'is_sales_order' => $isSalesOrder,'transactiondate'=>$transactiondate,'dp'=>$dp,'discount'=>$discount,
-                        'updated_by'=>$userid
+                        'updated_by'=>$userid,
+                        'address'=>$address
                         ,'updated_at'=> date("Y-m-d H:i:s")]);
             $flag=false;
             for($i=0;$i<count($data);$i++){

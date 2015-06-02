@@ -1,4 +1,4 @@
-angular.module('app').controller('UpdatePurchaseController',['$scope','filterFilter','ProductService','PurchaseService','UserService','PrintService',function($scope,filterFilter,productService,purchaseService,userService,printService){
+angular.module('app').controller('UpdatePurchaseController',['$scope','filterFilter','ProductService','PurchaseService','UserService','PrintService','CustomerService',function($scope,filterFilter,productService,purchaseService,userService,printService,customerService){
     
    var convertDate = function(usDate) {
       var dateParts = usDate.split(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
@@ -167,7 +167,48 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
             $scope.deleted.push(order);
     };
 
+
+     $scope.searchCustomer=function(){
+        if($scope.form.customer=='')
+        {
+           $scope.filteredCustomers=[];
+           return;
+        }
+        $scope.filteredCustomers=filterFilter($scope.customers,{'username':$scope.form.customer});  
+    };
+
+
+    $scope.onClickAutoCompleteCustomer=function(customer){
+        
+        $scope.form.customer=customer.username;
+        customerService.loadAddressCustomerforAutoComplete(customer.username).then(function(data){
+            $scope.addresses=data;
+             
+        },function(){});
+        $scope.filteredAddresses=$scope.addresses;
+        $scope.filteredCustomers=[];
+    };
+
+
+
+    $scope.searchAddress=function(){
+        $scope.filteredAddresses=filterFilter($scope.addresses,{'address':$scope.form.address});  
+    };
+
+
+    $scope.onClickAutoCompleteAddress=function(address){
+        
+        $scope.form.address=address.address;
+        $scope.filteredAddresses=[];
+    };
+
     $scope.init=function(){
+
+        customerService.loadCustomerforAutoComplete().then(function(data){
+            $scope.customers=data;
+             
+        },function(){});
+
         purchaseService.loadHeaderPurchase($scope.form.orderId).then(function(data){
             $scope.form.customer=data.result.customer;
             $scope.form.dp=data.result.dp;
@@ -175,6 +216,7 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
             $scope.form.sales=data.result.lastname+' '+data.result.firstname;
             $scope.form.salesId=data.result.userid;
             $scope.form.id=data.result.id;
+            $scope.form.address=data.result.address;
             if(data.result.is_sales_order==1)
                 $scope.form.salesOrder=true;
             if(data.result.dp>0)
@@ -182,7 +224,12 @@ angular.module('app').controller('UpdatePurchaseController',['$scope','filterFil
             if(data.result.discount>0)
                 $scope.form.isDiscount=true;
             $scope.form.date=data.result.transactiondate;
-  
+            customerService.loadAddressCustomerforAutoComplete($scope.form.customer).then(function(data){
+                $scope.addresses=data;
+                 
+            },function(){});
+            $scope.filteredAddresses=$scope.addresses;
+           
             purchaseService.loadDetailPurchase($scope.form.orderId).then(function(data_detail){
                 $scope.orders=data_detail.result;
                 productService.loadProductsforAutoComplete().then(function(data){
