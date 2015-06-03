@@ -14,7 +14,7 @@ class SendDocument extends Model {
     public static function getHeaders(){
         $documents=DB::table('sending_header')
                     ->join('order_purchase_header','order_purchase_header.id','=','sending_header.purchaseid')
-                    ->select('sending_header.id','order_purchase_header.invoice as invoice','sending_header.invoice as suratJalan','destination','address','tracking_number','ongkos_kirim','sending_header.transactiondate')
+                    ->select('sending_header.id','order_purchase_header.invoice as invoice','sending_header.invoice as suratJalan','destination','sending_header.address','tracking_number','ongkos_kirim','sending_header.transactiondate')
                     ->get();
         return $documents;
     }

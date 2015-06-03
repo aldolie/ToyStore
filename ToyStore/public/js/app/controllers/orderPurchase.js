@@ -226,10 +226,9 @@ angular.module('app').controller('OrderPurchaseDetailController',['$scope','filt
            return;
         }
         $scope.filteredProducts=filterFilter($scope.$parent.products,{'nama_barang':$scope.order.nama_barang,'isSelected':false});
-        if($scope.$parent.form.salesOrder){
-            $scope.filteredProducts.push({kode_barang:0,nama_barang:'Tambah Barang Baru',quantity:'',quantity:-1,harga:''});
-            
-        }
+     //   if($scope.$parent.form.salesOrder){
+            $scope.filteredProducts.push({kode_barang:0,nama_barang:'Tambah Barang Baru',quantity:'',quantity:-1,harga:''});   
+       // }
         
     }
     
